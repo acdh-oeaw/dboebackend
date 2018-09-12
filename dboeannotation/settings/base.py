@@ -44,6 +44,24 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'POST',
+    'PUT',
+)
+
+CORS_ALLOW_HEADERS = default_headers
+
+CORS_REPLACE_HTTPS_REFERER = True
+
+#CSRF_TRUSTED_ORIGINS = ['vawadioe-rest.eos.arz.oeaw.ac.at']
+
 ROOT_URLCONF = 'dboeannotation.urls'
 
 TEMPLATES = [
