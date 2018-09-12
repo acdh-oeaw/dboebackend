@@ -1,0 +1,27 @@
+# Byte-compiled
+__pycache__/
+*.pyc
+
+# sensitive data
+dboeannotation/settings/server.py
+
+#sqlitedb
+
+#/db.sqlite3
+
+# IDE
+.idea
+
+# migrations
+annotations/migrations/*
+
+
+#Ipython Notebook
+.ipynb_checkpoints
+
+
+
+/dboeannotation/settings/server.py
+/dboeannotation/db.sqlite3
+
+/dboeannotation/settings/dev.py
