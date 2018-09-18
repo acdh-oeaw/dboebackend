@@ -10,6 +10,7 @@ import requests
 from django.shortcuts import render
 from django.conf import settings
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 class LargeResultsSetPagination(pagination.PageNumberPagination):
@@ -98,18 +99,20 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 
 @api_view()
 def es_search(request):
+	"""
+	View to query external elasticsearch endpoint
+	query by field 'Hauptlemma'
+
+	"""
 	client = Elasticsearch(settings.ES_DBOE)
-	q = request.GET.get('q')
+	q = request.GET.get('Hauptlemma')
 	if q:
 		# results = Search(using=client, index="dboe")\
 		# .query("match", Hauptlemma=q).execute()
 		search = Search(using=client, index="dboe").query("match", Hauptlemma=q)
 		count = search.count()
 		results = search[0:count].execute()
+		results = results.to_dict()
 	else:
 		results = None
-	return Response(results)
-	# return render(request, 'annotations/search.html',
-	# 	{'results': results,
-	# 	#'hits': hits
-	# 	})
+	return Response({'results': results})
