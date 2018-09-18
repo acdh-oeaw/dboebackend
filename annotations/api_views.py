@@ -3,6 +3,13 @@ from rest_framework import pagination
 from .serializers import *
 from .models import *
 from django.contrib.auth.models import User
+from rest_framework.decorators import api_view
+from elasticsearch import Elasticsearch
+from elasticsearch_dsl import Document, Text, Date, Search, MultiSearch
+import requests
+from django.shortcuts import render
+from django.conf import settings
+from rest_framework.response import Response
 
 
 class LargeResultsSetPagination(pagination.PageNumberPagination):
@@ -87,3 +94,22 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 
 	def perform_create(self, serializer):
 		serializer.save(created_by=self.request.user)
+
+
+@api_view()
+def es_search(request):
+	client = Elasticsearch(settings.ES_DBOE)
+	q = request.GET.get('q')
+	if q:
+		# results = Search(using=client, index="dboe")\
+		# .query("match", Hauptlemma=q).execute()
+		search = Search(using=client, index="dboe").query("match", Hauptlemma=q)
+		count = search.count()
+		results = search[0:count].execute()
+	else:
+		results = None
+	return Response(results)
+	# return render(request, 'annotations/search.html',
+	# 	{'results': results,
+	# 	#'hits': hits
+	# 	})
