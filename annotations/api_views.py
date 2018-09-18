@@ -1,5 +1,6 @@
 from rest_framework import viewsets
-from rest_framework import pagination
+from rest_framework import pagination, generics, filters
+import django_filters
 from .serializers import *
 from .models import *
 from django.contrib.auth.models import User
@@ -11,6 +12,8 @@ from django.shortcuts import render
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.decorators import api_view
 
 
 class LargeResultsSetPagination(pagination.PageNumberPagination):
@@ -31,6 +34,8 @@ class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all().order_by('-date_joined')
 	serializer_class = UserSerializer
 	pagination_class = LargeResultsSetPagination
+	filter_backends = (DjangoFilterBackend,)
+	filter_fields = ('username', 'collections')
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -45,6 +50,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
 	queryset = Category.objects.all()
 	serializer_class = CategorySerializer
 	pagination_class = LargeResultsSetPagination
+	filter_backends = (DjangoFilterBackend,)
+	filter_fields = ('name', )
 
 
 class Es_documentViewSet(viewsets.ModelViewSet):
@@ -59,6 +66,9 @@ class Es_documentViewSet(viewsets.ModelViewSet):
 	queryset = Es_document.objects.all()
 	serializer_class = Es_documentSerializer
 	pagination_class = LargeResultsSetPagination
+	filter_backends = (DjangoFilterBackend,)
+	# make a custom filter with exact match for es_id
+	filter_fields = ('es_id', )
 
 
 class CollectionViewSet(viewsets.ModelViewSet):
@@ -73,6 +83,8 @@ class CollectionViewSet(viewsets.ModelViewSet):
 	queryset = Collection.objects.all()
 	serializer_class = CollectionSerializer
 	pagination_class = LargeResultsSetPagination
+	filter_backends = (DjangoFilterBackend,)
+	filter_fields = ('title', 'created_by')
 
 
 	def perform_create(self, serializer):
@@ -91,6 +103,9 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 	queryset = Annotation.objects.all()
 	serializer_class = AnnotationSerializer
 	pagination_class = LargeResultsSetPagination
+	filter_backends = (DjangoFilterBackend,)
+	filter_fields = ('title', 'description',
+		'collection', 'category', 'created_by',)
 
 
 	def perform_create(self, serializer):
