@@ -33,5 +33,5 @@ urlpatterns = [
 	path('api/', include(router.urls)),
 	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	path('', include_docs_urls(title='DBÖ annotation service rest api')),
-	path('api/es-search/', api_views.es_search),
+	path('api/dboe-query/', api_views.dboe_query),
 ]

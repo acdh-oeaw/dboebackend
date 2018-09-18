@@ -98,7 +98,7 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 
 
 @api_view()
-def es_search(request):
+def dboe_query(request):
 	"""
 	View to query external elasticsearch endpoint
 	query by field 'Hauptlemma'
