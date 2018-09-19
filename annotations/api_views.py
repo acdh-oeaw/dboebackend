@@ -15,6 +15,7 @@ from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
 from elasticsearch_dsl import Q
+from .filters import *
 
 
 class LargeResultsSetPagination(pagination.PageNumberPagination):
@@ -52,6 +53,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 	serializer_class = CategorySerializer
 	pagination_class = LargeResultsSetPagination
 	filter_backends = (DjangoFilterBackend,)
+	#filter_class = CategoryFilter
 	filter_fields = ('name', )
 
 
@@ -105,8 +107,7 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 	serializer_class = AnnotationSerializer
 	pagination_class = LargeResultsSetPagination
 	filter_backends = (DjangoFilterBackend,)
-	filter_fields = ('title', 'description',
-		'collection', 'category', 'created_by',)
+	filter_class = AnnotationFilter
 
 
 	def perform_create(self, serializer):
