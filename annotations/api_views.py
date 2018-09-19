@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
+from elasticsearch_dsl import Q
 
 
 class LargeResultsSetPagination(pagination.PageNumberPagination):
@@ -115,17 +116,19 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 @api_view()
 def dboe_query(request):
 	"""
-	View to query external elasticsearch endpoint
-	query by field 'Hauptlemma'
+	The endpoint to query external elasticsearch index;
+	the query matches all fields
 
 	"""
 	client = Elasticsearch(settings.ES_DBOE)
-	q = request.GET.get('Hauptlemma')
+	q = request.GET.get('q')
 	if q:
-		# results = Search(using=client, index="dboe")\
-		# .query("match", Hauptlemma=q).execute()
-		search = Search(using=client, index="dboe").query("match", Hauptlemma=q)
+		my_query = Q("multi_match", query=q, fields=['*'])
+		search = Search(using=client, index="dboe").query(my_query)
+		
 		count = search.count()
+		
+
 		results = search[0:count].execute()
 		results = results.to_dict()
 	else:
