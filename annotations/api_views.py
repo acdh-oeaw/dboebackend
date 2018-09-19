@@ -124,11 +124,8 @@ def dboe_query(request):
 	q = request.GET.get('q')
 	if q:
 		my_query = Q("multi_match", query=q, fields=['*'])
-		search = Search(using=client, index="dboe").query(my_query)
-		
+		search = Search(using=client, index="dboe").query(my_query)		
 		count = search.count()
-		
-
 		results = search[0:count].execute()
 		results = results.to_dict()
 	else:
