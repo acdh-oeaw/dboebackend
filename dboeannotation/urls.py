@@ -19,7 +19,10 @@ from rest_framework import routers
 from annotations import api_views
 from rest_framework.authtoken import views
 from rest_framework.documentation import include_docs_urls
+from rest_framework_swagger.views import get_swagger_view
 
+
+schema_view = get_swagger_view(title='DBÖ annotation service rest api')
 
 router = routers.DefaultRouter()
 router.register(r'users', api_views.UserViewSet)
@@ -32,6 +35,7 @@ urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('api/', include(router.urls)),
 	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-	path('', include_docs_urls(title='DBÖ annotation service rest api')),
+	#path('', include_docs_urls(title='DBÖ annotation service rest api')),
+	path('', schema_view),
 	path('api/dboe-query/', api_views.dboe_query),
 ]
