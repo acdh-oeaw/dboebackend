@@ -98,10 +98,10 @@ CORS_ALLOW_HEADERS = default_headers
 
 #CORS_REPLACE_HTTPS_REFERER = True
 
-CSRF_TRUSTED_ORIGINS = (
-    'dboefrontend.hephaistos.arz.oeaw.ac.at', 'http://localhost:8000',
-    'dboeannotation.acdh-dev.oeaw.ac.at', 'dboeannotation.hephaistos.arz.oeaw.ac.at'
-    )
+# CSRF_TRUSTED_ORIGINS = (
+#     'dboefrontend.hephaistos.arz.oeaw.ac.at', 'http://localhost:8000',
+#     'dboeannotation.acdh-dev.oeaw.ac.at', 'dboeannotation.hephaistos.arz.oeaw.ac.at'
+#     )
 
 CORS_ALLOW_CREDENTIALS = True #cross check!
 
