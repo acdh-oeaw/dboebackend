@@ -42,6 +42,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware', #cross check!
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -79,7 +80,11 @@ SWAGGER_SETTINGS = {
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-CORS_ORIGIN_ALLOW_ALL = True
+#CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_WHITELIST = ('dboefrontend.hephaistos.arz.oeaw.ac.at',
+    'dboeannotation.acdh-dev.oeaw.ac.at', 'dboeannotation.hephaistos.arz.oeaw.ac.at',
+    'localhost:8000')
 
 CORS_ALLOW_METHODS = (
     'DELETE',
@@ -91,12 +96,14 @@ CORS_ALLOW_METHODS = (
 
 CORS_ALLOW_HEADERS = default_headers
 
-#CORS_REPLACE_HTTPS_REFERER = True
+CORS_REPLACE_HTTPS_REFERER = True
 
-CSRF_TRUSTED_ORIGINS = [
+CSRF_TRUSTED_ORIGINS = (
     'dboefrontend.hephaistos.arz.oeaw.ac.at', 'localhost:8000',
     'dboeannotation.acdh-dev.oeaw.ac.at', 'dboeannotation.hephaistos.arz.oeaw.ac.at'
-    ]
+    )
+
+CORS_ALLOW_CREDENTIALS = True #cross check!
 
 ROOT_URLCONF = 'dboeannotation.urls'
 
