@@ -53,8 +53,29 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication', # this is default
     )
 }
+
+#CSRF_USE_SESSIONS = True
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+    'JSON_EDITOR': True,
+    'SHOW_REQUEST_HEADERS': True,
+    'LOGIN_URL': 'rest_framework:login',
+    'LOGOUT_URL': 'rest_framework:logout',
+}
+
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -70,9 +91,12 @@ CORS_ALLOW_METHODS = (
 
 CORS_ALLOW_HEADERS = default_headers
 
-CORS_REPLACE_HTTPS_REFERER = True
+#CORS_REPLACE_HTTPS_REFERER = True
 
-#CSRF_TRUSTED_ORIGINS = ['vawadioe-rest.eos.arz.oeaw.ac.at']
+CSRF_TRUSTED_ORIGINS = [
+    'dboefrontend.hephaistos.arz.oeaw.ac.at', 'localhost:8000',
+    'dboeannotation.acdh-dev.oeaw.ac.at', 'dboeannotation.hephaistos.arz.oeaw.ac.at'
+    ]
 
 ROOT_URLCONF = 'dboeannotation.urls'
 
