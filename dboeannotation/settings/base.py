@@ -96,7 +96,7 @@ CORS_ALLOW_METHODS = (
 
 CORS_ALLOW_HEADERS = default_headers
 
-CORS_REPLACE_HTTPS_REFERER = True
+#CORS_REPLACE_HTTPS_REFERER = True
 
 CSRF_TRUSTED_ORIGINS = (
     'dboefrontend.hephaistos.arz.oeaw.ac.at', 'localhost:8000',
