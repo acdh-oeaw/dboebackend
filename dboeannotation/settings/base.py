@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'rest_framework_swagger',
     'django_filters',
@@ -60,9 +61,6 @@ REST_FRAMEWORK = {
     )
 }
 
-#CSRF_USE_SESSIONS = True
-
-
 SWAGGER_SETTINGS = {
     # 'SECURITY_DEFINITIONS': {
     #     'api_key': {
@@ -82,9 +80,12 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 #CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ORIGIN_WHITELIST = ('dboefrontend.hephaistos.arz.oeaw.ac.at',
-    'dboeannotation.acdh-dev.oeaw.ac.at', 'dboeannotation.hephaistos.arz.oeaw.ac.at',
-    'http://localhost:8000', 'http://localhost:8080')
+CORS_ORIGIN_WHITELIST = (
+    'dboefrontend.hephaistos.arz.oeaw.ac.at',
+    'dboeannotation.acdh-dev.oeaw.ac.at',
+    'dboeannotation.hephaistos.arz.oeaw.ac.at',
+    'http://localhost:8000',
+    'http://localhost:8080')
 
 CORS_ALLOW_METHODS = (
     'DELETE',
@@ -96,9 +97,11 @@ CORS_ALLOW_METHODS = (
 
 CORS_ALLOW_HEADERS = default_headers
 
-CORS_REPLACE_HTTPS_REFERER = True
-
-CSRF_TRUSTED_ORIGINS = ['dboeannotation.acdh-dev.oeaw.ac.at']
+CSRF_TRUSTED_ORIGINS = [
+    'dboeannotation.acdh-dev.oeaw.ac.at',
+    'dboefrontend.hephaistos.arz.oeaw.ac.at',
+    'http://localhost:8000',
+    'http://localhost:8080']
 
 CORS_ALLOW_CREDENTIALS = True #cross check!
 
