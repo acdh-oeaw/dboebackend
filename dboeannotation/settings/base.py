@@ -84,7 +84,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 CORS_ORIGIN_WHITELIST = ('dboefrontend.hephaistos.arz.oeaw.ac.at',
     'dboeannotation.acdh-dev.oeaw.ac.at', 'dboeannotation.hephaistos.arz.oeaw.ac.at',
-    'http://localhost:8000')
+    'localhost')
 
 CORS_ALLOW_METHODS = (
     'DELETE',
