@@ -64,17 +64,17 @@ REST_FRAMEWORK = {
 
 
 SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        'api_key': {
-            'type': 'apiKey',
-            'in': 'header',
-            'name': 'Authorization'
-        }
-    },
-    'JSON_EDITOR': True,
-    'SHOW_REQUEST_HEADERS': True,
-    'LOGIN_URL': 'rest_framework:login',
-    'LOGOUT_URL': 'rest_framework:logout',
+    # 'SECURITY_DEFINITIONS': {
+    #     'api_key': {
+    #         'type': 'apiKey',
+    #         'in': 'header',
+    #         'name': 'Authorization'
+    #     }
+    # },
+    # 'JSON_EDITOR': True,
+    # 'SHOW_REQUEST_HEADERS': True,
+    # 'LOGIN_URL': 'rest_framework:login',
+    # 'LOGOUT_URL': 'rest_framework:logout',
 }
 
 
