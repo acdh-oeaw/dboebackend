@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_swagger',
     'django_filters',
     'annotations',
@@ -57,7 +58,8 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication', # this is default
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
     )
 }
 
@@ -99,12 +101,12 @@ CORS_ALLOW_METHODS = (
 
 CORS_ALLOW_HEADERS = default_headers
 
-CSRF_TRUSTED_ORIGINS = [
-    'dboeannotation.acdh-dev.oeaw.ac.at',
-    'dboefrontend.hephaistos.arz.oeaw.ac.at',
-    '127.0.0.1', '127.0.0.1:8080',
-    'localhost:8000',
-    'localhost:8080', ]
+# CSRF_TRUSTED_ORIGINS = [
+#     'dboeannotation.acdh-dev.oeaw.ac.at',
+#     'dboefrontend.hephaistos.arz.oeaw.ac.at',
+#     '127.0.0.1', '127.0.0.1:8080',
+#     'localhost:8000',
+#     'localhost:8080', ]
 
 CORS_ALLOW_CREDENTIALS = True #cross check!
 
