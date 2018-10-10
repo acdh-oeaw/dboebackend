@@ -18,6 +18,7 @@ from elasticsearch_dsl import Q
 from .filters import *
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+from rest_framework.authentication import TokenAuthentication
 
 
 class CustomObtainAuthToken(ObtainAuthToken):
@@ -45,6 +46,7 @@ class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all().order_by('-date_joined')
 	serializer_class = UserSerializer
 	pagination_class = LargeResultsSetPagination
+	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
 	filter_fields = ('username', 'collections')
 
@@ -61,6 +63,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 	queryset = Category.objects.all()
 	serializer_class = CategorySerializer
 	pagination_class = LargeResultsSetPagination
+	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
 	#filter_class = CategoryFilter
 	filter_fields = ('name', )
@@ -78,6 +81,7 @@ class Es_documentViewSet(viewsets.ModelViewSet):
 	queryset = Es_document.objects.all()
 	serializer_class = Es_documentSerializer
 	pagination_class = LargeResultsSetPagination
+	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
 	# make a custom filter with exact match for es_id
 	filter_fields = ('es_id', )
@@ -95,6 +99,7 @@ class CollectionViewSet(viewsets.ModelViewSet):
 	queryset = Collection.objects.all()
 	serializer_class = CollectionSerializer
 	pagination_class = LargeResultsSetPagination
+	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
 	filter_fields = ('title', 'created_by')
 
@@ -115,6 +120,7 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 	queryset = Annotation.objects.all()
 	serializer_class = AnnotationSerializer
 	pagination_class = LargeResultsSetPagination
+	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
 	filter_class = AnnotationFilter
 
