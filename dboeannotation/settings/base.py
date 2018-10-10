@@ -84,8 +84,10 @@ CORS_ORIGIN_WHITELIST = (
     'dboefrontend.hephaistos.arz.oeaw.ac.at',
     'dboeannotation.acdh-dev.oeaw.ac.at',
     'dboeannotation.hephaistos.arz.oeaw.ac.at',
+    '127.0.0.1',
     'http://localhost:8000',
-    'http://localhost:8080')
+    'http://localhost:8080',
+    )
 
 CORS_ALLOW_METHODS = (
     'DELETE',
