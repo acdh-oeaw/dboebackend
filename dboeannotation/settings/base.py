@@ -104,7 +104,7 @@ CSRF_TRUSTED_ORIGINS = [
     'dboefrontend.hephaistos.arz.oeaw.ac.at',
     '127.0.0.1', '127.0.0.1:8080',
     'localhost:8000',
-    'localhost:8080']
+    'localhost:8080', ]
 
 CORS_ALLOW_CREDENTIALS = True #cross check!
 
