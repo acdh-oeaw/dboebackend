@@ -14,10 +14,11 @@ class CategoryFilter(django_filters.rest_framework.FilterSet):
 
 
 class AnnotationFilter(django_filters.rest_framework.FilterSet):
+	title = django_filters.CharFilter(lookup_expr='icontains')
 	description = django_filters.CharFilter(lookup_expr='icontains')
 
 	class Meta:
 		model = Annotation
 		fields = ['title', 'description',
-		'collection', 'category', 'created_by', ]
+		'collection', 'category', 'created_by', 'public']
 

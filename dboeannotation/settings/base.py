@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
@@ -110,6 +111,8 @@ CORS_ALLOW_HEADERS = default_headers
 #     'localhost:8080', ]
 
 CORS_ALLOW_CREDENTIALS = True #cross check!
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 ROOT_URLCONF = 'dboeannotation.urls'
 

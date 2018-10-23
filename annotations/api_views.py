@@ -65,8 +65,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
 	pagination_class = LargeResultsSetPagination
 	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
-	#filter_class = CategoryFilter
-	filter_fields = ('name', )
+	filter_class = CategoryFilter
+	#filter_fields = ('name', )
 
 
 class Es_documentViewSet(viewsets.ModelViewSet):
@@ -84,7 +84,7 @@ class Es_documentViewSet(viewsets.ModelViewSet):
 	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
 	# make a custom filter with exact match for es_id
-	filter_fields = ('es_id', )
+	filter_fields = ('es_id', 'index', 'version', 'in_collections')
 
 
 class CollectionViewSet(viewsets.ModelViewSet):
@@ -101,7 +101,7 @@ class CollectionViewSet(viewsets.ModelViewSet):
 	pagination_class = LargeResultsSetPagination
 	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
-	filter_fields = ('title', 'created_by')
+	filter_fields = ('title', 'created_by', 'public')
 
 
 	def perform_create(self, serializer):
