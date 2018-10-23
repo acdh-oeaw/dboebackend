@@ -26,7 +26,6 @@ class Category(models.Model):
 class Es_document(models.Model):
 	es_id = models.CharField(
 		max_length=255,
-		unique=True,
 		verbose_name="ID in elasticsearch index"
 		)
 	index = models.CharField(

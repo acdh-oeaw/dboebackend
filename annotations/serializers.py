@@ -39,6 +39,12 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
 			'in_collections'
 			]
 
+	def create(self, validated_data):
+		es_id, created = Es_document.objects.get_or_create(
+			es_id=validated_data.get('es_id', None),
+			defaults={'es_id': validated_data.get('es_id', None)})
+		return es_id
+
 
 class CollectionSerializer(serializers.HyperlinkedModelSerializer):
 	created_by = serializers.HyperlinkedRelatedField(read_only=True, view_name='user-detail')
