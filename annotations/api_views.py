@@ -19,6 +19,7 @@ from .filters import *
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import DjangoObjectPermissions
 
 
 class CustomObtainAuthToken(ObtainAuthToken):

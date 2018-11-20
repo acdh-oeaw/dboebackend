@@ -155,3 +155,106 @@ class Annotation(models.Model):
 		return "{}".format(self.id)
 
 
+#############################################################################
+#
+# Object Permissions on signals
+#
+#############################################################################
+
+############## Adding Group 'general' with all Model Permissions ############
+
+@receiver(post_save, sender=User, dispatch_uid="add_user_to_group")
+def add_user_to_group(sender, instance=None, created=False, **kwargs):
+	if created:
+		g, _ = Group.objects.get_or_create(name='general')
+		g.user_set.add(instance)
+
+
+@receiver(post_save, sender=Collection, dispatch_uid="create_perms_col_created_by")
+def create_perms_col_created_by(sender, instance, **kwargs):
+	assign_perm('delete_collection', instance.created_by, instance)
+	assign_perm('change_collection', instance.created_by, instance)
+	assign_perm('view_collection', instance.created_by, instance)
+	if instance.public is True:
+		for user in User.objects.exclude(username=instance.created_by):
+			assign_perm('view_collection', user, instance)
+			if instance.annotations.all():
+				for annotation in instance.annotations.all():
+					assign_perm('view_annotation', user, annotation)
+	else:
+		try:
+			for user in User.objects.exclude(username=instance.created_by):
+				if user not in instance.curator.all():
+					remove_perm('view_collection', user, instance)
+					if instance.annotations.all():
+						for annotation in instance.annotations.all():
+							remove_perm('view_annotation', user, annotation)
+		except KeyError:
+			pass
+			
+
+
+@receiver(post_save, sender=Annotation, dispatch_uid="create_perms_annotation_created_by")
+def create_perms_annotation_created_by(sender, instance, **kwargs):
+	assign_perm('delete_annotation', instance.created_by, instance)
+	assign_perm('change_annotation', instance.created_by, instance)
+	assign_perm('view_annotation', instance.created_by, instance)
+	if instance.collection:
+		if instance.collection.public is False:
+			for curator in instance.collection.curator.all():
+				assign_perm('delete_annotation', curator, instance)
+				assign_perm('change_annotation', curator, instance)
+				assign_perm('view_annotation', curator, instance)
+				if curator is not instance.collection.created_by:
+					assign_perm('delete_annotation', instance.collection.created_by, instance)
+					assign_perm('change_annotation', instance.collection.created_by, instance)
+					assign_perm('view_annotation', instance.collection.created_by, instance)
+		else:
+			for user in User.objects.all():
+				if user in instance.collection.curator.all():
+					assign_perm('delete_annotation', user, instance)
+					assign_perm('change_annotation', user, instance)
+					assign_perm('view_annotation', user, instance)
+				elif user is instance.collection.created_by:
+					assign_perm('delete_annotation', instance.collection.created_by, instance)
+					assign_perm('change_annotation', instance.collection.created_by, instance)
+					assign_perm('view_annotation', instance.collection.created_by, instance)
+				else:
+					assign_perm('view_annotation', instance.collection.created_by, instance)
+
+
+################ Add/Remove a curator (user) to Collection ####################
+
+
+@receiver(m2m_changed, sender=Collection.curator.through, dispatch_uid="create_perms_curator")
+def create_perms_curator(sender, instance, **kwargs):
+	if kwargs['action'] == 'pre_add':
+		for curator in User.objects.filter(pk__in=kwargs['pk_set']):
+			assign_perm('view_collection', curator, instance)
+			assign_perm('change_collection', curator, instance)
+			assign_perm('delete_collection', curator, instance)
+			for obj in instance.annotations.all():
+				assign_perm('view_'+obj.__class__.__name__.lower(), curator, obj)
+				assign_perm('change_'+obj.__class__.__name__.lower(), curator, obj)
+				assign_perm('delete_'+obj.__class__.__name__.lower(), curator, obj)
+	elif kwargs['action'] == 'post_remove':
+		for curator in User.objects.filter(pk__in=kwargs['pk_set']):
+			# if Collection is public remove only change and delete perms but leave view perms for ex-curator
+			if instance.public is True:
+				#remove_perm('view_collection', curator, instance)
+				remove_perm('change_collection', curator, instance)
+				remove_perm('delete_collection', curator, instance)
+				# if user removed from the curators list
+				# he/she won't be able to access the objects he/she created within this Collection
+				for obj in instance.annotations.all():
+					#remove_perm('view_'+obj.__class__.__name__.lower(), curator, obj)
+					remove_perm('change_'+obj.__class__.__name__.lower(), curator, obj)
+					remove_perm('delete_'+obj.__class__.__name__.lower(), curator, obj)
+			else:
+				remove_perm('view_collection', curator, instance)
+				remove_perm('change_collection', curator, instance)
+				remove_perm('delete_collection', curator, instance)
+				for obj in instance.annotations.all():
+					remove_perm('view_'+obj.__class__.__name__.lower(), curator, obj)
+					remove_perm('change_'+obj.__class__.__name__.lower(), curator, obj)
+					remove_perm('delete_'+obj.__class__.__name__.lower(), curator, obj)
