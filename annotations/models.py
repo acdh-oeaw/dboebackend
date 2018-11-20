@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db.models.signals import post_save, m2m_changed
 from guardian.shortcuts import assign_perm, remove_perm
 from django.dispatch import receiver
+from django.db.models import Q
 
 
 class Category(models.Model):
@@ -199,6 +200,24 @@ def create_perms_annotation_created_by(sender, instance, **kwargs):
 	assign_perm('delete_annotation', instance.created_by, instance)
 	assign_perm('change_annotation', instance.created_by, instance)
 	assign_perm('view_annotation', instance.created_by, instance)
+	# if instance.collection:
+	# 	for curator in instance.collection.curator.all():
+	# 		assign_perm('delete_annotation', curator, instance)
+	# 		assign_perm('change_annotation', curator, instance)
+	# 		assign_perm('view_annotation', curator, instance)
+	# 		if curator is not instance.collection.created_by:
+	# 			assign_perm('delete_annotation', instance.collection.created_by, instance)
+	# 			assign_perm('change_annotation', instance.collection.created_by, instance)
+	# 			assign_perm('view_annotation', instance.collection.created_by, instance)
+	# if instance.collection.public is True:
+	# 	for user in User.objects.exclude(username=instance.collection.created_by):
+	# 		if user not in instance.collection.curator.all():
+	# 			assign_perm('view_annotation', instance.collection.created_by, instance)
+
+
+
+
+
 	if instance.collection:
 		if instance.collection.public is False:
 			for curator in instance.collection.curator.all():
@@ -216,11 +235,11 @@ def create_perms_annotation_created_by(sender, instance, **kwargs):
 					assign_perm('change_annotation', user, instance)
 					assign_perm('view_annotation', user, instance)
 				elif user is instance.collection.created_by:
-					assign_perm('delete_annotation', instance.collection.created_by, instance)
-					assign_perm('change_annotation', instance.collection.created_by, instance)
-					assign_perm('view_annotation', instance.collection.created_by, instance)
+					assign_perm('delete_annotation', user, instance)
+					assign_perm('change_annotation', user, instance)
+					assign_perm('view_annotation', user, instance)
 				else:
-					assign_perm('view_annotation', instance.collection.created_by, instance)
+					assign_perm('view_annotation', user, instance)
 
 
 ################ Add/Remove a curator (user) to Collection ####################
