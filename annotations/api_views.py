@@ -109,7 +109,8 @@ class CollectionViewSet(viewsets.ModelViewSet):
 	permission_classes = (DjangoObjectPermissionsOrAnonReadOnly, )
 	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (filters.DjangoObjectPermissionsFilter, DjangoFilterBackend,)
-	filter_fields = ('title', 'created_by', 'public')
+	#filter_fields = ('title', 'created_by', 'public', 'annotations')
+	filter_class = CollectionFilter
 
 
 	def perform_create(self, serializer):
