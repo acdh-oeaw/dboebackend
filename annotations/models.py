@@ -234,7 +234,7 @@ def create_perms_annotation_created_by(sender, instance, **kwargs):
 					assign_perm('delete_annotation', user, instance)
 					assign_perm('change_annotation', user, instance)
 					assign_perm('view_annotation', user, instance)
-				elif user is instance.collection.created_by:
+				elif user == instance.collection.created_by:
 					assign_perm('delete_annotation', user, instance)
 					assign_perm('change_annotation', user, instance)
 					assign_perm('view_annotation', user, instance)
