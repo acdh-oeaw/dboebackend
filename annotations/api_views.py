@@ -22,6 +22,12 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import DjangoObjectPermissions
 
 
+# AnonymousUser can view objects if granted 'view' permission
+
+class DjangoObjectPermissionsOrAnonReadOnly(DjangoObjectPermissions):
+	authenticated_users_only = False
+
+
 class CustomObtainAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
@@ -100,8 +106,9 @@ class CollectionViewSet(viewsets.ModelViewSet):
 	queryset = Collection.objects.all()
 	serializer_class = CollectionSerializer
 	pagination_class = LargeResultsSetPagination
+	permission_classes = (DjangoObjectPermissionsOrAnonReadOnly, )
 	# authentication_classes = (TokenAuthentication, )
-	filter_backends = (DjangoFilterBackend,)
+	filter_backends = (filters.DjangoObjectPermissionsFilter, DjangoFilterBackend,)
 	filter_fields = ('title', 'created_by', 'public')
 
 
@@ -121,8 +128,9 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 	queryset = Annotation.objects.all()
 	serializer_class = AnnotationSerializer
 	pagination_class = LargeResultsSetPagination
+	permission_classes = (DjangoObjectPermissionsOrAnonReadOnly, )
 	# authentication_classes = (TokenAuthentication, )
-	filter_backends = (DjangoFilterBackend,)
+	filter_backends = (filters.DjangoObjectPermissionsFilter, DjangoFilterBackend,)
 	filter_class = AnnotationFilter
 
 
