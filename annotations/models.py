@@ -126,7 +126,7 @@ class Annotation(models.Model):
 		)
 	category = models.ForeignKey(
 		Category,
-		on_delete=models.SET_NULL,
+		on_delete=models.PROTECT,
 		related_name="annotations",
 		verbose_name="Category",
 		blank=True, null=True
