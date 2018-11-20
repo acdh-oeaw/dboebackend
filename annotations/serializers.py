@@ -5,14 +5,18 @@ from django.contrib.auth.models import User
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-	collections = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='collection-detail')
-	annotations = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='annotation-detail')
+	collections_created = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='collection-detail')
+	collections_curated = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='collection-detail')
+	annotations_created = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='annotation-detail')
 
 	class Meta:
 		model = User
 		fields = [
 			'url', 'username',
-			'collections', 'annotations'
+			'date_joined',
+			'collections_created',
+			'collections_curated',
+			'annotations_created'
 			]
 
 
@@ -23,7 +27,8 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 		model = Category
 		fields = [
 			'url', 'name',
-			'notation', 'note',
+			'description',
+			'note', 'notation',
 			'annotations'
 			]
 
@@ -47,29 +52,31 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CollectionSerializer(serializers.HyperlinkedModelSerializer):
-	created_by = serializers.HyperlinkedRelatedField(read_only=True, view_name='user-detail')
+	#created_by = serializers.HyperlinkedRelatedField(read_only=True, view_name='user-detail')
+	created_by = serializers.StringRelatedField()
 	annotations = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='annotation-detail')
 
 	class Meta:
 		model = Collection
 		fields = [
 			'url', 'title', 'description',
-			'created_by', 'es_document',
-			'public', 'comment',
+			'es_document', 'comment',
 			'annotations',
+			'created_by', 'curator',
+			'public',
 			'created', 'modified'
 			]
 
 
 class AnnotationSerializer(serializers.HyperlinkedModelSerializer):
-	created_by = serializers.HyperlinkedRelatedField(read_only=True, view_name='user-detail')
+	#created_by = serializers.HyperlinkedRelatedField(read_only=True, view_name='user-detail')
+	created_by = serializers.StringRelatedField()
 
 	class Meta:
 		model = Annotation
 		fields = [
 			'url', 'collection',
 			'title', 'description',
-			'category', 'public',
-			'created_by', 'created',
-			'modified'
+			'category', 'created_by',
+			'created', 'modified'
 			]

@@ -1,6 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.utils import timezone
+from django.db.models.signals import post_save, m2m_changed
+#from guardian.shortcuts import assign_perm, remove_perm
+from django.dispatch import receiver
 
 
 class Category(models.Model):
@@ -9,14 +12,18 @@ class Category(models.Model):
 		max_length=255,
 		verbose_name="Name"
 		)
-	notation = models.CharField(
-		max_length=200,
+	description = models.TextField(
 		blank=True,
-		verbose_name="Notation"
+		help_text="Describe the purpose of this category"
 		)
 	note = models.TextField(
 		blank=True,
 		help_text="Note/Comment"
+		)
+	notation = models.CharField(
+		max_length=200,
+		blank=True,
+		verbose_name="Notation"
 		)
 
 	def __str__(self):
@@ -59,7 +66,7 @@ class Collection(models.Model):
 		User,
 		blank=True, null=True,
 		on_delete=models.SET_NULL,
-		related_name="collections",
+		related_name="collections_created",
 		help_text="The user who created current collection"
 		)
 	es_document = models.ManyToManyField(
@@ -68,13 +75,18 @@ class Collection(models.Model):
 		verbose_name="Document",
 		blank=True
 		)
-	public = models.BooleanField(
-		default=False,
-		help_text="Public collection or not. By default is not public."
-		)
 	comment = models.TextField(
 		blank=True,
 		help_text="Comment on collection"
+		)
+	curator = models.ManyToManyField(
+		User, related_name="collections_curated",
+		blank=True,
+		help_text="The selected user(s) will be able to view, edit and delete current Collection."
+	)
+	public = models.BooleanField(
+		default=False,
+		help_text="Public collection or not. By default is not public."
 		)
 	created = models.DateTimeField(editable=False, default=timezone.now)
 	modified = models.DateTimeField(editable=False, default=timezone.now)
@@ -113,7 +125,7 @@ class Annotation(models.Model):
 		)
 	category = models.ForeignKey(
 		Category,
-		on_delete=models.PROTECT,
+		on_delete=models.SET_NULL,
 		related_name="annotations",
 		verbose_name="Category",
 		blank=True, null=True
@@ -126,7 +138,7 @@ class Annotation(models.Model):
 		User,
 		blank=True, null=True,
 		on_delete=models.SET_NULL,
-		related_name="annotations",
+		related_name="annotations_created",
 		help_text="The user who created current annotation"
 		)
 	created = models.DateTimeField(editable=False, default=timezone.now)
