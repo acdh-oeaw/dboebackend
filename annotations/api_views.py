@@ -55,7 +55,7 @@ class UserViewSet(viewsets.ModelViewSet):
 	pagination_class = LargeResultsSetPagination
 	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
-	filter_fields = ('username', )
+	filter_class = UserFilter
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
