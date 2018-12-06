@@ -33,13 +33,12 @@ class AnnotationFilter(django_filters.rest_framework.FilterSet):
 
 
 class CollectionFilter(django_filters.rest_framework.FilterSet):
+	title = django_filters.CharFilter(lookup_expr='icontains')
 	annotations__category = django_filters.ModelChoiceFilter(
         queryset=Category.objects.all(),
         label='Annotation category',
-        help_text="Search collections by category of its annotations")
-	
+        help_text="Search collections by category of its annotations")	
 
 	class Meta:
 		model = Collection
 		fields = ['title', 'created_by', 'public', 'annotations', 'annotations__category']
-
