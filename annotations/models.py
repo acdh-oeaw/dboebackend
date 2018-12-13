@@ -169,6 +169,15 @@ def add_user_to_group(sender, instance=None, created=False, **kwargs):
 	if created:
 		g, _ = Group.objects.get_or_create(name='general')
 		g.user_set.add(instance)
+		# a new user has to have an access to view all public collections and their annotations
+		for collection in Collection.objects.all():
+			if collection.public is True:
+				assign_perm('view_collection', instance, collection)
+				if collection.annotations.all():
+					for annotation in collection.annotations.all():
+						assign_perm('view_annotation', instance, annotation)
+			else:
+				pass
 
 
 @receiver(post_save, sender=Collection, dispatch_uid="create_perms_col_created_by")
@@ -200,24 +209,6 @@ def create_perms_annotation_created_by(sender, instance, **kwargs):
 	assign_perm('delete_annotation', instance.created_by, instance)
 	assign_perm('change_annotation', instance.created_by, instance)
 	assign_perm('view_annotation', instance.created_by, instance)
-	# if instance.collection:
-	# 	for curator in instance.collection.curator.all():
-	# 		assign_perm('delete_annotation', curator, instance)
-	# 		assign_perm('change_annotation', curator, instance)
-	# 		assign_perm('view_annotation', curator, instance)
-	# 		if curator is not instance.collection.created_by:
-	# 			assign_perm('delete_annotation', instance.collection.created_by, instance)
-	# 			assign_perm('change_annotation', instance.collection.created_by, instance)
-	# 			assign_perm('view_annotation', instance.collection.created_by, instance)
-	# if instance.collection.public is True:
-	# 	for user in User.objects.exclude(username=instance.collection.created_by):
-	# 		if user not in instance.collection.curator.all():
-	# 			assign_perm('view_annotation', instance.collection.created_by, instance)
-
-
-
-
-
 	if instance.collection:
 		if instance.collection.public is False:
 			for curator in instance.collection.curator.all():
