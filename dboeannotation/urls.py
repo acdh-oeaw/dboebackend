@@ -37,6 +37,7 @@ urlpatterns = [
 	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	path('api-token-auth/', views.obtain_auth_token),
     path('authenticate/', api_views.CustomObtainAuthToken.as_view()),
+    path('project-info/', api_views.project_info),
 	#path('', include_docs_urls(title='DBÖ annotation service rest api')),
 	path('', schema_view),
 	path('api/dboe-query/', api_views.dboe_query),

@@ -20,6 +20,8 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import DjangoObjectPermissions
+from dboeannotation.metadata import PROJECT_METADATA as PM
+from copy import deepcopy
 
 
 # AnonymousUser can view objects if granted 'view' permission
@@ -157,3 +159,19 @@ def dboe_query(request):
 	else:
 		results = None
 	return Response({'results': results})
+
+
+#################################################################
+#                    project info view                          #
+#################################################################
+
+@api_view()
+def project_info(request):
+
+    """
+    returns a dict providing metadata about the current project
+    """
+
+    info_dict = deepcopy(PM)
+    info_dict['base_tech'] = 'django rest framework'
+    return Response(info_dict)
