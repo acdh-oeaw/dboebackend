@@ -47,8 +47,14 @@ class CollectionFilter(django_filters.rest_framework.FilterSet):
 	annotations__category = django_filters.ModelChoiceFilter(
         queryset=Category.objects.all(),
         label='Annotation category',
-        help_text="Search collections by category of its annotations")	
+        help_text="Search collections by category of its annotations")
+	es_document__tag = django_filters.ModelMultipleChoiceFilter(
+		queryset=Tag.objects.all(),
+		label='Tag', help_text="Filter collections by tags of its documents"
+		)
 
 	class Meta:
 		model = Collection
-		fields = ['title', 'created_by', 'public', 'annotations', 'annotations__category']
+		fields = ['title', 'created_by',
+		'public', 'annotations',
+		'annotations__category', 'es_document__tag']

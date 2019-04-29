@@ -109,7 +109,7 @@ class Es_documentViewSet(viewsets.ModelViewSet):
 	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
 	# make a custom filter with exact match for es_id
-	filter_fields = ('es_id', 'index', 'version', 'in_collections')
+	filter_fields = ('es_id', 'index', 'version', 'in_collections', 'tag')
 
 
 class CollectionViewSet(viewsets.ModelViewSet):
