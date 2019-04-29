@@ -75,16 +75,15 @@ class CategoryViewSet(viewsets.ModelViewSet):
 	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
 	filter_class = CategoryFilter
-	#filter_fields = ('name', )
 
 
 class TagViewSet(viewsets.ModelViewSet):
 	"""
 	get:
-	Return a list of all the existing categories.
+	Return a list of all tags.
 
 	post:
-    Create a new category instance.
+    Create a new tag instance.
     
 	"""
 	queryset = Tag.objects.all()
@@ -93,7 +92,6 @@ class TagViewSet(viewsets.ModelViewSet):
 	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
 	filter_class = TagFilter
-	#filter_fields = ('name', )
 
 
 class Es_documentViewSet(viewsets.ModelViewSet):

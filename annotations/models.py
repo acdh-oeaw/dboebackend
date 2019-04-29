@@ -135,12 +135,6 @@ class Collection(models.Model):
 	@property
 	def tags(self):
 		return set([tag for x in self.es_document.all() for tag in x.tag.all()])
-		# tags = []
-		# docs_in_collection = self.es_document.all()
-		# for x in docs_in_collection:
-		# 	for tag in x.tag.all():
-		# 		tags.append(tag)
-		# return set(tags)
 
 
 class Annotation(models.Model):
