@@ -35,7 +35,7 @@ class Category(models.Model):
 class Tag(models.Model):
 	"""Class to store tags for incoming elasticsearch documents"""
 	name = models.CharField(
-		max_length=255, unique=True
+		max_length=255
 		)
 	color = models.CharField(
 		max_length=255,
