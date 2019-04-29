@@ -78,6 +78,24 @@ class CategoryViewSet(viewsets.ModelViewSet):
 	#filter_fields = ('name', )
 
 
+class TagViewSet(viewsets.ModelViewSet):
+	"""
+	get:
+	Return a list of all the existing categories.
+
+	post:
+    Create a new category instance.
+    
+	"""
+	queryset = Tag.objects.all()
+	serializer_class = TagSerializer
+	pagination_class = LargeResultsSetPagination
+	# authentication_classes = (TokenAuthentication, )
+	filter_backends = (DjangoFilterBackend,)
+	#filter_class = TagFilter
+	#filter_fields = ('name', )
+
+
 class Es_documentViewSet(viewsets.ModelViewSet):
 	"""
 	get:

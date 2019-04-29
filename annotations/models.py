@@ -5,6 +5,7 @@ from django.db.models.signals import post_save, m2m_changed
 from guardian.shortcuts import assign_perm, remove_perm
 from django.dispatch import receiver
 from django.db.models import Q
+from django.contrib.postgres.fields import JSONField
 
 
 class Category(models.Model):
@@ -31,6 +32,27 @@ class Category(models.Model):
 		return "{}".format(self.name)
 
 
+class Tag(models.Model):
+	"""Class to store tags for incoming elasticsearch documents"""
+	name = models.CharField(
+		max_length=255, unique=True
+		)
+	color = models.CharField(
+		max_length=255,
+		blank=True
+		)
+	emoji = models.CharField(
+		max_length=255,
+		blank=True
+		)
+	meta = JSONField(
+		null=True
+		)
+
+	def __str__(self):
+		return self.name
+
+
 class Es_document(models.Model):
 	es_id = models.CharField(
 		max_length=255,
@@ -45,6 +67,11 @@ class Es_document(models.Model):
 		blank=True,
 		null=True,
 		verbose_name="Version"
+		)
+	tag = models.ManyToManyField(
+		Tag,
+		related_name="es_documents",
+		blank=True
 		)
 
 	def __str__(self):
@@ -104,6 +131,16 @@ class Collection(models.Model):
 			return "{}".format(self.title)
 		else:
 			return "{}".format(self.id)
+
+	@property
+	def tags(self):
+		return set([tag for x in self.es_document.all() for tag in x.tag.all()])
+		# tags = []
+		# docs_in_collection = self.es_document.all()
+		# for x in docs_in_collection:
+		# 	for tag in x.tag.all():
+		# 		tags.append(tag)
+		# return set(tags)
 
 
 class Annotation(models.Model):

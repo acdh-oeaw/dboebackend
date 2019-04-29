@@ -33,6 +33,25 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 			]
 
 
+class TagSerializer(serializers.HyperlinkedModelSerializer):
+	es_documents = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='es_document-detail')
+
+	class Meta:
+		model = Tag
+		fields = [
+			'url', 'name',
+			'color',
+			'emoji', 'meta',
+			'es_documents'
+			]
+
+	def create(self, validated_data):
+		name, created = Tag.objects.get_or_create(
+			name=validated_data.get('name', None),
+			defaults={'name': validated_data.get('name', None)})
+		return name
+
+
 class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
 	in_collections = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='collection-detail')
 
@@ -41,6 +60,7 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
 		fields = [
 			'url', 'es_id',
 			'index', 'version',
+			'tag',
 			'in_collections'
 			]
 
@@ -55,6 +75,7 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
 	#created_by = serializers.HyperlinkedRelatedField(read_only=True, view_name='user-detail')
 	created_by = serializers.StringRelatedField()
 	annotations = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='annotation-detail')
+	tags = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='tag-detail')
 
 	class Meta:
 		model = Collection
@@ -64,7 +85,8 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
 			'annotations',
 			'created_by', 'curator',
 			'public',
-			'created', 'modified'
+			'created', 'modified',
+			'tags'
 			]
 
 

@@ -14,6 +14,7 @@ class AnnotationAdmin(GuardedModelAdmin):
 
 
 admin.site.register(Category)
+admin.site.register(Tag)
 admin.site.register(Collection, CollectionAdmin)
 admin.site.register(Es_document)
 admin.site.register(Annotation, AnnotationAdmin)
