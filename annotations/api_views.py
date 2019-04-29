@@ -92,7 +92,7 @@ class TagViewSet(viewsets.ModelViewSet):
 	pagination_class = LargeResultsSetPagination
 	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (DjangoFilterBackend,)
-	#filter_class = TagFilter
+	filter_class = TagFilter
 	#filter_fields = ('name', )
 
 
