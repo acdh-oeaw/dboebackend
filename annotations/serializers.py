@@ -46,10 +46,14 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
 			]
 
 	def create(self, validated_data):
-		name, created = Tag.objects.get_or_create(
+		tag, created = Tag.objects.get_or_create(
 			name=validated_data.get('name', None),
-			defaults={'name': validated_data.get('name', None)})
-		return name
+			defaults={
+			'color': validated_data.get('color', None),
+			'emoji': validated_data.get('emoji', None),
+			'meta': validated_data.get('meta', None),
+			})
+		return tag
 
 
 class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
