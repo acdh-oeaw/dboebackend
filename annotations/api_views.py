@@ -111,32 +111,20 @@ class Es_documentViewSet(viewsets.ModelViewSet):
 	filter_backends = (DjangoFilterBackend,)
 	# make a custom filter with exact match for es_id
 	filter_fields = ('es_id', 'index', 'version', 'in_collections', 'tag')
+	
 	def create(self, request, *args, **kwargs):
-		# many =  True if isinstance(self.request.data, list) else False
-		# print('many in modelviewset',  many)
-		# if(many):
-		# 	serializer = Es_documentSerializer(context={'request': request}, many=True)
-		# else: 
-		# 	serializer = Es_documentSerializer(context={'request': request}, many=False)
-		# if(serializer.is_valid):
-		# 	print('serializer is valid')
-		# 	data = serializer.save
-		# 	print('after serializer.save:', data)
-		# else: 
-		# 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-		# return serializer.create(request.data)
 		many =  True if isinstance(self.request.data, list) else False
 		if(not many):
 			return super().create(request, *args, **kwargs)
 		else:
 			serializer = Es_documentSerializer(data = request.data, context={'request': request},many=True)
 			if(serializer.is_valid()):
-				print('is valido')
+				#	print('is valido')
 				serializer.save()
-				print('we created something...', serializer)
+				#	print('we created something...', serializer)
 				return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 			else: 
-				print('is not valido')
+				#	print('is not valido')
 				return Response(data=serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
 			
 			
