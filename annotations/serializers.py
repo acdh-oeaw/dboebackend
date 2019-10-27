@@ -12,6 +12,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = User
 		fields = [
+			'id',
 			'url', 'username',
 			'date_joined',
 			'collections_created',
@@ -26,6 +27,7 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Category
 		fields = [
+			'id',
 			'url', 'name',
 			'description',
 			'note', 'notation',
@@ -39,6 +41,7 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Tag
 		fields = [
+			'id',
 			'url', 'name',
 			'color',
 			'emoji', 'meta',
@@ -56,22 +59,36 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
 		return tag
 
 
+#class Es_documentListSerializer(serializers.ListSerializer):
+#	def create(self, validated_data):
+#	 print('create list:', self.context.get('request').data)
+#	 return super().create(validated_data)
+
+
 class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
+
+
 	in_collections = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='collection-detail')
 
 	class Meta:
 		model = Es_document
 		fields = [
+			'id',
 			'url', 'es_id',
 			'index', 'version',
 			'tag',
 			'in_collections'
 			]
 
+
 	def create(self, validated_data):
+		many = True if isinstance(self.context.get('request').data, list) else False
+		print('request.data in serializer', self.context.get('request').data)
+		#print('self', self.context.request)
 		es_id, created = Es_document.objects.get_or_create(
 			es_id=validated_data.get('es_id', None),
 			defaults={'es_id': validated_data.get('es_id', None)})
+		print('many', many,  'created', created, 'es_id', es_id)
 		return es_id
 
 
@@ -84,6 +101,7 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Collection
 		fields = [
+			'id',
 			'url', 'title', 'description',
 			'es_document', 'comment',
 			'annotations',
@@ -101,6 +119,7 @@ class AnnotationSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Annotation
 		fields = [
+			'id',
 			'url', 'collection',
 			'title', 'description',
 			'category', 'created_by',
