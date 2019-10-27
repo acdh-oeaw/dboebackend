@@ -73,8 +73,9 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Es_document
 		fields = [
-			'id',
-			'url', 'es_id',
+	#		'id',
+			'url',
+			'es_id',
 	#		'index', 'version',
 	#		'tag',
 	#		'in_collections'
@@ -93,6 +94,7 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
 			defaults={'es_id': validated_data.get('es_id', None)})
 	#	print('many', many,  'created', created, 'es_id', es_id)
 		return es_id
+
 
 
 
