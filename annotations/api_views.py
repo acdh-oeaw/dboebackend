@@ -117,7 +117,7 @@ class Es_documentViewSet(viewsets.ModelViewSet):
 		if(not many):
 			return super().create(request, *args, **kwargs)
 		else:
-			serializer = Es_documentSerializer(data = request.data, context={'request': request},many=True)
+			serializer = Es_documentListSerializer(data = request.data, context={'request': request},many=True)
 			if(serializer.is_valid()):
 				#	print('is valido')
 				serializer.save()
