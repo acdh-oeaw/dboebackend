@@ -8,7 +8,6 @@ from rest_framework.decorators import api_view
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Document, Text, Date, Search, MultiSearch
 import requests
-
 from django.shortcuts import render
 from django.conf import settings
 from rest_framework.response import Response
@@ -145,7 +144,7 @@ class CollectionViewSet(viewsets.ModelViewSet):
 	pagination_class = LargeResultsSetPagination
 	permission_classes = (DjangoObjectPermissionsOrAnonReadOnly, )
 	# authentication_classes = (TokenAuthentication, )
-	filter_backends = (filters.DjangoObjectPermissionsFilter, DjangoFilterBackend,)
+	filter_backends = (filters.DjangoObjectPermissionsFilter, DjangoFilterBackend,filters.OrderingFilter)
 	#filter_fields = ('title', 'created_by', 'public', 'annotations')
 	filter_class = CollectionFilter
 

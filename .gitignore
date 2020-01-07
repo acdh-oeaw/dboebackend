@@ -2,8 +2,10 @@
 __pycache__/
 *.pyc
 
+env/*
 # sensitive data
 dboeannotation/settings/server.py
+dboeannotation/settings/dev.py
 
 #sqlitedb
 
