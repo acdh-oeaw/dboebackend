@@ -57,4 +57,4 @@ class CollectionFilter(django_filters.rest_framework.FilterSet):
 		model = Collection
 		fields = ['title', 'created_by',
 		'public', 'annotations',
-		'annotations__category', 'tag']
+		'annotations__category', 'tag', 'deleted']

@@ -132,6 +132,7 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
 			'annotations',
 			'created_by', 'curator',
 			'public',
+			'deleted',
 			'created', 'modified',
 			'tags'
 			]

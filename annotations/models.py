@@ -116,6 +116,12 @@ class Collection(models.Model):
 		default=False,
 		help_text="Public collection or not. By default is not public."
 		)
+	
+	deleted = models.BooleanField(
+		default=False,
+		help_text="deletion flag"
+		)
+	
 	created = models.DateTimeField(editable=False, default=timezone.now)
 	modified = models.DateTimeField(editable=False, default=timezone.now)
 
