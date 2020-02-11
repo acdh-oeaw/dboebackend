@@ -142,7 +142,8 @@ class CollectionViewSet(viewsets.ModelViewSet):
 	queryset = Collection.objects.all()
 	serializer_class = CollectionSerializer
 	pagination_class = LargeResultsSetPagination
-	permission_classes = (DjangoObjectPermissionsOrAnonReadOnly, )
+	# permission_classes = (DjangoObjectPermissionsOrAnonReadOnly, )
+	# permission_classes = (IsAuthenticatedOrAnonReadOnly)
 	# authentication_classes = (TokenAuthentication, )
 	filter_backends = (filters.DjangoObjectPermissionsFilter, DjangoFilterBackend,filters.OrderingFilter)
 	#filter_fields = ('title', 'created_by', 'public', 'annotations')
