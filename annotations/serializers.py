@@ -40,6 +40,31 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
+
+
+class TagListSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Tag
+        fields = [
+            'id',
+            'url', 'name',
+            'color',
+            'emoji', 'meta',
+        ]
+
+    def create(self, validated_data):
+        tag, created = Tag.objects.get_or_create(
+            name=validated_data.get('name', None),
+            defaults={
+                'color': validated_data.get('color', None),
+                'emoji': validated_data.get('emoji', None),
+                'meta': validated_data.get('meta', None),
+            })
+        return tag
+
+
+
 class TagSerializer(serializers.HyperlinkedModelSerializer):
     es_documents = serializers.HyperlinkedRelatedField(
         many=True, read_only=True, view_name='es_document-detail')

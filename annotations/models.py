@@ -126,7 +126,9 @@ class Collection(models.Model):
 
     created = models.DateTimeField(editable=False, default=timezone.now)
     modified = models.DateTimeField(
-        editable=False, db_index=True, default=timezone.now)
+        editable=False,
+        db_index=True,
+        default=timezone.now)
 
     def save(self, *args, **kwargs):
         if not self.id:

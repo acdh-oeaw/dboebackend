@@ -96,6 +96,11 @@ Create a new tag instance.
     filter_backends = (DjangoFilterBackend,)
     filter_class = TagFilter
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return TagListSerializer
+        return TagSerializer
+
 
 class Es_documentViewSet(viewsets.ModelViewSet):
     """
