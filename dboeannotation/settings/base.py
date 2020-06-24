@@ -97,6 +97,7 @@ CORS_ORIGIN_WHITELIST = (
     'dboeannotation.acdh-dev.oeaw.ac.at',
     'dboeannotation.hephaistos.arz.oeaw.ac.at',
     'lioe.dioe.at',
+    'lioe-test.dioe.at',
     '127.0.0.1', '127.0.0.1:8080',
     'localhost:8000',
     'localhost:8080',
