@@ -94,6 +94,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 CORS_ORIGIN_WHITELIST = (
     'dboefrontend.acdh-dev.oeaw.ac.at',
+    'dboefrontend-test.acdh-dev.oeaw.ac.at',
     'dboeannotation.acdh-dev.oeaw.ac.at',
     'dboeannotation.hephaistos.arz.oeaw.ac.at',
     'lioe.dioe.at',
