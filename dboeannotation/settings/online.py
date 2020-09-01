@@ -10,6 +10,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -36,6 +37,5 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-"""
 
 ES_DBOE = 'https://walk-want-grew.acdh.oeaw.ac.at/'

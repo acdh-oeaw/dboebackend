@@ -102,6 +102,7 @@ class Es_documentListSerializer(serializers.HyperlinkedModelSerializer):
             'es_id',
             'index',
             'version',
+            'scans'
             #		'tag',
             #		'in_collections'
         ]
@@ -132,6 +133,7 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
             'index',
             'version',
             'tag',
+            'scans',
             'in_collections'
         ]
 

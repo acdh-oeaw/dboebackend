@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.contrib.auth.models import User, Group
 from django.utils import timezone
@@ -72,6 +73,9 @@ class Es_document(models.Model):
         Tag,
         related_name="es_documents",
         blank=True
+    )
+    scans = ArrayField(
+        models.CharField(max_length=200, blank=True), default = []
     )
 
     def __str__(self):
