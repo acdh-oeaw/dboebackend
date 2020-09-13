@@ -1,0 +1,45 @@
+                               List of relations
+ Schema |                   Name                    |   Type   |     Owner      
+--------+-------------------------------------------+----------+----------------
+ public | annotations_annotation                    | table    | dboeannotation
+ public | annotations_annotation_id_seq             | sequence | dboeannotation
+ public | annotations_category                      | table    | dboeannotation
+ public | annotations_category_id_seq               | sequence | dboeannotation
+ public | annotations_collection                    | table    | dboeannotation
+ public | annotations_collection_curator            | table    | dboeannotation
+ public | annotations_collection_curator_id_seq     | sequence | dboeannotation
+ public | annotations_collection_es_document        | table    | dboeannotation
+ public | annotations_collection_es_document_id_seq | sequence | dboeannotation
+ public | annotations_collection_id_seq             | sequence | dboeannotation
+ public | annotations_es_document                   | table    | dboeannotation
+ public | annotations_es_document_id_seq            | sequence | dboeannotation
+ public | annotations_es_document_tag               | table    | dboeannotation
+ public | annotations_es_document_tag_id_seq        | sequence | dboeannotation
+ public | annotations_tag                           | table    | dboeannotation
+ public | annotations_tag_id_seq                    | sequence | dboeannotation
+ public | auth_group                                | table    | dboeannotation
+ public | auth_group_id_seq                         | sequence | dboeannotation
+ public | auth_group_permissions                    | table    | dboeannotation
+ public | auth_group_permissions_id_seq             | sequence | dboeannotation
+ public | auth_permission                           | table    | dboeannotation
+ public | auth_permission_id_seq                    | sequence | dboeannotation
+ public | auth_user                                 | table    | dboeannotation
+ public | auth_user_groups                          | table    | dboeannotation
+ public | auth_user_groups_id_seq                   | sequence | dboeannotation
+ public | auth_user_id_seq                          | sequence | dboeannotation
+ public | auth_user_user_permissions                | table    | dboeannotation
+ public | auth_user_user_permissions_id_seq         | sequence | dboeannotation
+ public | authtoken_token                           | table    | dboeannotation
+ public | django_admin_log                          | table    | dboeannotation
+ public | django_admin_log_id_seq                   | sequence | dboeannotation
+ public | django_content_type                       | table    | dboeannotation
+ public | django_content_type_id_seq                | sequence | dboeannotation
+ public | django_migrations                         | table    | dboeannotation
+ public | django_migrations_id_seq                  | sequence | dboeannotation
+ public | django_session                            | table    | dboeannotation
+ public | guardian_groupobjectpermission            | table    | dboeannotation
+ public | guardian_groupobjectpermission_id_seq     | sequence | dboeannotation
+ public | guardian_userobjectpermission             | table    | dboeannotation
+ public | guardian_userobjectpermission_id_seq      | sequence | dboeannotation
+(40 rows)
+

@@ -62,6 +62,7 @@ class Es_document(models.Model):
     index = models.CharField(
         max_length=255,
         blank=True,
+        null=True,
         verbose_name="Index"
     )
     version = models.IntegerField(
@@ -75,7 +76,8 @@ class Es_document(models.Model):
         blank=True
     )
     scans = ArrayField(
-        models.CharField(max_length=200, blank=True), default = []
+        models.CharField(max_length=200, blank=True), default = [],
+        null=True,
     )
 
     def __str__(self):
