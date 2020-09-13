@@ -24,6 +24,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             'annotations_created'
         ]
 
+class UserListSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'url', 'username',
+            'date_joined'
+        ]
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     annotations = serializers.HyperlinkedRelatedField(
@@ -163,6 +171,7 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
             'id',
             'url',
             'title',
+            'lemma_id',
             'description',
             'es_document',
             'comment',
@@ -176,6 +185,48 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
             'tags'
 
         ]
+
+class AutorArtikelSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Autor_Artikel
+        fields = [
+            'id',
+            'url',
+            'lemma_id',
+            'bearbeiter_id'
+        ]
+
+class EditOfArticleSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Edit_of_article
+        fields = [
+            'id',
+            'url',
+            'begin_time',
+            'step',
+            'status',
+            'deadline',
+            'last_edited',
+            'user',
+        ]
+
+class LemmaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Lemma
+        fields = [
+            'id',
+            'url',
+            'norm',
+            'org',
+            'filename',
+            'count',
+            'comment',
+            'simplex',
+            'bearbeitung_id',
+
+        ]
+
 
 
 class CollectionListSerializer(serializers.HyperlinkedModelSerializer):

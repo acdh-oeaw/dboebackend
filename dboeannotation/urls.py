@@ -31,6 +31,9 @@ router.register(r'tags', api_views.TagViewSet)
 router.register(r'documents', api_views.Es_documentViewSet)
 router.register(r'collections', api_views.CollectionViewSet)
 router.register(r'annotations', api_views.AnnotationViewSet)
+router.register(r'lemmas', api_views.LemmaViewSet)
+router.register(r'author_artikel', api_views.AutorArtikelViewSet)
+router.register(r'article_edits', api_views.EditOfArticleViewSet)
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
