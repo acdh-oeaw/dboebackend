@@ -52,7 +52,7 @@ class UserViewSet(viewsets.ModelViewSet):
     Return a list of all the existing users.
 
     post:
-Create a new user instance.
+    Create a new user instance.
 
     """
     queryset = User.objects.all().order_by('-date_joined')
@@ -61,6 +61,11 @@ Create a new user instance.
     # authentication_classes = (TokenAuthentication, )
     filter_backends = (DjangoFilterBackend,)
     filter_class = UserFilter
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return UserListSerializer
+        return UserSerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -100,6 +105,27 @@ Create a new tag instance.
         if self.action == 'list':
             return TagListSerializer
         return TagSerializer
+
+
+
+class LemmaViewSet(viewsets.ModelViewSet):
+    queryset = Lemma.objects.all()
+    serializer_class = LemmaSerializer
+    pagination_class = LargeResultsSetPagination
+    filter_backends = (DjangoFilterBackend,)
+
+class EditOfArticleViewSet(viewsets.ModelViewSet):
+    queryset = Edit_of_article.objects.all()
+    serializer_class = EditOfArticleSerializer
+    pagination_class = LargeResultsSetPagination
+    filter_backends = (DjangoFilterBackend,)
+
+
+class AutorArtikelViewSet(viewsets.ModelViewSet):
+    queryset = Autor_Artikel.objects.all()
+    serializer_class = AutorArtikelSerializer
+    pagination_class = LargeResultsSetPagination
+    filter_backends = (DjangoFilterBackend,)
 
 
 class Es_documentViewSet(viewsets.ModelViewSet):

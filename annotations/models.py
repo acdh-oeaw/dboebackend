@@ -7,7 +7,7 @@ from guardian.shortcuts import assign_perm, remove_perm
 from django.dispatch import receiver
 from django.db.models import Q
 from django.contrib.postgres.fields import JSONField
-
+from enum import Enum
 
 class Category(models.Model):
     """Controlled vocabulary Class"""
@@ -84,6 +84,109 @@ class Es_document(models.Model):
         return "ID {}: {}".format(self.id, self.es_id)
 
 
+class Edit_of_article(models.Model):
+    """Class to store tags for incoming elasticsearch documents"""    
+
+    begin_time = models.DateTimeField(editable=False, default=timezone.now)
+    
+    class StepChoices(Enum):
+        ARTIKEL_IN_ARBEIT = "Artikel in Arbeit"
+        ARTIKEL_ERSTELLT = "Artikel erstellt"
+        ARTIKEL_IM_REDAKTIONSTOOL= 'Artikel_im_Redaktionstool'
+        LAUTKOMMENTAR_ERSTELLT = 'Lautkommentar erstellt'
+        LAUTKOMMENTAR_HINZUGEFÜGT = 'Lautkommentar hinzugefügt'
+
+        @classmethod
+        def choices(cls):
+            print(tuple((i.name, i.value) for i in cls))
+            return tuple((i.name, i.value) for i in cls)
+
+    
+    step = models.CharField(max_length=255, choices=StepChoices.choices())
+
+    class StatusChoices(Enum):
+        DRAFT = "draft"
+        PEER_CORRECTION ="peer correction"
+        INTERNAL_CORRECTION = "internal correction"
+        EXTERNAL_CORRECTION = "external correction"
+        FINAL_VERSION= "final version"
+
+
+        @classmethod
+        def choices(cls):
+            print(tuple((i.name, i.value) for i in cls))
+            return tuple((i.name, i.value) for i in cls)
+
+    status = models.CharField(max_length=255, choices=StatusChoices.choices())
+
+
+    deadline = models.DateTimeField(
+        null=False,
+        blank=False
+    )
+
+    last_edited = models.DateTimeField(
+        default=timezone.now,
+        null=False,
+        blank=False
+    )
+    
+    user = models.ForeignKey(
+        User,
+        blank=True, null=True,
+        on_delete=models.SET_NULL,
+        related_name="article_edits",
+        help_text="The user who did this editing"
+    )
+
+
+class Lemma(models.Model):
+    """Class to store tags for incoming elasticsearch documents"""
+    
+    norm = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False
+    )
+    org = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False
+    )
+    filename = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False
+    )
+    count = models.IntegerField(
+        default=0
+    )
+    
+    comment = models.TextField(
+        blank=True,
+        help_text="Comment on Lemmata"
+    )
+
+    simplex = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        related_name="complex_lemmata",
+        verbose_name="Simplex",
+        blank=True, null=True
+    )
+
+    bearbeitung_id = models.ForeignKey(
+        Edit_of_article,
+        blank=True, null=True,
+        on_delete=models.SET_NULL,
+        related_name="lemma_of_edit",
+    )
+
+    def __str__(self):
+        return self.norm
+  
+
+
 class Collection(models.Model):
     """1 to n references to elasticsearch documents"""
     title = models.CharField(
@@ -104,6 +207,15 @@ class Collection(models.Model):
         related_name="collections_created",
         help_text="The user who created current collection"
     )
+
+    lemma_id = models.ForeignKey(
+        Lemma,
+        blank=True, null=True,
+        on_delete=models.SET_NULL,
+        related_name="of_collections",
+        help_text="Collections in which this lemma apperas"
+    )
+
     es_document = models.ManyToManyField(
         Es_document,
         related_name="in_collections",
@@ -205,7 +317,25 @@ class Annotation(models.Model):
 
     def __str__(self):
         return "{}".format(self.id)
+  
 
+class Autor_Artikel(models.Model):      
+
+	lemma_id = models.ForeignKey(
+        Lemma,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="article_author_lemma",
+        verbose_name="article_author_lemma",
+    )
+
+	bearbeiter_id = models.ForeignKey(
+        User,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="article_author",
+        verbose_name="Artikel, die der Autor bearbeitet hat",
+    )
 
 #############################################################################
 #
