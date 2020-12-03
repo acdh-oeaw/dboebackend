@@ -5,7 +5,6 @@ staticfiles/*
 *.pyc
 
 env/*
-myenv/*
 # sensitive data
 dboeannotation/settings/server.py
 dboeannotation/settings/dev.py
