@@ -94,9 +94,11 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 CORS_ORIGIN_WHITELIST = (
     'dboefrontend.acdh-dev.oeaw.ac.at',
+    'dboefrontend-test.acdh-dev.oeaw.ac.at',
     'dboeannotation.acdh-dev.oeaw.ac.at',
     'dboeannotation.hephaistos.arz.oeaw.ac.at',
     'lioe.dioe.at',
+    'lioe-test.dioe.at',
     '127.0.0.1', '127.0.0.1:8080',
     'localhost:8000',
     'localhost:8080',
@@ -180,4 +182,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'

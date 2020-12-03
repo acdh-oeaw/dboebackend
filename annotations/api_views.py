@@ -1,3 +1,4 @@
+from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework import pagination, generics, filters
 import django_filters
@@ -22,159 +23,226 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import DjangoObjectPermissions
 from dboeannotation.metadata import PROJECT_METADATA as PM
 from copy import deepcopy
-
+from rest_framework import status
 
 # AnonymousUser can view objects if granted 'view' permission
 
+
 class DjangoObjectPermissionsOrAnonReadOnly(DjangoObjectPermissions):
-	authenticated_users_only = False
+    authenticated_users_only = False
 
 
 class CustomObtainAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
-        response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
+        response = super(CustomObtainAuthToken, self).post(
+            request, *args, **kwargs)
         token = Token.objects.get(key=response.data['token'])
         return Response({'token': token.key, 'id': token.user_id})
 
 
 class LargeResultsSetPagination(pagination.PageNumberPagination):
-	page_size = 25
-	page_size_query_param = 'page_size'
-	max_page_size = 10000
+    page_size = 25
+    page_size_query_param = 'page_size'
+    max_page_size = 10000
 
 
 class UserViewSet(viewsets.ModelViewSet):
-	"""
-	get:
-	Return a list of all the existing users.
+    """
+    get:
+    Return a list of all the existing users.
 
-	post:
+    post:
     Create a new user instance.
 
-	"""
-	queryset = User.objects.all().order_by('-date_joined')
-	serializer_class = UserSerializer
-	pagination_class = LargeResultsSetPagination
-	# authentication_classes = (TokenAuthentication, )
-	filter_backends = (DjangoFilterBackend,)
-	filter_class = UserFilter
+    """
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+    pagination_class = LargeResultsSetPagination
+    # authentication_classes = (TokenAuthentication, )
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = UserFilter
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return UserListSerializer
+        return UserSerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-	"""
-	get:
-	Return a list of all the existing categories.
+    """
+    get:
+    Return a list of all the existing categories.
 
-	post:
-    Create a new category instance.
-    
-	"""
-	queryset = Category.objects.all()
-	serializer_class = CategorySerializer
-	pagination_class = LargeResultsSetPagination
-	# authentication_classes = (TokenAuthentication, )
-	filter_backends = (DjangoFilterBackend,)
-	filter_class = CategoryFilter
+    post:
+Create a new category instance.
+
+    """
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    pagination_class = LargeResultsSetPagination
+    # authentication_classes = (TokenAuthentication, )
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = CategoryFilter
 
 
 class TagViewSet(viewsets.ModelViewSet):
-	"""
-	get:
-	Return a list of all tags.
+    """
+    get:
+    Return a list of all tags.
 
-	post:
-    Create a new tag instance.
+    post:
+Create a new tag instance.
+
+    """
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    pagination_class = LargeResultsSetPagination
+    # authentication_classes = (TokenAuthentication, )
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = TagFilter
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return TagListSerializer
+        return TagSerializer
+
+
+
+class LemmaViewSet(viewsets.ModelViewSet):
     
-	"""
-	queryset = Tag.objects.all()
-	serializer_class = TagSerializer
-	pagination_class = LargeResultsSetPagination
-	# authentication_classes = (TokenAuthentication, )
-	filter_backends = (DjangoFilterBackend,)
-	filter_class = TagFilter
+    def get_queryset(self):
+        queryset = Lemma.objects.all()
+        parameter = self.request.query_params.get('has_collection', None)
+        editor_para = self.request.query_params.get('has_editor', None)
+        if parameter is not None and editor_para is None:
+            queryset = Lemma.objects.exclude(id__in=Collection.objects.exclude(lemma_id__isnull=True))
+        elif parameter is None and editor_para is not None:
+            queryset = Lemma.objects.exclude(id__in=Edit_of_article.objects.filter(lemma__isnull=False))
+        return queryset    
+    queryset = Lemma.objects.all()
+    serializer_class = LemmaSerializer
+    pagination_class = LargeResultsSetPagination
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
+    filter_class = LemmaFilter
+
+class EditOfArticleViewSet(viewsets.ModelViewSet):
+    queryset = Edit_of_article.objects.all()
+    serializer_class = EditOfArticleSerializer
+    pagination_class = LargeResultsSetPagination
+    filter_backends = (DjangoFilterBackend,filters.OrderingFilter)
+    filter_class = EditOfArticleFilter 
+
+
+class AutorArtikelViewSet(viewsets.ModelViewSet):
+    queryset = Autor_Artikel.objects.all()
+    serializer_class = AutorArtikelSerializer
+    pagination_class = LargeResultsSetPagination
+    filter_backends = (DjangoFilterBackend,)
 
 
 class Es_documentViewSet(viewsets.ModelViewSet):
-	"""
-	get:
-	Return a list of all the existing documents.
+    """
+    get:
+    Return a list of all the existing documents.
 
-	post:
-    Create a new document instance.
-    
-	"""
-	queryset = Es_document.objects.all()
-	serializer_class = Es_documentSerializer
-	pagination_class = LargeResultsSetPagination
-	# authentication_classes = (TokenAuthentication, )
-	filter_backends = (DjangoFilterBackend,)
-	# make a custom filter with exact match for es_id
-	filter_fields = ('es_id', 'index', 'version', 'in_collections', 'tag')
+    post:
+Create a new document instance.
+
+    """
+    queryset = Es_document.objects.all()
+    serializer_class = Es_documentSerializer
+    pagination_class = LargeResultsSetPagination
+    # authentication_classes = (TokenAuthentication, )
+    filter_backends = (DjangoFilterBackend,)
+    # make a custom filter with exact match for es_id
+    filter_fields = ('es_id', 'index', 'version', 'in_collections', 'tag')
+
+    def create(self, request, *args, **kwargs):
+        many = True if isinstance(self.request.data, list) else False
+        if(not many):
+            return super().create(request, *args, **kwargs)
+        else:
+            serializer = Es_documentListSerializer(data=request.data, context={
+                                                   'request': request}, many=True)
+            if(serializer.is_valid()):
+                #	print('is valido')
+                serializer.save()
+                #	print('we created something...', serializer)
+                return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                #	print('is not valido')
+                return Response(data=serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
 
 
 class CollectionViewSet(viewsets.ModelViewSet):
-	"""
-	get:
-	Return a list of all the existing collection.
+    """
+    get:
+    Return a list of all the existing collection.
 
-	post:
-    Create a new collection instance.
-    
-	"""
-	queryset = Collection.objects.all()
-	serializer_class = CollectionSerializer
-	pagination_class = LargeResultsSetPagination
-	permission_classes = (DjangoObjectPermissionsOrAnonReadOnly, )
-	# authentication_classes = (TokenAuthentication, )
-	filter_backends = (filters.DjangoObjectPermissionsFilter, DjangoFilterBackend,)
-	#filter_fields = ('title', 'created_by', 'public', 'annotations')
-	filter_class = CollectionFilter
+    post:
+Create a new collection instance.
 
+    """
+    queryset = Collection.objects.all()
+    serializer_class = CollectionSerializer
+    pagination_class = LargeResultsSetPagination
+    #permission_classes = (DjangoObjectPermissionsOrAnonReadOnly, )
+    # permission_classes = (IsAuthenticatedOrAnonReadOnly)
+    # authentication_classes = (TokenAuthentication, )
+    filter_backends = (filters.DjangoObjectPermissionsFilter,
+                       DjangoFilterBackend, filters.OrderingFilter)
+    #filter_fields = ('title', 'created_by', 'public', 'annotations')
+    filter_class = CollectionFilter
 
-	def perform_create(self, serializer):
-		serializer.save(created_by=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return CollectionListSerializer
+        return CollectionSerializer
 
 
 class AnnotationViewSet(viewsets.ModelViewSet):
-	"""
-	get:
-	Return a list of all the existing annotations.
+    """
+    get:
+    Return a list of all the existing annotations.
 
-	post:
-    Create a new annotation instance.
-    
-	"""
-	queryset = Annotation.objects.all()
-	serializer_class = AnnotationSerializer
-	pagination_class = LargeResultsSetPagination
-	permission_classes = (DjangoObjectPermissionsOrAnonReadOnly, )
-	# authentication_classes = (TokenAuthentication, )
-	filter_backends = (filters.DjangoObjectPermissionsFilter, DjangoFilterBackend,)
-	filter_class = AnnotationFilter
+    post:
+Create a new annotation instance.
 
+    """
+    queryset = Annotation.objects.all()
+    serializer_class = AnnotationSerializer
+    pagination_class = LargeResultsSetPagination
+    permission_classes = (DjangoObjectPermissionsOrAnonReadOnly, )
+    # authentication_classes = (TokenAuthentication, )
+    filter_backends = (filters.DjangoObjectPermissionsFilter,
+                       DjangoFilterBackend,)
+    filter_class = AnnotationFilter
 
-	def perform_create(self, serializer):
-		serializer.save(created_by=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
 
 
 @api_view()
 def dboe_query(request):
-	"""
-	The endpoint to query external elasticsearch index;
-	the query matches all fields
+    """
+    The endpoint to query external elasticsearch index;
+    the query matches all fields
 
-	"""
-	client = Elasticsearch(settings.ES_DBOE)
-	q = request.GET.get('q')
-	if q:
-		my_query = Q("multi_match", query=q, fields=['*'])
-		search = Search(using=client, index="dboe").query(my_query)		
-		count = search.count()
-		results = search[0:count].execute()
-		results = results.to_dict()
-	else:
-		results = None
-	return Response({'results': results})
+    """
+    client = Elasticsearch(settings.ES_DBOE)
+    q = request.GET.get('q')
+    if q:
+        my_query = Q("multi_match", query=q, fields=['*'])
+        search = Search(using=client, index="dboe").query(my_query)
+        count = search.count()
+        results = search[0:count].execute()
+        results = results.to_dict()
+    else:
+        results = None
+    return Response({'results': results})
 
 
 #################################################################
@@ -183,7 +251,6 @@ def dboe_query(request):
 
 @api_view()
 def project_info(request):
-
     """
     returns a dict providing metadata about the current project
     """
