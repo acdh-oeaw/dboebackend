@@ -156,6 +156,15 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
         # print('many', many,  'created', created, 'es_id', es_id)
         return es_id
 
+class Es_documentSerializerForScans(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Es_document
+        fields = [
+            'id',
+            'url',
+            'es_id',
+            'scans',
+        ]
 
 class CollectionSerializer(serializers.HyperlinkedModelSerializer):
     # created_by = serializers.HyperlinkedRelatedField(read_only=True, view_name='user-detail')

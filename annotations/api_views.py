@@ -155,8 +155,27 @@ Create a new document instance.
     # authentication_classes = (TokenAuthentication, )
     filter_backends = (DjangoFilterBackend,)
     # make a custom filter with exact match for es_id
-    filter_fields = ('es_id', 'index', 'version', 'in_collections', 'tag')
-
+    
+    # es_id__starts_with = django_filters.CharFilter(lookup_expr='istartswith', field_name="es_id")
+    filter_fields = (
+        'es_id', 'index', 'version', 'in_collections', 'tag'
+    )
+    #filter_class = Es_Document_es_id_filter
+    def get_queryset(self):
+       qs = super().get_queryset()
+       es = str(self.request.query_params.get('es_id__startswith')).lower()
+       print('es',es)
+       if isinstance(es, str) and len(es) > 1 and es != 'none':
+           return qs.filter(es_id__istartswith=es)
+       return qs
+    
+    def get_serializer_class(self):
+        es = str(self.request.query_params.get('es_id__startswith')).lower()
+        if isinstance(es, str) and len(es) > 1 and es != 'none':
+            return Es_documentSerializerForScans
+        return Es_documentSerializer
+        
+        
     def create(self, request, *args, **kwargs):
         many = True if isinstance(self.request.data, list) else False
         if(not many):
@@ -172,7 +191,6 @@ Create a new document instance.
             else:
                 #	print('is not valido')
                 return Response(data=serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
-
 
 class CollectionViewSet(viewsets.ModelViewSet):
     """
