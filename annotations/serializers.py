@@ -198,20 +198,52 @@ class AutorArtikelSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 class EditOfArticleSerializer(serializers.HyperlinkedModelSerializer):
+    user_name = serializers.CharField(source='user.username', read_only=True)
+    lemma_name = serializers.CharField(source='lemma.org', read_only=True)
     class Meta:
         model = Edit_of_article
         fields = [
             'id',
+            'current',
             'url',
             'begin_time',
             'step',
             'status',
+            'description',
             'deadline',
             'last_edited',
             'user',
+            'user_name',
+            'lemma',
+            'lemma_name',
+            'finished_date'
         ]
 
+
 class LemmaSerializer(serializers.HyperlinkedModelSerializer):
+    simplex_HL = serializers.CharField(source='simplex.org', read_only=True)
+    # user = serializers.SerializerMethodField(read_only=True)
+    assigned_task = serializers.SerializerMethodField()
+   # assigned_task = serializers.SerializerMethodField('get_assigned_task')
+
+    def get_assigned_task(self, lemma):
+        try:
+            tasks = Edit_of_article.objects.filter(lemma = Lemma.objects.get(id=lemma.id), current = True).first()
+            ser_context = { 'request': self.context.get('request') }
+            result = EditOfArticleSerializer(tasks, context = ser_context)
+            user = result.data['user']
+            if(user is None):
+                return {'user' : result.data['user'],
+                        'task' : result.data['url']
+                        }
+            else:
+                return {'user' : result.data['user'],
+                    'user_name': result.data['user_name'],
+                    'task' : result.data['url']
+                    }
+        except Edit_of_article.DoesNotExist:
+            return None
+
     class Meta:
         model = Lemma
         fields = [
@@ -220,13 +252,12 @@ class LemmaSerializer(serializers.HyperlinkedModelSerializer):
             'norm',
             'org',
             'filename',
-            'count',
             'comment',
+            'count',
             'simplex',
-            'bearbeitung_id',
-
+            'simplex_HL',
+            'assigned_task'
         ]
-
 
 
 class CollectionListSerializer(serializers.HyperlinkedModelSerializer):

@@ -109,16 +109,28 @@ Create a new tag instance.
 
 
 class LemmaViewSet(viewsets.ModelViewSet):
+    
+    def get_queryset(self):
+        queryset = Lemma.objects.all()
+        parameter = self.request.query_params.get('has_collection', None)
+        editor_para = self.request.query_params.get('has_editor', None)
+        if parameter is not None and editor_para is None:
+            queryset = Lemma.objects.exclude(id__in=Collection.objects.exclude(lemma_id__isnull=True))
+        elif parameter is None and editor_para is not None:
+            queryset = Lemma.objects.exclude(id__in=Edit_of_article.objects.filter(lemma__isnull=False))
+        return queryset    
     queryset = Lemma.objects.all()
     serializer_class = LemmaSerializer
     pagination_class = LargeResultsSetPagination
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
+    filter_class = LemmaFilter
 
 class EditOfArticleViewSet(viewsets.ModelViewSet):
     queryset = Edit_of_article.objects.all()
     serializer_class = EditOfArticleSerializer
     pagination_class = LargeResultsSetPagination
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend,filters.OrderingFilter)
+    filter_class = EditOfArticleFilter 
 
 
 class AutorArtikelViewSet(viewsets.ModelViewSet):

@@ -76,12 +76,53 @@ class Es_document(models.Model):
         blank=True
     )
     scans = ArrayField(
-        models.CharField(max_length=200, blank=True), default = [],
+        models.CharField(max_length=200, blank=True),
         null=True,
     )
 
     def __str__(self):
         return "ID {}: {}".format(self.id, self.es_id)
+
+
+
+class Lemma(models.Model):
+    """Class to store tags for incoming elasticsearch documents"""
+    
+    norm = models.CharField(
+        max_length=255,
+        blank=False,
+        null=True
+    )
+    org = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False
+    )
+    filename = models.CharField(
+        max_length=255,
+        blank=True,
+        null=False
+    )
+    count = models.IntegerField(
+        default=0
+    )
+    
+    comment = models.TextField(
+        blank=True,
+        help_text="Comment on Lemmata"
+    )
+
+    simplex = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        related_name="complex_lemmata",
+        verbose_name="Simplex",
+        blank=True, null=True
+    )
+
+    def __str__(self):
+        return self.norm
+
 
 
 class Edit_of_article(models.Model):
@@ -95,6 +136,7 @@ class Edit_of_article(models.Model):
         ARTIKEL_IM_REDAKTIONSTOOL= 'Artikel_im_Redaktionstool'
         LAUTKOMMENTAR_ERSTELLT = 'Lautkommentar erstellt'
         LAUTKOMMENTAR_HINZUGEFÜGT = 'Lautkommentar hinzugefügt'
+        IRRELEVANT = 'Irrelevant'
 
         @classmethod
         def choices(cls):
@@ -118,10 +160,24 @@ class Edit_of_article(models.Model):
             return tuple((i.name, i.value) for i in cls)
 
     status = models.CharField(max_length=255, choices=StatusChoices.choices())
-
+    
+    finished_date = models.DateTimeField(
+        null=True,
+        blank=False
+    )
+    
+    description = models.TextField(
+        blank=True,
+        help_text="Comment on Edit of Article"
+    )
+    
+    current = models.BooleanField(
+            default=False,
+            help_text="Is this the current entry of the edit"
+    )
 
     deadline = models.DateTimeField(
-        null=False,
+        null=True,
         blank=False
     )
 
@@ -139,52 +195,20 @@ class Edit_of_article(models.Model):
         help_text="The user who did this editing"
     )
 
-
-class Lemma(models.Model):
-    """Class to store tags for incoming elasticsearch documents"""
-    
-    norm = models.CharField(
-        max_length=255,
-        blank=False,
-        null=False
-    )
-    org = models.CharField(
-        max_length=255,
-        blank=False,
-        null=False
-    )
-    filename = models.CharField(
-        max_length=255,
-        blank=False,
-        null=False
-    )
-    count = models.IntegerField(
-        default=0
-    )
-    
-    comment = models.TextField(
-        blank=True,
-        help_text="Comment on Lemmata"
-    )
-
-    simplex = models.ForeignKey(
-        'self',
+    lemma = models.ForeignKey(
+        Lemma,
+        blank=False, null=True,
         on_delete=models.SET_NULL,
-        related_name="complex_lemmata",
-        verbose_name="Simplex",
-        blank=True, null=True
-    )
+        related_name="lemma",
+        help_text="Assigned lemma to this edit"
+    ) 
 
-    bearbeitung_id = models.ForeignKey(
-        Edit_of_article,
-        blank=True, null=True,
-        on_delete=models.SET_NULL,
-        related_name="lemma_of_edit",
-    )
 
-    def __str__(self):
-        return self.norm
-  
+    def save(self, *args, **kwargs):
+        self.last_edited = timezone.now()
+        return super(Edit_of_article, self).save(*args, **kwargs)
+
+
 
 
 class Collection(models.Model):
