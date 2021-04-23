@@ -11,16 +11,52 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-import dj_database_url
+import re
+from struct import unpack
+from environ import Env
 from corsheaders.defaults import default_headers
+
+def generate_secret_key(length=50):
+    sample = '1234567890-=!@#$%^&*()_+qwertyuiopasdfghjklzxcvbnm'
+    return ''.join([sample[unpack('>I', os.urandom(4))[0] % len(sample)] for i in range(length)])
+
+env = Env(
+    # set casting, default value
+    DJANGO_DEBUG=(bool, False),
+    DJANGO_ALLOWED_HOSTS=(list, re.sub(r'https?://', '', os.environ.get('GITLAB_ENVIRONMENT_URL', 'http://127.0.0.1,http://localhost')).split(',')),
+    DJANGO_SECRET_KEY=(str, generate_secret_key()),
+    DJANGO_CORS_ORIGIN_WHITELIST=(tuple, ('127.0.0.1', 
+                                          '127.0.0.1:8080',
+                                          'localhost:8000',
+                                          'localhost:8080'))
+)
+
+Env.read_env()
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 #BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(os.path.join(__file__, '../'))))
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.1/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
+
+# SECURITY WARNING: keep the secret key used in production secret!
+# Generates a throw away key on every start of a test or debug instance.
+# Set DJANGO_SECRET_KEY using docker environment or kubernetes secret to
+# have a fixed *secret* value.
+SECRET_KEY = env('DJANGO_SECRET_KEY')
+
+DEBUG = env('DJANGO_DEBUG')
+print(env('DJANGO_ALLOWED_HOSTS'))
+ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS')
+# You need to allow '10.0.0.0/8' for service health checks.
+ALLOWED_CIDR_NETS = ['10.0.0.0/8', '127.0.0.0/8']
 
 # Application definition
 
@@ -93,17 +129,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 #CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ORIGIN_WHITELIST = (
-    'dboefrontend.acdh-dev.oeaw.ac.at',
-    'dboefrontend-test.acdh-dev.oeaw.ac.at',
-    'dboeannotation.acdh-dev.oeaw.ac.at',
-    'dboeannotation.hephaistos.arz.oeaw.ac.at',
-    'lioe.dioe.at',
-    'lioe-test.dioe.at',
-    '127.0.0.1', '127.0.0.1:8080',
-    'localhost:8000',
-    'localhost:8080',
-    )
+CORS_ORIGIN_WHITELIST = env('DJANGO_CORS_ORIGIN_WHITELIST')
 
 CORS_ALLOW_METHODS = (
     'DELETE',
@@ -151,7 +177,7 @@ WSGI_APPLICATION = 'dboeannotation.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default='sqlite:///'+os.path.join(BASE_DIR, 'db.sqlite3'))
+    'default': env.db(default='sqlite:///'+os.path.join(BASE_DIR, 'db.sqlite3'))
 }
 
 ES_DBOE = 'https://walk-want-grew.acdh.oeaw.ac.at/'
@@ -188,9 +214,3 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
-STATIC_URL = '/static/'
