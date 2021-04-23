@@ -20,11 +20,13 @@ def generate_secret_key(length=50):
     sample = '1234567890-=!@#$%^&*()_+qwertyuiopasdfghjklzxcvbnm'
     return ''.join([sample[unpack('>I', os.urandom(4))[0] % len(sample)] for i in range(length)])
 
+throw_away_key = generate_secret_key()
+
 env = Env(
     # set casting, default value
     DJANGO_DEBUG=(bool, False),
     DJANGO_ALLOWED_HOSTS=(list, re.sub(r'https?://', '', os.environ.get('GITLAB_ENVIRONMENT_URL', 'http://127.0.0.1,http://localhost')).split(',')),
-    DJANGO_SECRET_KEY=(str, generate_secret_key()),
+    DJANGO_SECRET_KEY=(str, throw_away_key),
     DJANGO_CORS_ORIGIN_WHITELIST=(tuple, ('127.0.0.1', 
                                           '127.0.0.1:8080',
                                           'localhost:8000',
@@ -53,7 +55,7 @@ STATIC_URL = '/static/'
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 DEBUG = env('DJANGO_DEBUG')
-print(env('DJANGO_ALLOWED_HOSTS'))
+
 ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS')
 # You need to allow '10.0.0.0/8' for service health checks.
 ALLOWED_CIDR_NETS = ['10.0.0.0/8', '127.0.0.0/8']
@@ -181,6 +183,12 @@ WSGI_APPLICATION = 'dboeannotation.wsgi.application'
 DATABASES = {
     'default': env.db(default='sqlite:///'+os.path.join(BASE_DIR, 'db.sqlite3'))
 }
+
+# Force test database name to equal database name (test stage has it's own database)
+DATABASES['default']['TEST'] = {
+    'NAME':DATABASES['default']['NAME']
+}
+print(DATABASES)
 
 ES_DBOE = 'https://walk-want-grew.acdh.oeaw.ac.at/'
 

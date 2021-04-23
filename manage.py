@@ -12,4 +12,8 @@ if __name__ == '__main__':
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    if sys.argv[1] == 'test':
+        sys.argv.append('--keepdb')
+        execute_from_command_line([sys.argv[0], 'makemigrations'])
+        execute_from_command_line([sys.argv[0], 'migrate'])
     execute_from_command_line(sys.argv)
