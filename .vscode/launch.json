@@ -12,10 +12,6 @@
             "args": [
                 "runserver"
             ],
-            "env": {
-                "DJANGO_SETTINGS_MODULE": "dboeannotation.settings.online",
-                "DATABASE_URL": "postgres://dboeannotation:dboeannotation@localhost:5432/dboeannotation"
-            },
             "django": true
         }
     ]
