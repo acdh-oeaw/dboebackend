@@ -40,5 +40,8 @@ uritemplate = "==3.0.0"
 urllib3 = "==1.23"
 wincertstore = "==0.2"
 django-environ = "*"
+gunicorn = "*"
+whitenoise = "*"
+django-allow-cidr = "*"
 
 [dev-packages]
