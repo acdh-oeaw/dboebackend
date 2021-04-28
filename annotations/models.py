@@ -90,13 +90,18 @@ class Lemma(models.Model):
     
     norm = models.CharField(
         max_length=255,
-        blank=False,
+        blank=True,
         null=True
     )
     org = models.CharField(
         max_length=255,
         blank=False,
         null=False
+    )
+    lemmatisierung = models.CharField(
+        max_length=255,
+        blank=False,
+        null=True
     )
     filename = models.CharField(
         max_length=255,
@@ -128,15 +133,18 @@ class Lemma(models.Model):
 class Edit_of_article(models.Model):
     """Class to store tags for incoming elasticsearch documents"""    
 
-    begin_time = models.DateTimeField(editable=False, default=timezone.now)
+    begin_time = models.DateTimeField(editable=True, default=timezone.now)
     
     class StepChoices(Enum):
         ARTIKEL_IN_ARBEIT = "Artikel in Arbeit"
         ARTIKEL_ERSTELLT = "Artikel erstellt"
-        ARTIKEL_IM_REDAKTIONSTOOL= 'Artikel_im_Redaktionstool'
         LAUTKOMMENTAR_ERSTELLT = 'Lautkommentar erstellt'
         LAUTKOMMENTAR_HINZUGEFÜGT = 'Lautkommentar hinzugefügt'
         IRRELEVANT = 'Irrelevant'
+        FREIGEGEBEN_FUER_LK = 'Freigegeben für Lautkommentar'
+        FREIGEGEBEN_FUER_VORARBEITEN = 'Freigegeben für Vorarbeiten'
+        VERBREITUGS_COLLECTION_ERSTELLT = 'Verbreitungs-Collection erstellt'
+        ZUGEWIESEN = 'Zugewiesen'
 
         @classmethod
         def choices(cls):
@@ -151,6 +159,7 @@ class Edit_of_article(models.Model):
         PEER_CORRECTION ="peer correction"
         INTERNAL_CORRECTION = "internal correction"
         EXTERNAL_CORRECTION = "external correction"
+        ONLINE = "online"
         FINAL_VERSION= "final version"
 
 
@@ -165,7 +174,7 @@ class Edit_of_article(models.Model):
         null=True,
         blank=False
     )
-    
+     
     description = models.TextField(
         blank=True,
         help_text="Comment on Edit of Article"
@@ -483,3 +492,4 @@ def create_perms_curator(sender, instance, **kwargs):
                         'change_'+obj.__class__.__name__.lower(), curator, obj)
                     remove_perm(
                         'delete_'+obj.__class__.__name__.lower(), curator, obj)
+

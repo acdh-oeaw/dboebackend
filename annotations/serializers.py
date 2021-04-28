@@ -206,9 +206,46 @@ class AutorArtikelSerializer(serializers.HyperlinkedModelSerializer):
             'bearbeiter_id'
         ]
 
+class EditOfArticleStSerializer(serializers.HyperlinkedModelSerializer):
+    steps = serializers.IntegerField()
+    stati = serializers.IntegerField()
+    class Meta:
+        model = Edit_of_article
+        fields = [
+            'step',
+            'status',
+            'steps',
+            'stati'
+        ]
+
+class EditOfArticleLemmaSerializer(serializers.HyperlinkedModelSerializer):
+    lemma__org = serializers.CharField(read_only=True)
+    lemma__count = serializers.IntegerField(read_only=True)
+    user__username = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Edit_of_article
+        fields = [
+            'lemma__org',
+            'lemma__count',
+            'user__username'
+        ]
+
+class EditOfArticleUserSerializer(serializers.HyperlinkedModelSerializer):
+    user__username = serializers.CharField(read_only=True)
+    lemma_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = Edit_of_article
+        fields = [
+            'lemma_count',
+            'user__username'
+        ]
+
+
 class EditOfArticleSerializer(serializers.HyperlinkedModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
-    lemma_name = serializers.CharField(source='lemma.org', read_only=True)
+    lemma_name = serializers.CharField(source='lemma.lemmatisierung', read_only=True)
     class Meta:
         model = Edit_of_article
         fields = [
@@ -230,21 +267,21 @@ class EditOfArticleSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class LemmaSerializer(serializers.HyperlinkedModelSerializer):
-    simplex_HL = serializers.CharField(source='simplex.org', read_only=True)
-    # user = serializers.SerializerMethodField(read_only=True)
+    art_lemmatisierung = serializers.CharField(source='simplex.lemmatisierung', read_only=True)
     assigned_task = serializers.SerializerMethodField()
-   # assigned_task = serializers.SerializerMethodField('get_assigned_task')
 
     def get_assigned_task(self, lemma):
+        curr_lemma = Lemma.objects.get(id = lemma.id)
+        if curr_lemma.simplex is not None:
+            lemma = curr_lemma.simplex
         try:
             tasks = Edit_of_article.objects.filter(lemma = Lemma.objects.get(id=lemma.id), current = True).first()
             ser_context = { 'request': self.context.get('request') }
             result = EditOfArticleSerializer(tasks, context = ser_context)
             user = result.data['user']
+            print(result)
             if(user is None):
-                return {'user' : result.data['user'],
-                        'task' : result.data['url']
-                        }
+                return None
             else:
                 return {'user' : result.data['user'],
                     'user_name': result.data['user_name'],
@@ -258,13 +295,14 @@ class LemmaSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id',
             'url',
+            'lemmatisierung',
             'norm',
             'org',
             'filename',
             'comment',
             'count',
             'simplex',
-            'simplex_HL',
+            'art_lemmatisierung',
             'assigned_task'
         ]
 
@@ -312,3 +350,4 @@ class AnnotationSerializer(serializers.HyperlinkedModelSerializer):
             'category', 'created_by',
             'created', 'modified'
         ]
+

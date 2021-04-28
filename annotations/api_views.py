@@ -131,7 +131,17 @@ class EditOfArticleViewSet(viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
     filter_backends = (DjangoFilterBackend,filters.OrderingFilter)
     filter_class = EditOfArticleFilter 
-
+    
+    def get_serializer_class(self):
+        parameter = self.request.query_params.get('reporting')
+        if parameter is None:
+            return EditOfArticleSerializer
+        elif parameter == '0':
+            return EditOfArticleStSerializer
+        elif parameter == '1':
+            return EditOfArticleLemmaSerializer
+        elif parameter == '2':
+            return EditOfArticleUserSerializer
 
 class AutorArtikelViewSet(viewsets.ModelViewSet):
     queryset = Autor_Artikel.objects.all()
@@ -276,3 +286,4 @@ def project_info(request):
     info_dict = deepcopy(PM)
     info_dict['base_tech'] = 'django rest framework'
     return Response(info_dict)
+
