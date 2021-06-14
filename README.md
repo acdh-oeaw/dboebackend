@@ -14,6 +14,7 @@ Use `pipenv install` to get all dependencies.
 The installed environment can be selected for example in Visual Studion Code.
 
 If you want to save local environment settings use a `.env` file in `dboeannotation/settings`
+
 For example
 
 ```bash
