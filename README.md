@@ -29,7 +29,6 @@ We do not git migrations. A database is updated using ad-hoc migrations which ar
 python manage.py makemigrations
 python manage.py migrate
 ```
-
 ## Recognized environment variables and defaults
 
 ```bash
