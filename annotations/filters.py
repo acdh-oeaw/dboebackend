@@ -147,6 +147,8 @@ class EditOfArticleFilter(django_filters.rest_framework.FilterSet):
         lemma__id = django_filters.CharFilter(field_name = 'lemma__id', lookup_expr = 'iexact')
         date = django_filters.DateFilter(field_name = 'deadline', lookup_expr = 'exact')
         finished_date = django_filters.DateFromToRangeFilter()
+        begin_time = django_filters.DateFromToRangeFilter()
+        last_edited = django_filters.DateFromToRangeFilter()
         currentstatus = django_filters.ChoiceFilter(label = 'Filter for Status', method = 'check_status', choices=CHOICES_STATUS)
         mytasks = django_filters.ChoiceFilter(label = 'Nach eigenen Aufgaben filtern', method = 'check_mytasks', choices=CHOICES_STEP)
         
@@ -159,7 +161,7 @@ class EditOfArticleFilter(django_filters.rest_framework.FilterSet):
 
         def check_report(self, queryset, name, value):
             val = int(value)
-            entry = queryset.filter(current = True)
+            entry = queryset
             if val == 0:
                 return entry.values('step', 'status').annotate(steps = Count('step'), stati=Count('status'))
             elif val == 1:
@@ -183,5 +185,5 @@ class EditOfArticleFilter(django_filters.rest_framework.FilterSet):
 
         class Meta:
             model = Edit_of_article
-            fields = ['deadline', 'step', 'status', 'last_edited', 'current', 'user', 'lemma', 'finished_date']
+            fields = ['deadline', 'step', 'status', 'last_edited', 'current', 'user', 'lemma', 'finished_date', 'begin_time']
 

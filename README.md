@@ -14,6 +14,7 @@ Use `pipenv install` to get all dependencies.
 The installed environment can be selected for example in Visual Studion Code.
 
 If you want to save local environment settings use a `.env` file in `dboeannotation/settings`
+
 For example
 
 ```bash
@@ -28,7 +29,6 @@ We do not git migrations. A database is updated using ad-hoc migrations which ar
 python manage.py makemigrations
 python manage.py migrate
 ```
-
 ## Recognized environment variables and defaults
 
 ```bash
