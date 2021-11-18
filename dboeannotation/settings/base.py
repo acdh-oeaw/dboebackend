@@ -141,6 +141,7 @@ CORS_ALLOW_METHODS = (
     'OPTIONS',
     'POST',
     'PUT',
+    'PATCH'
 )
 
 CORS_ALLOW_HEADERS = default_headers
