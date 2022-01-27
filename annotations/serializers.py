@@ -303,7 +303,9 @@ class LemmaSerializer(serializers.HyperlinkedModelSerializer):
             'count',
             'simplex',
             'art_lemmatisierung',
-            'assigned_task'
+            'assigned_task',
+            'pos',
+            'suggestion'
         ]
 
 
