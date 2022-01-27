@@ -125,6 +125,18 @@ class Lemma(models.Model):
         blank=True, null=True
     )
 
+    suggestion = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    pos = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
     def __str__(self):
         return self.norm
 
