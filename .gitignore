@@ -16,9 +16,6 @@ db.sqlite3
 # IDE
 .idea
 
-# the only file we want to have in git for migrations is __init__.py
-annotations/migrations/*
-
 
 #Ipython Notebook
 .ipynb_checkpoints
