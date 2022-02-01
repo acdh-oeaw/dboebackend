@@ -43,5 +43,6 @@ django-environ = "*"
 gunicorn = "*"
 whitenoise = "*"
 django-allow-cidr = "*"
+pandas = "==1.3.5"
 
 [dev-packages]
