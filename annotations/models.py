@@ -79,6 +79,11 @@ class Es_document(models.Model):
         models.CharField(max_length=200, blank=True),
         null=True,
     )
+    
+    xml = models.TextField(
+        blank=True,
+        help_text="XML Entry Data"
+    )
 
     def __str__(self):
         return "ID {}: {}".format(self.id, self.es_id)

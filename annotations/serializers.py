@@ -3,6 +3,7 @@
 from rest_framework import serializers
 from .models import *
 from django.contrib.auth.models import User
+from xml.etree import ElementTree as ET
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -142,8 +143,16 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
             'version',
             'tag',
             'scans',
+            'xml',
             'in_collections'
         ]
+    def validate(self, data):
+        try:
+            if 'xml' in data and (data['xml']):
+                ET.fromstring(data['xml'])
+        except Exception as e:
+            raise serializers.ValidationError(str(e))
+        return data    
 
     def create(self, validated_data):
         many = True if isinstance(self.context.get(
@@ -152,9 +161,13 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
         # print('self', self.context.request)
         es_id, created = Es_document.objects.get_or_create(
             es_id=validated_data.get('es_id', None),
+            xml = validated_data.get('xml',''),
             defaults={'es_id': validated_data.get('es_id', None)})
         # print('many', many,  'created', created, 'es_id', es_id)
         return es_id
+    
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
 
 class Es_documentSerializerForScans(serializers.HyperlinkedModelSerializer):
     class Meta:

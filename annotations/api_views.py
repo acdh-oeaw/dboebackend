@@ -156,8 +156,11 @@ class Es_documentViewSet(viewsets.ModelViewSet):
     Return a list of all the existing documents.
 
     post:
-Create a new document instance.
+    Create a new document instance.
 
+    patch:
+    Update only certain fields
+    
     """
     queryset = Es_document.objects.all()
     serializer_class = Es_documentSerializer
@@ -201,6 +204,25 @@ Create a new document instance.
             else:
                 #	print('is not valido')
                 return Response(data=serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
+        
+    def partial_update(self, request, *args, **kwargs):
+        
+        
+        allowed_props = {'xml'}
+        if request.data.keys() <= allowed_props:
+            es_document = self.get_object()
+            serializer = Es_documentSerializer(es_document, data=request.data,context={
+                                                   'request': request}, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(data=serializer.data,
+                            status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": serializer.errors},
+                            status=status.HTTP_409_CONFLICT)
+        else:
+            return Response({"detail": f"Allowed properties are {str(allowed_props)}"},
+                            status=status.HTTP_409_CONFLICT)
 
 class CollectionViewSet(viewsets.ModelViewSet):
     """
