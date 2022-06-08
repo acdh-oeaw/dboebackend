@@ -176,6 +176,7 @@ class Es_documentSerializerForScans(serializers.HyperlinkedModelSerializer):
             'id',
             'url',
             'es_id',
+            'xml',
             'scans',
         ]
 
