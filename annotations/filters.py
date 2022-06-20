@@ -1,6 +1,7 @@
 from django.db import models
 from rest_framework import filters
 import django_filters
+from django_filters.widgets import CSVWidget
 from django_filters.rest_framework import FilterSet
 from .models import *
 from django.contrib.auth.models import User
@@ -53,12 +54,33 @@ class CollectionFilter(django_filters.rest_framework.FilterSet):
 		queryset=Tag.objects.all(), field_name='es_document__tag',
 		label='Tag', help_text="Filter collections by tags of its documents"
 		)
+	category = django_filters.ModelMultipleChoiceFilter(
+        queryset=Category.objects.filter(
+            name__in=['distribution','sense','multi_word_expression','etymology','compound','lemma'],
+            ),
+            widget=CSVWidget,
+            field_name ='category__name',
+            to_field_name='name',
+            method="filter_categories"
+        )
+
 
 	class Meta:
 		model = Collection
-		fields = ['title', 'created_by',
-		'public', 'annotations',
-		'annotations__category', 'tag', 'deleted', 'lemma_id']
+
+		fields = {
+        'created_by':['exact'],
+        'public':['exact'],
+        'annotations':['exact'],
+        'deleted':['exact'],
+        'lemma_id': ['exact', 'isnull'],
+        }
+
+	def filter_categories(self, queryset, name,  value):
+		if value:
+			queryset = queryset.filter(category__name__in=value)
+		return queryset
+
 
 
 class LemmaFilter(django_filters.rest_framework.FilterSet):

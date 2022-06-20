@@ -187,6 +187,7 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
         many=True, read_only=True, view_name='annotation-detail')
     tags = serializers.HyperlinkedRelatedField(
         many=True, read_only=True, view_name='tag-detail')
+    category = serializers.SlugRelatedField(queryset=Category.objects.filter(name__in=['distribution','sense','multi_word_expression','etymology','compound','lemma']), slug_field='name')
 
     class Meta:
         model = Collection
@@ -202,6 +203,7 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
             'created_by',
             'curator',
             'public',
+            'category',
             'deleted',
             'created',
             'modified',
@@ -328,6 +330,7 @@ class CollectionListSerializer(serializers.HyperlinkedModelSerializer):
     #created_by = serializers.StringRelatedField()
     document_count = serializers.SerializerMethodField('get_document_docs')
     # tags = serializers.HyperlinkedRelatedField( many=True, read_only=True, view_name='tag-detail')
+    category = serializers.CharField(source="category.name", read_only=True, allow_null=True)
 
     def get_document_docs(self, document):
         return len(document.es_document.all())
@@ -339,6 +342,7 @@ class CollectionListSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'title',
             'description',
+            'category',
             # 'es_document',
             'document_count',
             # 'comment',
