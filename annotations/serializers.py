@@ -235,15 +235,15 @@ class EditOfArticleStSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 class EditOfArticleLemmaSerializer(serializers.HyperlinkedModelSerializer):
-    lemma__org = serializers.CharField(read_only=True)
-    lemma__count = serializers.IntegerField(read_only=True)
+    lemma__lemmatisierung = serializers.CharField(read_only=True)
+    document__count = serializers.IntegerField(read_only=True)
     user__username = serializers.CharField(read_only=True)
 
     class Meta:
         model = Edit_of_article
         fields = [
-            'lemma__org',
-            'lemma__count',
+            'lemma__lemmatisierung',
+            'document__count',
             'user__username'
         ]
 
@@ -279,7 +279,7 @@ class EditOfArticleSerializer(serializers.HyperlinkedModelSerializer):
             'lemma',
             'lemma_name',
             'finished_date'
-        ]
+        ]    
 
 
 class LemmaSerializer(serializers.HyperlinkedModelSerializer):
@@ -295,7 +295,6 @@ class LemmaSerializer(serializers.HyperlinkedModelSerializer):
             ser_context = { 'request': self.context.get('request') }
             result = EditOfArticleSerializer(tasks, context = ser_context)
             user = result.data['user']
-            print(result)
             if(user is None):
                 return None
             else:

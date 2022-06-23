@@ -187,13 +187,16 @@ class EditOfArticleFilter(django_filters.rest_framework.FilterSet):
             if val == 0:
                 return entry.values('step', 'status').annotate(steps = Count('step'), stati=Count('status'))
             elif val == 1:
-                simplex_lemma = Lemma.objects.filter(simplex = OuterRef('lemma')).order_by().values('simplex')
-                total_count = simplex_lemma.annotate(total=Sum('count')).values('total')
-                result = entry.values('lemma__org', 'user__username').annotate(lemma__count = ExpressionWrapper(Coalesce(Subquery(total_count), 0) + F('lemma__count'), output_field = IntegerField()))
+                #simplex_lemma = Lemma.objects.filter(simplex = OuterRef('lemma')).order_by().values('simplex')
+                #total_count = simplex_lemma.annotate(total=Sum('count')).values('total')
+                es_documents = Collection.objects.filter(lemma_id = OuterRef('lemma'),category__name="lemma").order_by().values('lemma_id_id')
+                es_document_total_count = es_documents.annotate(docs_count=Count('es_document')).values('docs_count')
+                result = entry.values('lemma__lemmatisierung', 'user__username').annotate(document__count = ExpressionWrapper(Coalesce(Subquery(es_document_total_count),0), output_field = IntegerField()))
+                #result = entry.values('lemma__org', 'user__username').annotate(lemma__count = ExpressionWrapper(Coalesce(Subquery(total_count), 0) + F('lemma__count'), output_field = IntegerField()))
                 # result = entry.values('lemma__org', 'user__username').annotate(lemma__count = Subquery(total_count))
                 return result
             elif val == 2:
-                return entry.values('user__username').annotate(lemma_count = Count('lemma'))
+                return entry.values('user__username').annotate(lemma_count = Count('lemma', distinct=True))
             return entry
 
 
