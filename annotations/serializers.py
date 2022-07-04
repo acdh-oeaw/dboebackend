@@ -187,7 +187,7 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
         many=True, read_only=True, view_name='annotation-detail')
     tags = serializers.HyperlinkedRelatedField(
         many=True, read_only=True, view_name='tag-detail')
-    category = serializers.SlugRelatedField(queryset=Category.objects.filter(name__in=['distribution','sense','multi_word_expression','etymology','compound','lemma']), slug_field='name')
+    category = serializers.SlugRelatedField(queryset=Category.objects.filter(name__in=['distribution','sense','multi_word_expression','etymology','compound','lemma']), slug_field='name', allow_null=True)
 
     class Meta:
         model = Collection
