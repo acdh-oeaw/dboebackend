@@ -30,7 +30,8 @@ env = Env(
     DJANGO_CORS_ORIGIN_WHITELIST=(tuple, ('127.0.0.1', 
                                           '127.0.0.1:8080',
                                           'localhost:8000',
-                                          'localhost:8080'))
+                                          'localhost:8080')),
+    SW_VERSION=(str, os.environ.get('SW_VERSION')),
 )
 
 Env.read_env()

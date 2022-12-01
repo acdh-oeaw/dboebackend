@@ -24,6 +24,9 @@ from rest_framework.permissions import DjangoObjectPermissions
 from dboeannotation.metadata import PROJECT_METADATA as PM
 from copy import deepcopy
 from rest_framework import status
+import json
+
+
 
 # AnonymousUser can view objects if granted 'view' permission
 
@@ -309,3 +312,13 @@ def project_info(request):
     info_dict['base_tech'] = 'django rest framework'
     return Response(info_dict)
 
+
+@api_view()
+def version_info(request):
+    """
+    returns a software version
+    """
+    info_dict = None
+    with open('version.json') as version_file:
+        info_dict = json.load(version_file)
+    return Response(info_dict)
