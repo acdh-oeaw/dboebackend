@@ -22,3 +22,16 @@ db.sqlite3
 
 # the only file we want to have in git for settings is basex.py
 dboeannotation/settings/*
+
+#data repo
+dboeannotation_data
+
+#temporary folders
+temp
+
+#db-dumps
+.devcontainer/sql/*
+
+#supervisor
+supervisord.log
+supervisord.pid
