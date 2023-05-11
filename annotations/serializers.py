@@ -144,12 +144,14 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
             'tag',
             'scans',
             'xml',
-            'in_collections'
+            'in_collections',
+            'xml_error_message'
         ]
     def validate(self, data):
         try:
             if 'xml' in data and (data['xml']):
                 ET.fromstring(data['xml'])
+                data.xml_modified_by = self.context['request'].user
         except Exception as e:
             raise serializers.ValidationError(str(e))
         return data    
@@ -167,6 +169,7 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
         return es_id
     
     def update(self, instance, validated_data):
+        instance.xml_modified_by = self.context['request'].user
         return super().update(instance, validated_data)
 
 class Es_documentSerializerForScans(serializers.HyperlinkedModelSerializer):
@@ -178,6 +181,20 @@ class Es_documentSerializerForScans(serializers.HyperlinkedModelSerializer):
             'es_id',
             'xml',
             'scans',
+        ]
+
+class Es_documentSerializerForCache(serializers.HyperlinkedModelSerializer):
+    xml_modified_by = serializers.StringRelatedField()
+    
+    class Meta:
+        model = Es_document
+        fields = [
+            'id',
+            'url',
+            'es_id',
+            'xml',
+            'xml_modified_by',
+            'xml_error_message'
         ]
 
 class CollectionSerializer(serializers.HyperlinkedModelSerializer):
