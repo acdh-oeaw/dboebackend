@@ -4,6 +4,7 @@ from rest_framework import serializers
 from .models import *
 from django.contrib.auth.models import User
 from xml.etree import ElementTree as ET
+from django.conf import settings
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -151,7 +152,8 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
         try:
             if 'xml' in data and (data['xml']):
                 ET.fromstring(data['xml'])
-                data.xml_modified_by = self.context['request'].user
+                if (self.context['request'].user.username != settings.VLE_USER):
+                    data.xml_modified_by = self.context['request'].user
         except Exception as e:
             raise serializers.ValidationError(str(e))
         return data    
@@ -169,7 +171,8 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
         return es_id
     
     def update(self, instance, validated_data):
-        instance.xml_modified_by = self.context['request'].user
+        if (self.context['request'].user.username != settings.VLE_USER):
+            instance.xml_modified_by = self.context['request'].user
         return super().update(instance, validated_data)
 
 class Es_documentSerializerForScans(serializers.HyperlinkedModelSerializer):
