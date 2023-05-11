@@ -84,6 +84,17 @@ class Es_document(models.Model):
         blank=True,
         help_text="XML Entry Data"
     )
+    xml_modified_by = models.ForeignKey(
+        User,
+        blank=True, null=True,
+        on_delete=models.SET_NULL,
+        related_name="xml_modified",
+        help_text="The user updated the xml field"
+    )
+    xml_error_message = models.TextField(
+        blank=True,
+        help_text="Field for for wboe api to store validation error message"
+    )
 
     def __str__(self):
         return "ID {}: {}".format(self.id, self.es_id)
