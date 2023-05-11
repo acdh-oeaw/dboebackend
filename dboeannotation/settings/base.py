@@ -32,6 +32,7 @@ env = Env(
                                           'localhost:8000',
                                           'localhost:8080')),
     SW_VERSION=(str, os.environ.get('SW_VERSION')),
+    VLE_USER=(str,''),
 )
 
 Env.read_env()
@@ -226,3 +227,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+VLE_USER=env('VLE_USER')
