@@ -69,6 +69,7 @@ class CollectionFilter(django_filters.rest_framework.FilterSet):
 		model = Collection
 
 		fields = {
+        'id':['exact','contains'],
         'created_by':['exact'],
         'public':['exact'],
         'annotations':['exact'],
