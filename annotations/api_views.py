@@ -24,6 +24,9 @@ from rest_framework.permissions import DjangoObjectPermissions
 from dboeannotation.metadata import PROJECT_METADATA as PM
 from copy import deepcopy
 from rest_framework import status
+import json
+
+
 
 # AnonymousUser can view objects if granted 'view' permission
 
@@ -156,8 +159,11 @@ class Es_documentViewSet(viewsets.ModelViewSet):
     Return a list of all the existing documents.
 
     post:
-Create a new document instance.
+    Create a new document instance.
 
+    patch:
+    Update only certain fields
+    
     """
     queryset = Es_document.objects.all()
     serializer_class = Es_documentSerializer
@@ -177,12 +183,16 @@ Create a new document instance.
        print('es',es)
        if isinstance(es, str) and len(es) > 1 and es != 'none':
            return qs.filter(es_id__istartswith=es)
+       if bool(self.request.query_params.get('cache_only')) == True:
+           return qs.exclude(xml=u'')
        return qs
     
     def get_serializer_class(self):
         es = str(self.request.query_params.get('es_id__startswith')).lower()
         if isinstance(es, str) and len(es) > 1 and es != 'none':
             return Es_documentSerializerForScans
+        if bool(self.request.query_params.get('cache_only')) == True:
+            return Es_documentSerializerForCache
         return Es_documentSerializer
         
         
@@ -201,6 +211,41 @@ Create a new document instance.
             else:
                 #	print('is not valido')
                 return Response(data=serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
+        
+    def partial_update(self, request, *args, **kwargs):
+        
+        
+        allowed_props = {'xml','xml_error_message'}
+        if request.data.keys() <= allowed_props:
+            es_document = self.get_object()
+            serializer = Es_documentSerializer(es_document, data=request.data,context={
+                                                   'request': request}, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(data=serializer.data,
+                            status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": serializer.errors},
+                            status=status.HTTP_409_CONFLICT)
+        else:
+            return Response({"detail": f"Allowed properties are {str(allowed_props)}"},
+                            status=status.HTTP_409_CONFLICT)
+    
+    def put(self, request):
+        es_documents_data = request.data
+        for es_document_item in es_documents_data:
+            try:
+                es_document = Es_document.objects.get(es_id=es_document_item['es_id'])
+            except Es_document.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializer = self.serializer_class(
+                es_document, data=es_document_item,context={
+                                                   'request': request}, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+
+        return Response(status=status.HTTP_200_OK)
 
 class CollectionViewSet(viewsets.ModelViewSet):
     """
@@ -287,3 +332,13 @@ def project_info(request):
     info_dict['base_tech'] = 'django rest framework'
     return Response(info_dict)
 
+
+@api_view()
+def version_info(request):
+    """
+    returns a software version
+    """
+    info_dict = None
+    with open('version.json') as version_file:
+        info_dict = json.load(version_file)
+    return Response(info_dict)

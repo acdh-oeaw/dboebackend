@@ -79,6 +79,22 @@ class Es_document(models.Model):
         models.CharField(max_length=200, blank=True),
         null=True,
     )
+    
+    xml = models.TextField(
+        blank=True,
+        help_text="XML Entry Data"
+    )
+    xml_modified_by = models.ForeignKey(
+        User,
+        blank=True, null=True,
+        on_delete=models.SET_NULL,
+        related_name="xml_modified",
+        help_text="The user updated the xml field"
+    )
+    xml_error_message = models.TextField(
+        blank=True,
+        help_text="Field for for wboe api to store validation error message"
+    )
 
     def __str__(self):
         return "ID {}: {}".format(self.id, self.es_id)
@@ -251,6 +267,17 @@ class Collection(models.Model):
         on_delete=models.SET_NULL,
         related_name="collections_created",
         help_text="The user who created current collection"
+    )
+    
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.PROTECT,
+        related_name="collections",
+        verbose_name="Category",
+        blank=True, null=True,
+        limit_choices_to=Q(
+            name__in=['distribution','sense','multi_word_expression','etymology','compound','lemma']
+            )
     )
 
     lemma_id = models.ForeignKey(

@@ -1,6 +1,7 @@
 from django.db import models
 from rest_framework import filters
 import django_filters
+from django_filters.widgets import CSVWidget
 from django_filters.rest_framework import FilterSet
 from .models import *
 from django.contrib.auth.models import User
@@ -53,12 +54,34 @@ class CollectionFilter(django_filters.rest_framework.FilterSet):
 		queryset=Tag.objects.all(), field_name='es_document__tag',
 		label='Tag', help_text="Filter collections by tags of its documents"
 		)
+	category = django_filters.ModelMultipleChoiceFilter(
+        queryset=Category.objects.filter(
+            name__in=['distribution','sense','multi_word_expression','etymology','compound','lemma'],
+            ),
+            widget=CSVWidget,
+            field_name ='category__name',
+            to_field_name='name',
+            method="filter_categories"
+        )
+
 
 	class Meta:
 		model = Collection
-		fields = ['title', 'created_by',
-		'public', 'annotations',
-		'annotations__category', 'tag', 'deleted', 'lemma_id']
+
+		fields = {
+        'id':['exact','contains'],
+        'created_by':['exact'],
+        'public':['exact'],
+        'annotations':['exact'],
+        'deleted':['exact'],
+        'lemma_id': ['exact', 'isnull'],
+        }
+
+	def filter_categories(self, queryset, name,  value):
+		if value:
+			queryset = queryset.filter(category__name__in=value)
+		return queryset
+
 
 
 class LemmaFilter(django_filters.rest_framework.FilterSet):
@@ -147,6 +170,8 @@ class EditOfArticleFilter(django_filters.rest_framework.FilterSet):
         lemma__id = django_filters.CharFilter(field_name = 'lemma__id', lookup_expr = 'iexact')
         date = django_filters.DateFilter(field_name = 'deadline', lookup_expr = 'exact')
         finished_date = django_filters.DateFromToRangeFilter()
+        begin_time = django_filters.DateFromToRangeFilter()
+        last_edited = django_filters.DateFromToRangeFilter()
         currentstatus = django_filters.ChoiceFilter(label = 'Filter for Status', method = 'check_status', choices=CHOICES_STATUS)
         mytasks = django_filters.ChoiceFilter(label = 'Nach eigenen Aufgaben filtern', method = 'check_mytasks', choices=CHOICES_STEP)
         
@@ -159,17 +184,20 @@ class EditOfArticleFilter(django_filters.rest_framework.FilterSet):
 
         def check_report(self, queryset, name, value):
             val = int(value)
-            entry = queryset.filter(current = True)
+            entry = queryset
             if val == 0:
                 return entry.values('step', 'status').annotate(steps = Count('step'), stati=Count('status'))
             elif val == 1:
-                simplex_lemma = Lemma.objects.filter(simplex = OuterRef('lemma')).order_by().values('simplex')
-                total_count = simplex_lemma.annotate(total=Sum('count')).values('total')
-                result = entry.values('lemma__org', 'user__username').annotate(lemma__count = ExpressionWrapper(Coalesce(Subquery(total_count), 0) + F('lemma__count'), output_field = IntegerField()))
+                #simplex_lemma = Lemma.objects.filter(simplex = OuterRef('lemma')).order_by().values('simplex')
+                #total_count = simplex_lemma.annotate(total=Sum('count')).values('total')
+                es_documents = Collection.objects.filter(lemma_id = OuterRef('lemma'),category__name="lemma").order_by().values('lemma_id_id')
+                es_document_total_count = es_documents.annotate(docs_count=Count('es_document')).values('docs_count')
+                result = entry.values('lemma__lemmatisierung', 'user__username').annotate(document__count = ExpressionWrapper(Coalesce(Subquery(es_document_total_count),0), output_field = IntegerField()))
+                #result = entry.values('lemma__org', 'user__username').annotate(lemma__count = ExpressionWrapper(Coalesce(Subquery(total_count), 0) + F('lemma__count'), output_field = IntegerField()))
                 # result = entry.values('lemma__org', 'user__username').annotate(lemma__count = Subquery(total_count))
                 return result
             elif val == 2:
-                return entry.values('user__username').annotate(lemma_count = Count('lemma'))
+                return entry.values('user__username').annotate(lemma_count = Count('lemma', distinct=True))
             return entry
 
 
@@ -183,5 +211,5 @@ class EditOfArticleFilter(django_filters.rest_framework.FilterSet):
 
         class Meta:
             model = Edit_of_article
-            fields = ['deadline', 'step', 'status', 'last_edited', 'current', 'user', 'lemma', 'finished_date']
+            fields = ['deadline', 'step', 'status', 'last_edited', 'current', 'user', 'lemma', 'finished_date', 'begin_time']
 

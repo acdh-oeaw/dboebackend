@@ -30,7 +30,9 @@ env = Env(
     DJANGO_CORS_ORIGIN_WHITELIST=(tuple, ('127.0.0.1', 
                                           '127.0.0.1:8080',
                                           'localhost:8000',
-                                          'localhost:8080'))
+                                          'localhost:8080')),
+    SW_VERSION=(str, os.environ.get('SW_VERSION')),
+    VLE_USER=(str,''),
 )
 
 Env.read_env()
@@ -141,6 +143,7 @@ CORS_ALLOW_METHODS = (
     'OPTIONS',
     'POST',
     'PUT',
+    'PATCH'
 )
 
 CORS_ALLOW_HEADERS = default_headers
@@ -224,3 +227,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+VLE_USER=env('VLE_USER')
