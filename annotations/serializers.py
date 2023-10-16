@@ -166,6 +166,7 @@ class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
         es_id, created = Es_document.objects.get_or_create(
             es_id=validated_data.get('es_id', None),
             xml = validated_data.get('xml',''),
+            xml_modified_by = self.context['request'].user if validated_data.get('xml') else None,
             defaults={'es_id': validated_data.get('es_id', None)})
         # print('many', many,  'created', created, 'es_id', es_id)
         return es_id
