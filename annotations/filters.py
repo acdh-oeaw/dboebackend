@@ -1,20 +1,14 @@
-from django.db import models
-from rest_framework import filters
 import django_filters
 from django_filters.widgets import CSVWidget
-from django_filters.rest_framework import FilterSet
-from .models import *
+from .models import Category, Collection, Annotation, Tag, Lemma, Edit_of_article
 from django.contrib.auth.models import User
 from django.db.models import (
     Count,
     Q,
     OuterRef,
     Subquery,
-    Sum,
     IntegerField,
     ExpressionWrapper,
-    Case,
-    F,
 )
 from django.db.models.functions import Coalesce
 
@@ -282,8 +276,6 @@ class EditOfArticleFilter(django_filters.rest_framework.FilterSet):
                     output_field=IntegerField(),
                 )
             )
-            # result = entry.values('lemma__org', 'user__username').annotate(lemma__count = ExpressionWrapper(Coalesce(Subquery(total_count), 0) + F('lemma__count'), output_field = IntegerField()))
-            # result = entry.values('lemma__org', 'user__username').annotate(lemma__count = Subquery(total_count))
             return result
         elif val == 2:
             return entry.values("user__username").annotate(

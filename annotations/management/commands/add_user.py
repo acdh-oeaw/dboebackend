@@ -1,7 +1,7 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User, Group
-from guardian.shortcuts import assign_perm, remove_perm
-from annotations.models import Collection, Annotation
+from guardian.shortcuts import assign_perm
+from annotations.models import Collection
 
 
 class Command(BaseCommand):

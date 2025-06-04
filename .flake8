@@ -3,16 +3,11 @@ ignore = D203 W504 W503
 max-line-length = 120
 exclude =
     */migrations,
-    */migrations,
     manage.py
     .git,
     .tox,
+    .venv
     docs/conf.py,
     build,
     dist
-    venv
-    infos
-    appcreator
-    djangobaseproject/settings
-    webpage
-    djangobaseproject/settings/pg_local.py
+  

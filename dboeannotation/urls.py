@@ -3,6 +3,11 @@ from django.urls import path, include
 from rest_framework import routers
 from annotations import api_views
 from rest_framework.authtoken import views
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 
 
 router = routers.DefaultRouter()
@@ -25,4 +30,12 @@ urlpatterns = [
     path("project-info/", api_views.project_info),
     path("version/", api_views.version_info),
     path("api/dboe-query/", api_views.dboe_query),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    # Optional UI:
+    path("", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+    path(
+        "api/schema/redoc/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc",
+    ),
 ]
