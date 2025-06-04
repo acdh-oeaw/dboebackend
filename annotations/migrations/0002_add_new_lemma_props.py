@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('annotations', '0001_production-state-2022-01-26'),
+        ("annotations", "0001_production-state-2022-01-26"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='lemma',
-            name='pos',
+            model_name="lemma",
+            name="pos",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
         migrations.AddField(
-            model_name='lemma',
-            name='suggestion',
+            model_name="lemma",
+            name="suggestion",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
     ]

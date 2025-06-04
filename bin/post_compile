@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-SW_VERSION=$(git describe --tags --always)
-python update_version.py $SW_VERSION

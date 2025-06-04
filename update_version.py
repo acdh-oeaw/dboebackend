@@ -9,4 +9,3 @@ with open("version.json", "r") as jsonFile:
 
 with open("version.json", "w") as jsonFile:
     json.dump(data, jsonFile)
-

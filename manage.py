@@ -1,9 +1,12 @@
 #!/usr/bin/env python
+"""Django's command-line utility for administrative tasks."""
 import os
 import sys
 
-if __name__ == '__main__':
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dboeannotation.settings.base')
+
+def main():
+    """Run administrative tasks."""
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dboeannotation.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -12,8 +15,8 @@ if __name__ == '__main__':
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    if sys.argv[1] == 'test':
-        sys.argv.append('--keepdb')
-        execute_from_command_line([sys.argv[0], 'makemigrations'])
-        execute_from_command_line([sys.argv[0], 'migrate'])
     execute_from_command_line(sys.argv)
+
+
+if __name__ == "__main__":
+    main()

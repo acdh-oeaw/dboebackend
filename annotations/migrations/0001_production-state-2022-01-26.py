@@ -18,138 +18,436 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Annotation',
+            name="Annotation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(blank=True, max_length=255, verbose_name='Title')),
-                ('description', models.TextField(blank=True, help_text='Describe the annotation', verbose_name='Description')),
-                ('public', models.BooleanField(default=False, help_text='Public annotation or not. By default is not public.')),
-                ('created', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
-                ('modified', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(blank=True, max_length=255, verbose_name="Title"),
+                ),
+                (
+                    "description",
+                    models.TextField(
+                        blank=True,
+                        help_text="Describe the annotation",
+                        verbose_name="Description",
+                    ),
+                ),
+                (
+                    "public",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Public annotation or not. By default is not public.",
+                    ),
+                ),
+                (
+                    "created",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, editable=False
+                    ),
+                ),
+                (
+                    "modified",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, editable=False
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Autor_Artikel',
+            name="Autor_Artikel",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('bearbeiter_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='article_author', to=settings.AUTH_USER_MODEL, verbose_name='Artikel, die der Autor bearbeitet hat')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "bearbeiter_id",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="article_author",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Artikel, die der Autor bearbeitet hat",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, verbose_name='Name')),
-                ('description', models.TextField(blank=True, help_text='Describe the purpose of this category')),
-                ('note', models.TextField(blank=True, help_text='Note/Comment')),
-                ('notation', models.CharField(blank=True, max_length=200, verbose_name='Notation')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255, verbose_name="Name")),
+                (
+                    "description",
+                    models.TextField(
+                        blank=True, help_text="Describe the purpose of this category"
+                    ),
+                ),
+                ("note", models.TextField(blank=True, help_text="Note/Comment")),
+                (
+                    "notation",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="Notation"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Collection',
+            name="Collection",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(blank=True, db_index=True, help_text='Title', max_length=255)),
-                ('description', models.TextField(blank=True, help_text='Describe the collection', verbose_name='Description')),
-                ('comment', models.TextField(blank=True, help_text='Comment on collection')),
-                ('public', models.BooleanField(default=False, help_text='Public collection or not. By default is not public.')),
-                ('deleted', models.BooleanField(db_index=True, default=False, help_text='deletion flag')),
-                ('created', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
-                ('modified', models.DateTimeField(db_index=True, default=django.utils.timezone.now, editable=False)),
-                ('created_by', models.ForeignKey(blank=True, help_text='The user who created current collection', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='collections_created', to=settings.AUTH_USER_MODEL)),
-                ('curator', models.ManyToManyField(blank=True, help_text='The selected user(s) will be able to view, edit and delete current Collection.', related_name='collections_curated', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        blank=True, db_index=True, help_text="Title", max_length=255
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(
+                        blank=True,
+                        help_text="Describe the collection",
+                        verbose_name="Description",
+                    ),
+                ),
+                (
+                    "comment",
+                    models.TextField(blank=True, help_text="Comment on collection"),
+                ),
+                (
+                    "public",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Public collection or not. By default is not public.",
+                    ),
+                ),
+                (
+                    "deleted",
+                    models.BooleanField(
+                        db_index=True, default=False, help_text="deletion flag"
+                    ),
+                ),
+                (
+                    "created",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, editable=False
+                    ),
+                ),
+                (
+                    "modified",
+                    models.DateTimeField(
+                        db_index=True, default=django.utils.timezone.now, editable=False
+                    ),
+                ),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        blank=True,
+                        help_text="The user who created current collection",
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="collections_created",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "curator",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="The selected user(s) will be able to view, edit and delete current Collection.",
+                        related_name="collections_curated",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Edit_of_article',
+            name="Edit_of_article",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('begin_time', models.DateTimeField(default=django.utils.timezone.now)),
-                ('step', models.CharField(choices=[('ARTIKEL_IN_ARBEIT', 'Artikel in Arbeit'), ('ARTIKEL_ERSTELLT', 'Artikel erstellt'), ('LAUTKOMMENTAR_ERSTELLT', 'Lautkommentar erstellt'), ('LAUTKOMMENTAR_HINZUGEFÜGT', 'Lautkommentar hinzugefügt'), ('IRRELEVANT', 'Irrelevant'), ('FREIGEGEBEN_FUER_LK', 'Freigegeben für Lautkommentar'), ('FREIGEGEBEN_FUER_VORARBEITEN', 'Freigegeben für Vorarbeiten'), ('VERBREITUGS_COLLECTION_ERSTELLT', 'Verbreitungs-Collection erstellt'), ('ZUGEWIESEN', 'Zugewiesen')], max_length=255)),
-                ('status', models.CharField(choices=[('DRAFT', 'draft'), ('PEER_CORRECTION', 'peer correction'), ('INTERNAL_CORRECTION', 'internal correction'), ('EXTERNAL_CORRECTION', 'external correction'), ('ONLINE', 'online'), ('FINAL_VERSION', 'final version')], max_length=255)),
-                ('finished_date', models.DateTimeField(null=True)),
-                ('description', models.TextField(blank=True, help_text='Comment on Edit of Article')),
-                ('current', models.BooleanField(default=False, help_text='Is this the current entry of the edit')),
-                ('deadline', models.DateTimeField(null=True)),
-                ('last_edited', models.DateTimeField(default=django.utils.timezone.now)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("begin_time", models.DateTimeField(default=django.utils.timezone.now)),
+                (
+                    "step",
+                    models.CharField(
+                        choices=[
+                            ("ARTIKEL_IN_ARBEIT", "Artikel in Arbeit"),
+                            ("ARTIKEL_ERSTELLT", "Artikel erstellt"),
+                            ("LAUTKOMMENTAR_ERSTELLT", "Lautkommentar erstellt"),
+                            ("LAUTKOMMENTAR_HINZUGEFÜGT", "Lautkommentar hinzugefügt"),
+                            ("IRRELEVANT", "Irrelevant"),
+                            ("FREIGEGEBEN_FUER_LK", "Freigegeben für Lautkommentar"),
+                            (
+                                "FREIGEGEBEN_FUER_VORARBEITEN",
+                                "Freigegeben für Vorarbeiten",
+                            ),
+                            (
+                                "VERBREITUGS_COLLECTION_ERSTELLT",
+                                "Verbreitungs-Collection erstellt",
+                            ),
+                            ("ZUGEWIESEN", "Zugewiesen"),
+                        ],
+                        max_length=255,
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("DRAFT", "draft"),
+                            ("PEER_CORRECTION", "peer correction"),
+                            ("INTERNAL_CORRECTION", "internal correction"),
+                            ("EXTERNAL_CORRECTION", "external correction"),
+                            ("ONLINE", "online"),
+                            ("FINAL_VERSION", "final version"),
+                        ],
+                        max_length=255,
+                    ),
+                ),
+                ("finished_date", models.DateTimeField(null=True)),
+                (
+                    "description",
+                    models.TextField(
+                        blank=True, help_text="Comment on Edit of Article"
+                    ),
+                ),
+                (
+                    "current",
+                    models.BooleanField(
+                        default=False, help_text="Is this the current entry of the edit"
+                    ),
+                ),
+                ("deadline", models.DateTimeField(null=True)),
+                (
+                    "last_edited",
+                    models.DateTimeField(default=django.utils.timezone.now),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Es_document',
+            name="Es_document",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('es_id', models.CharField(max_length=255, verbose_name='ID in elasticsearch index')),
-                ('index', models.CharField(blank=True, max_length=255, null=True, verbose_name='Index')),
-                ('version', models.IntegerField(blank=True, null=True, verbose_name='Version')),
-                ('scans', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=200), null=True, size=None)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "es_id",
+                    models.CharField(
+                        max_length=255, verbose_name="ID in elasticsearch index"
+                    ),
+                ),
+                (
+                    "index",
+                    models.CharField(
+                        blank=True, max_length=255, null=True, verbose_name="Index"
+                    ),
+                ),
+                (
+                    "version",
+                    models.IntegerField(blank=True, null=True, verbose_name="Version"),
+                ),
+                (
+                    "scans",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.CharField(blank=True, max_length=200),
+                        null=True,
+                        size=None,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Lemma',
+            name="Lemma",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('norm', models.CharField(blank=True, max_length=255, null=True)),
-                ('org', models.CharField(max_length=255)),
-                ('lemmatisierung', models.CharField(max_length=255, null=True)),
-                ('filename', models.CharField(blank=True, max_length=255)),
-                ('count', models.IntegerField(default=0)),
-                ('comment', models.TextField(blank=True, help_text='Comment on Lemmata')),
-                ('simplex', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='complex_lemmata', to='annotations.Lemma', verbose_name='Simplex')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("norm", models.CharField(blank=True, max_length=255, null=True)),
+                ("org", models.CharField(max_length=255)),
+                ("lemmatisierung", models.CharField(max_length=255, null=True)),
+                ("filename", models.CharField(blank=True, max_length=255)),
+                ("count", models.IntegerField(default=0)),
+                (
+                    "comment",
+                    models.TextField(blank=True, help_text="Comment on Lemmata"),
+                ),
+                (
+                    "simplex",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="complex_lemmata",
+                        to="annotations.Lemma",
+                        verbose_name="Simplex",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Tag',
+            name="Tag",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('color', models.CharField(blank=True, max_length=255)),
-                ('emoji', models.CharField(blank=True, max_length=255)),
-                ('meta', django.contrib.postgres.fields.jsonb.JSONField(null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("color", models.CharField(blank=True, max_length=255)),
+                ("emoji", models.CharField(blank=True, max_length=255)),
+                ("meta", django.contrib.postgres.fields.jsonb.JSONField(null=True)),
             ],
         ),
         migrations.AddField(
-            model_name='es_document',
-            name='tag',
-            field=models.ManyToManyField(blank=True, related_name='es_documents', to='annotations.Tag'),
+            model_name="es_document",
+            name="tag",
+            field=models.ManyToManyField(
+                blank=True, related_name="es_documents", to="annotations.Tag"
+            ),
         ),
         migrations.AddField(
-            model_name='edit_of_article',
-            name='lemma',
-            field=models.ForeignKey(help_text='Assigned lemma to this edit', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='lemma', to='annotations.Lemma'),
+            model_name="edit_of_article",
+            name="lemma",
+            field=models.ForeignKey(
+                help_text="Assigned lemma to this edit",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="lemma",
+                to="annotations.Lemma",
+            ),
         ),
         migrations.AddField(
-            model_name='edit_of_article',
-            name='user',
-            field=models.ForeignKey(blank=True, help_text='The user who did this editing', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='article_edits', to=settings.AUTH_USER_MODEL),
+            model_name="edit_of_article",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="The user who did this editing",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="article_edits",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='collection',
-            name='es_document',
-            field=models.ManyToManyField(blank=True, related_name='in_collections', to='annotations.Es_document', verbose_name='Document'),
+            model_name="collection",
+            name="es_document",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="in_collections",
+                to="annotations.Es_document",
+                verbose_name="Document",
+            ),
         ),
         migrations.AddField(
-            model_name='collection',
-            name='lemma_id',
-            field=models.ForeignKey(blank=True, help_text='Collections in which this lemma apperas', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='of_collections', to='annotations.Lemma'),
+            model_name="collection",
+            name="lemma_id",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="Collections in which this lemma apperas",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="of_collections",
+                to="annotations.Lemma",
+            ),
         ),
         migrations.AddField(
-            model_name='autor_artikel',
-            name='lemma_id',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='article_author_lemma', to='annotations.Lemma', verbose_name='article_author_lemma'),
+            model_name="autor_artikel",
+            name="lemma_id",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="article_author_lemma",
+                to="annotations.Lemma",
+                verbose_name="article_author_lemma",
+            ),
         ),
         migrations.AddField(
-            model_name='annotation',
-            name='category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='annotations', to='annotations.Category', verbose_name='Category'),
+            model_name="annotation",
+            name="category",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="annotations",
+                to="annotations.Category",
+                verbose_name="Category",
+            ),
         ),
         migrations.AddField(
-            model_name='annotation',
-            name='collection',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='annotations', to='annotations.Collection', verbose_name='Collection'),
+            model_name="annotation",
+            name="collection",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="annotations",
+                to="annotations.Collection",
+                verbose_name="Collection",
+            ),
         ),
         migrations.AddField(
-            model_name='annotation',
-            name='created_by',
-            field=models.ForeignKey(blank=True, help_text='The user who created current annotation', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='annotations_created', to=settings.AUTH_USER_MODEL),
+            model_name="annotation",
+            name="created_by",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="The user who created current annotation",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="annotations_created",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

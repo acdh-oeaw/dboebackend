@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('annotations', '0005_add_prop_to_es_document_regarding_xml_modifaction_user'),
+        ("annotations", "0005_add_prop_to_es_document_regarding_xml_modifaction_user"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='es_document',
-            name='xml_error_message',
-            field=models.TextField(blank=True, help_text='Field for for wboe api to store validation error message'),
+            model_name="es_document",
+            name="xml_error_message",
+            field=models.TextField(
+                blank=True,
+                help_text="Field for for wboe api to store validation error message",
+            ),
         ),
     ]

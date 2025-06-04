@@ -9,13 +9,20 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('annotations', '0004_add_category_prop_to_collection'),
+        ("annotations", "0004_add_category_prop_to_collection"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='es_document',
-            name='xml_modified_by',
-            field=models.ForeignKey(blank=True, help_text='The user updated the xml field', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='xml_modified', to=settings.AUTH_USER_MODEL),
+            model_name="es_document",
+            name="xml_modified_by",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="The user updated the xml field",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="xml_modified",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

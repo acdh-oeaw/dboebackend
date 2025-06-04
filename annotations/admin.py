@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import *
 from guardian.admin import GuardedModelAdmin
+
 # Register your models here.
 
 

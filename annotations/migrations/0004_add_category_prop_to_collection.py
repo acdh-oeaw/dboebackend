@@ -7,13 +7,30 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('annotations', '0003_es_document_xml'),
+        ("annotations", "0003_es_document_xml"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='collection',
-            name='category',
-            field=models.ForeignKey(blank=True, limit_choices_to=models.Q(name__in=['distribution', 'sense', 'multi_word_expression', 'etymology', 'compound', 'lemma']), null=True, on_delete=django.db.models.deletion.PROTECT, related_name='collections', to='annotations.Category', verbose_name='Category'),
+            model_name="collection",
+            name="category",
+            field=models.ForeignKey(
+                blank=True,
+                limit_choices_to=models.Q(
+                    name__in=[
+                        "distribution",
+                        "sense",
+                        "multi_word_expression",
+                        "etymology",
+                        "compound",
+                        "lemma",
+                    ]
+                ),
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="collections",
+                to="annotations.Category",
+                verbose_name="Category",
+            ),
         ),
     ]

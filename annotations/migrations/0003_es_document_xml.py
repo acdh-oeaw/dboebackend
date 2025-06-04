@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('annotations', '0002_add_new_lemma_props'),
+        ("annotations", "0002_add_new_lemma_props"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='es_document',
-            name='xml',
-            field=models.TextField(blank=True, help_text='XML Entry Data'),
+            model_name="es_document",
+            name="xml",
+            field=models.TextField(blank=True, help_text="XML Entry Data"),
         ),
     ]
