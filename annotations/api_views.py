@@ -12,6 +12,13 @@ from .serializers import (
     Es_documentSerializer,
     CollectionSerializer,
     AnnotationSerializer,
+    TagListSerializer,
+    EditOfArticleStSerializer,
+    EditOfArticleLemmaSerializer,
+    EditOfArticleUserSerializer,
+    Es_documentSerializerForScans,
+    Es_documentSerializerForCache,
+    Es_documentListSerializer
 )
 from .models import (
     Tag,
@@ -212,7 +219,7 @@ class Es_documentViewSet(viewsets.ModelViewSet):
         print("es", es)
         if isinstance(es, str) and len(es) > 1 and es != "none":
             return qs.filter(es_id__istartswith=es)
-        if bool(self.request.query_params.get("cache_only")) == True:
+        if bool(self.request.query_params.get("cache_only")) is True:
             return qs.exclude(xml="")
         return qs
 
@@ -220,7 +227,7 @@ class Es_documentViewSet(viewsets.ModelViewSet):
         es = str(self.request.query_params.get("es_id__startswith")).lower()
         if isinstance(es, str) and len(es) > 1 and es != "none":
             return Es_documentSerializerForScans
-        if bool(self.request.query_params.get("cache_only")) == True:
+        if bool(self.request.query_params.get("cache_only")) is True:
             return Es_documentSerializerForCache
         return Es_documentSerializer
 

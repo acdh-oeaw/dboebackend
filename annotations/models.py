@@ -251,11 +251,6 @@ class Collection(models.Model):
     def tags(self):
         return set([tag for x in self.es_document.all() for tag in x.tag.all()])
 
-        """   @property
-    def document_count(self):
-        return len(self.es_document.all())
-	"""
-
 
 class Annotation(models.Model):
     title = models.CharField(max_length=255, blank=True, verbose_name="Title")
@@ -327,7 +322,7 @@ class Autor_Artikel(models.Model):
 #
 #############################################################################
 
-############## Adding Group 'general' with all Model Permissions ############
+# Adding Group 'general' with all Model Permissions ############
 
 
 @receiver(post_save, sender=User, dispatch_uid="add_user_to_group")
@@ -406,7 +401,7 @@ def create_perms_annotation_created_by(sender, instance, **kwargs):
                     assign_perm("view_annotation", user, instance)
 
 
-################ Add/Remove a curator (user) to Collection ####################
+# Add/Remove a curator (user) to Collection ####################
 
 
 @receiver(
