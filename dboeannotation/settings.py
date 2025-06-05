@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "django_filters",
     "annotations",
+    "belege",
 ]
 
 MIDDLEWARE = [
