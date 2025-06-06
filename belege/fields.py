@@ -31,15 +31,12 @@ class XMLField(models.Field):
         if value is None:
             return value
 
-        # If it's already a parsed element or string, return as-is or process accordingly.
         if isinstance(value, ET.Element):
             return value
 
-        # Assume the value is a string and try parsing it.
         try:
             return ET.fromstring(value)
         except ET.ParseError:
-            # Optionally, you might want to raise a validation error instead.
             raise ValidationError(_("Invalid XML data."))
 
     def get_db_prep_value(self, value, connection, prepared=False):
@@ -50,11 +47,9 @@ class XMLField(models.Field):
         if value is None:
             return value
 
-        # If the value is an Element, convert it to a string.
         if isinstance(value, ET.Element):
             return ET.tostring(value, encoding='unicode')
 
-        # If it's already a string, you might want to do a simple validation check.
         try:
             ET.fromstring(value)
         except ET.ParseError:
@@ -81,12 +76,3 @@ class XMLField(models.Field):
         }
         defaults.update(kwargs)
         return super().formfield(**defaults)
-
-    # def value_to_string(self, obj):
-    #     """
-    #     Convert the value for serialization.
-    #     """
-    #     value = self.value_from_object(obj)
-    #     if isinstance(value, ET.Element):
-    #         return ET.tostring(value, encoding='unicode')
-    #     return value

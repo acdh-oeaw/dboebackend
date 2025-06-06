@@ -4,9 +4,11 @@ from belege.fields import XMLField
 
 class BelegSimple(models.Model):
     dboe_id = models.CharField(
-        blank=True, null=True, max_length=250, verbose_name="DBÖ ID", help_text="The DBÖ ID"
+        primary_key=True, max_length=250, verbose_name="DBÖ ID", help_text="The DBÖ ID"
     )
-    simple_xml = XMLField(blank=True, null=True, verbose_name="simplified XML")
+    orig_xml = XMLField(blank=True, null=True, verbose_name="original tei-xml entry")
+    xeno_data = models.TextField(blank=True, null=True, verbose_name="legacy transkription?")
+    hauptlemma = models.TextField(blank=True, null=True, max_length=20, verbose_name="Hauptlemma")
 
     def __str__(self):
         return f"{self.dboe_id}"
