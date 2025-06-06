@@ -1,5 +1,9 @@
+import xml.etree.ElementTree as ET
 from django.db import models
 from belege.fields import XMLField
+from acdh_tei_pyutils.tei import TeiReader
+from acdh_tei_pyutils.utils import extract_fulltext
+
 
 POS_CHOICES = (
     ("Subst", "Subst"),
@@ -14,7 +18,10 @@ def set_extra(self, **kwargs):
     return self
 
 
-class BelegSimple(models.Model):
+models.Field.set_extra = set_extra
+
+
+class Beleg(models.Model):
     dboe_id = models.CharField(
         primary_key=True, max_length=250, verbose_name="DBÖ ID", help_text="The DBÖ ID"
     )
@@ -38,3 +45,22 @@ class BelegSimple(models.Model):
 
     def __str__(self):
         return f"{self.dboe_id}"
+
+    def save(self, *args, **kwargs):
+        if self.orig_xml:
+            try:
+                doc = TeiReader(self.orig_xml)
+            except AttributeError:
+                doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
+            for field in self._meta.fields:
+                if hasattr(field, 'extra') and 'xpath' in field.extra:
+                    # Parse the XML if orig_xml exists
+                    if self.orig_xml:
+                        xpath_expr = field.extra['xpath']
+                        try:
+                            nodes = doc.any_xpath(xpath_expr)[0]
+                        except IndexError:
+                            continue
+                        value = extract_fulltext(nodes)
+                        setattr(self, field.name, value)
+        super().save(*args, **kwargs)
