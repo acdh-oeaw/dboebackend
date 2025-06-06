@@ -32,10 +32,10 @@ from .models import (
 )
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from django.conf import settings
-from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from elasticsearch_dsl import Q
 from .filters import (
@@ -53,7 +53,8 @@ from rest_framework.permissions import DjangoObjectPermissions
 from dboeannotation.metadata import PROJECT_METADATA as PM
 from copy import deepcopy
 from rest_framework import status
-import json
+from drf_spectacular.utils import extend_schema
+from typing import Dict
 
 
 # AnonymousUser can view objects if granted 'view' permission
@@ -91,7 +92,7 @@ class UserViewSet(viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
     # authentication_classes = (TokenAuthentication, )
     filter_backends = (DjangoFilterBackend,)
-    filter_class = UserFilter
+    filterset_class = UserFilter
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -114,7 +115,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
     # authentication_classes = (TokenAuthentication, )
     filter_backends = (DjangoFilterBackend,)
-    filter_class = CategoryFilter
+    filterset_class = CategoryFilter
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -132,7 +133,7 @@ class TagViewSet(viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
     # authentication_classes = (TokenAuthentication, )
     filter_backends = (DjangoFilterBackend,)
-    filter_class = TagFilter
+    filterset_class = TagFilter
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -154,14 +155,13 @@ class LemmaViewSet(viewsets.ModelViewSet):
             queryset = Lemma.objects.exclude(
                 id__in=Edit_of_article.objects.filter(lemma__isnull=False)
             )
-        self.filter = self.filter_class(self.request.GET, queryset=queryset)
-        return self.filter.qs.distinct()
+        return queryset
 
     queryset = Lemma.objects.all()
     serializer_class = LemmaSerializer
     pagination_class = LargeResultsSetPagination
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
-    filter_class = LemmaFilter
+    filterset_class = LemmaFilter
 
 
 class EditOfArticleViewSet(viewsets.ModelViewSet):
@@ -169,7 +169,7 @@ class EditOfArticleViewSet(viewsets.ModelViewSet):
     serializer_class = EditOfArticleSerializer
     pagination_class = LargeResultsSetPagination
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
-    filter_class = EditOfArticleFilter
+    filterset_class = EditOfArticleFilter
 
     def get_serializer_class(self):
         parameter = self.request.query_params.get("reporting")
@@ -213,10 +213,11 @@ class Es_documentViewSet(viewsets.ModelViewSet):
     # es_id__starts_with = django_filters.CharFilter(lookup_expr='istartswith', field_name="es_id")
     filter_fields = ("es_id", "index", "version", "in_collections", "tag")
 
-    # filter_class = Es_Document_es_id_filter
+    # filterset_class = Es_Document_es_id_filter
     def get_queryset(self):
         qs = super().get_queryset()
         es = str(self.request.query_params.get("es_id__startswith")).lower()
+        print("es", es)
         if isinstance(es, str) and len(es) > 1 and es != "none":
             return qs.filter(es_id__istartswith=es)
         if bool(self.request.query_params.get("cache_only")) is True:
@@ -312,7 +313,7 @@ class CollectionViewSet(viewsets.ModelViewSet):
     # authentication_classes = (TokenAuthentication, )
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     # filter_fields = ('title', 'created_by', 'public', 'annotations')
-    filter_class = CollectionFilter
+    filterset_class = CollectionFilter
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
@@ -339,12 +340,15 @@ class AnnotationViewSet(viewsets.ModelViewSet):
     permission_classes = (DjangoObjectPermissionsOrAnonReadOnly,)
     # authentication_classes = (TokenAuthentication, )
     filter_backends = (DjangoFilterBackend,)
-    filter_class = AnnotationFilter
+    filterset_class = AnnotationFilter
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
 
+@extend_schema(
+    responses={200: {}}
+)
 @api_view()
 def dboe_query(request):
     """
@@ -369,8 +373,10 @@ def dboe_query(request):
 #                    project info view                          #
 #################################################################
 
-
-@api_view()
+@extend_schema(
+    responses={200: Dict[str, str]}
+)
+@api_view(['GET'])
 def project_info(request):
     """
     returns a dict providing metadata about the current project
@@ -378,15 +384,4 @@ def project_info(request):
 
     info_dict = deepcopy(PM)
     info_dict["base_tech"] = "django rest framework"
-    return Response(info_dict)
-
-
-@api_view()
-def version_info(request):
-    """
-    returns a software version
-    """
-    info_dict = None
-    with open("version.json") as version_file:
-        info_dict = json.load(version_file)
     return Response(info_dict)

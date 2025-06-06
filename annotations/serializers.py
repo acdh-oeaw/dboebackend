@@ -304,7 +304,7 @@ class LemmaSerializer(serializers.HyperlinkedModelSerializer):
     )
     assigned_task = serializers.SerializerMethodField()
 
-    def get_assigned_task(self, lemma):
+    def get_assigned_task(self, lemma) -> dict | None:
         curr_lemma = Lemma.objects.get(id=lemma.id)
         if curr_lemma.simplex is not None:
             lemma = curr_lemma.simplex
@@ -354,8 +354,8 @@ class CollectionListSerializer(serializers.HyperlinkedModelSerializer):
         source="category.name", read_only=True, allow_null=True
     )
 
-    def get_document_docs(self, document):
-        return len(document.es_document.all())
+    def get_document_docs(self, document) -> int:
+        return document.es_document.all().count()
 
     class Meta:
         model = Collection

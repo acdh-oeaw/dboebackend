@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "guardian",
     "crispy_forms",
+    "crispy_bootstrap5",
     "rest_framework",
     "rest_framework.authtoken",
     "drf_spectacular",
@@ -149,3 +150,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 ES_DBOE = "https://walk-want-grew.acdh.oeaw.ac.at/"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"

@@ -5,7 +5,6 @@ from annotations import api_views
 from rest_framework.authtoken import views
 from drf_spectacular.views import (
     SpectacularAPIView,
-    SpectacularRedocView,
     SpectacularSwaggerView,
 )
 
@@ -28,14 +27,7 @@ urlpatterns = [
     path("api-token-auth/", views.obtain_auth_token),
     path("authenticate/", api_views.CustomObtainAuthToken.as_view()),
     path("project-info/", api_views.project_info),
-    path("version/", api_views.version_info),
     path("api/dboe-query/", api_views.dboe_query),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-    # Optional UI:
     path("", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
-    path(
-        "api/schema/redoc/",
-        SpectacularRedocView.as_view(url_name="schema"),
-        name="redoc",
-    ),
 ]
