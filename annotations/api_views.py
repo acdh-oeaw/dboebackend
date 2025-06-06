@@ -154,7 +154,8 @@ class LemmaViewSet(viewsets.ModelViewSet):
             queryset = Lemma.objects.exclude(
                 id__in=Edit_of_article.objects.filter(lemma__isnull=False)
             )
-        return queryset
+        self.filter = self.filter_class(self.request.GET, queryset=queryset)
+        return self.filter.qs.distinct()
 
     queryset = Lemma.objects.all()
     serializer_class = LemmaSerializer
@@ -216,7 +217,6 @@ class Es_documentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         qs = super().get_queryset()
         es = str(self.request.query_params.get("es_id__startswith")).lower()
-        print("es", es)
         if isinstance(es, str) and len(es) > 1 and es != "none":
             return qs.filter(es_id__istartswith=es)
         if bool(self.request.query_params.get("cache_only")) is True:
