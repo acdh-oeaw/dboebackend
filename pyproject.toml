@@ -13,7 +13,7 @@ dependencies = [
     "django-guardian>=3.0.0",
     "djangorestframework>=3.16.0",
     "drf-spectacular>=0.28.0",
-    "elasticsearch>=9.0.1",
+    "elasticsearch==5.5.3",
     "elasticsearch-dsl>=0.0.9",
     "guardian>=0.2.3",
     "psycopg2-binary>=2.9.10",

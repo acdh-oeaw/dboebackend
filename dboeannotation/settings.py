@@ -76,7 +76,7 @@ WSGI_APPLICATION = "dboeannotation.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": os.environ.get("DB_ENGINE", "django.db.backends.postgresql_psycopg2"),
-        "NAME": os.environ.get("POSTGRES_DB", "dboeannotation"),
+        "NAME": os.environ.get("POSTGRES_DB", "dboeannotation_prod"),
         "USER": os.environ.get("POSTGRES_USER", "postgres"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "postgres"),
         "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
@@ -147,3 +147,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+ES_DBOE = "https://walk-want-grew.acdh.oeaw.ac.at/"
