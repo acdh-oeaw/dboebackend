@@ -21,6 +21,164 @@ def set_extra(self, **kwargs):
 models.Field.set_extra = set_extra
 
 
+class BundesLand(models.Model):
+    """
+    Django model representing a federal state (Bundesland) in Austria.
+    This model stores information about Austrian federal states including their
+    official designation, abbreviation, full name, and optional GeoNames reference.
+    """
+
+    sigle = models.CharField(default="1", max_length=20, verbose_name="Bundesland")
+    abbr = models.CharField(default="OÖ", max_length=20, verbose_name="Kürzel")
+    name = models.CharField(
+        default="Oberösterreich", max_length=50, verbose_name="Name"
+    )
+    geonames = models.URLField(
+        max_length=200,
+        blank=True,
+        null=True,
+        verbose_name="GeoNames URL",
+        help_text="Link to corresponding GeoNames entry",
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Bundesland"
+        verbose_name_plural = "Bundesländer"
+        ordering = ["name"]
+
+
+class GRegion(models.Model):
+    """
+    Model representing a geographical greater region (Großregion) in Austria.
+    This model stores information about large geographical regions within Austrian states,
+    including their identification codes, abbreviations, and names. Each region can be
+    associated with a federal state (Bundesland) and linked to external geographical
+    databases like GeoNames.
+    """
+
+    sigle = models.CharField(default="5.4", max_length=20, verbose_name="Großregion")
+    abbr = models.CharField(default="Mühlv.", max_length=20, verbose_name="Kürzel")
+    name = models.CharField(default="Mühlviertel", max_length=50, verbose_name="Name")
+    bundesland = models.ForeignKey(
+        "Bundesland",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name="Bundesland",
+    )
+    geonames = models.URLField(
+        max_length=200,
+        blank=True,
+        null=True,
+        verbose_name="GeoNames URL",
+        help_text="Link to corresponding GeoNames entry",
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Großregion"
+        verbose_name_plural = "Großregionen"
+        ordering = ["name"]
+
+
+class KRegion(models.Model):
+    """
+    Model representing a small region (Kleinregion) in Austria.
+    This model stores information about administrative subdivisions within larger regions,
+    including their identifiers, names, and relationships to federal states and larger regions.
+    """
+    sigle = models.CharField(default="1", max_length=20, verbose_name="Kleinregion")
+    abbr = models.CharField(
+        default="swestl.uMühlv.", max_length=20, verbose_name="Kürzel"
+    )
+    name = models.CharField(
+        default="südwestliches Mühlviertel", max_length=50, verbose_name="Name"
+    )
+    bundesland = models.ForeignKey(
+        "Bundesland",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name="Bundesland",
+    )
+    gregion = models.ForeignKey(
+        "GRegion",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name="Großregion",
+    )
+    geonames = models.URLField(
+        max_length=200,
+        blank=True,
+        null=True,
+        verbose_name="GeoNames URL",
+        help_text="Link to corresponding GeoNames entry",
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Kleinregion"
+        verbose_name_plural = "Kleinregionen"
+        ordering = ["name"]
+
+
+class Ort(models.Model):
+    """
+    Django model representing a location/place (Ort) in the DBOE annotation system.
+    This model stores geographical information about places, including their abbreviations,
+    names, and hierarchical relationships to administrative regions (Bundesland, GRegion, KRegion).
+    It also supports linking to external GeoNames entries for additional geographical data.
+    """
+
+    sigle = models.CharField(default="1", max_length=20, verbose_name="Ort")
+    abbr = models.CharField(default="Bad Zell", max_length=20, verbose_name="Kürzel")
+    name = models.CharField(default="Bad Zell", max_length=50, verbose_name="Name")
+    bundesland = models.ForeignKey(
+        "Bundesland",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name="Bundesland",
+    )
+    gregion = models.ForeignKey(
+        "GRegion",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name="Großregion",
+    )
+    kregion = models.ForeignKey(
+        "KRegion",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name="Kleinregion",
+    )
+    geonames = models.URLField(
+        max_length=200,
+        blank=True,
+        null=True,
+        verbose_name="GeoNames URL",
+        help_text="Link to corresponding GeoNames entry",
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Ort"
+        verbose_name_plural = "Orte"
+        ordering = ["name"]
+
+
 class Citation(models.Model):
     """
     Django model representing a citation extracted from TEI XML documents.
@@ -194,7 +352,9 @@ class Beleg(models.Model):
                 try:
                     item = Citation.objects.get(dboe_id=xml_id)
                 except Citation.DoesNotExist:
-                    item = Citation(dboe_id=xml_id, beleg=self, number=number, orig_xml=orig_xml)
+                    item = Citation(
+                        dboe_id=xml_id, beleg=self, number=number, orig_xml=orig_xml
+                    )
                 try:
                     item.save()
                 except Exception as e:
