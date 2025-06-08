@@ -13,7 +13,7 @@ class Command(BaseCommand):
     help = "imports dboe xmls"
 
     def handle(self, *args, **options):
-        files = sorted(glob.glob("/home/csae8092/repos/dboe/legacy-data/orig-files/*.xml"))
+        files = sorted(glob.glob("/home/csae8092/repos/dboe/legacy-data/orig-files/d178_*.xml"))
         for f, x in enumerate(files, start=1):
             print(f"{f}/{len(files)} files")
             fname = os.path.split(x)[-1]
@@ -30,4 +30,5 @@ class Command(BaseCommand):
                     beleg.xeno_data = xenos[i].text
                 except IndexError:
                     beleg.xeno_data = "NO MATCHING ENTRY FOUND: HANSI4EVER"
-                beleg.save()
+                    beleg.import_issue = True
+                beleg.save(add_citations=True)

@@ -92,26 +92,6 @@ class Beleg(models.Model):
     Django model representing a Beleg entry from the DBÖ (Dictionary of Bavarian Dialects in Austria) database.
     This model stores linguistic evidence with metadata extracted from TEI-XML documents. It automatically
     populates fields from XML using XPath expressions and can create related Citation objects.
-    Attributes:
-        dboe_id (CharField): Primary key, unique identifier for the DBÖ entry
-        orig_xml (XMLField): Original TEI-XML entry data
-        xeno_data (TextField): Legacy transcription data
-        hauptlemma (CharField): Main lemma extracted from XML
-        nebenlemma (CharField): Secondary lemma extracted from XML
-        archivzeile (CharField): Archive reference extracted from XML
-        quelle (CharField): Source reference extracted from XML
-        quelle_bearbeitet (CharField): Processed source reference extracted from XML
-        bibl (CharField): Bibliography reference extracted from XML
-        pos (CharField): Part of speech tag with predefined choices
-    Methods:
-        save(add_citations=False, *args, **kwargs):
-            Overrides default save to automatically extract field values from orig_xml
-            using XPath expressions. Optionally creates Citation objects when add_citations=True.
-        __str__(): Returns the dboe_id as string representation.
-    Meta:
-        verbose_name: "Beleg"
-        verbose_name_plural: "Belege"
-        ordering: Ordered by dboe_id
     """
 
     dboe_id = models.CharField(
@@ -146,6 +126,11 @@ class Beleg(models.Model):
         verbose_name="POS",
         choices=POS_CHOICES,
     ).set_extra(xpath=".//tei:gramGrp/tei:pos", node_type="text")
+    import_issue = models.BooleanField(
+        default=False,
+        verbose_name="Import issue",
+        help_text="Set to True if there was an issue during import",
+    )
 
     class Meta:
         verbose_name = "Beleg"
@@ -193,6 +178,12 @@ class Beleg(models.Model):
                         except IndexError:
                             continue
                         value = extract_fulltext(nodes)
+                        if isinstance(field, models.CharField):
+                            if field.max_length and len(value) > field.max_length:
+                                value = value[: field.max_length]
+                                self.import_issue = True
+                        if isinstance(field, (models.CharField, models.TextField)):
+                            value = value.strip()
                         setattr(self, field.name, value)
         if self.orig_xml and add_citations:
             items = doc.any_xpath("./tei:cit")
@@ -203,7 +194,6 @@ class Beleg(models.Model):
                 try:
                     item = Citation.objects.get(dboe_id=xml_id)
                 except Citation.DoesNotExist:
-                    # If the citation does not exist, create it
                     item = Citation(dboe_id=xml_id, beleg=self, number=number, orig_xml=orig_xml)
                 try:
                     item.save()
