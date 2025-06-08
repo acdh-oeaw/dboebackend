@@ -29,9 +29,9 @@ class BundesLand(models.Model):
     """
 
     sigle = models.CharField(default="1", max_length=20, verbose_name="Bundesland")
-    abbr = models.CharField(default="OÖ", max_length=20, verbose_name="Kürzel")
+    abbr = models.CharField(default="OÖ", max_length=50, verbose_name="Kürzel")
     name = models.CharField(
-        default="Oberösterreich", max_length=50, verbose_name="Name"
+        default="", max_length=50, verbose_name="Name"
     )
     geonames = models.URLField(
         max_length=200,
@@ -42,7 +42,10 @@ class BundesLand(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        if self.name:
+            return f"{self.name} ({self.sigle})"
+        else:
+            return f"{self.abbr} ({self.sigle})"
 
     class Meta:
         verbose_name = "Bundesland"
@@ -60,8 +63,8 @@ class GRegion(models.Model):
     """
 
     sigle = models.CharField(default="5.4", max_length=20, verbose_name="Großregion")
-    abbr = models.CharField(default="Mühlv.", max_length=20, verbose_name="Kürzel")
-    name = models.CharField(default="Mühlviertel", max_length=50, verbose_name="Name")
+    abbr = models.CharField(default="Mühlv.", max_length=50, verbose_name="Kürzel")
+    name = models.CharField(default="", max_length=50, verbose_name="Name")
     bundesland = models.ForeignKey(
         "Bundesland",
         blank=True,
@@ -78,7 +81,10 @@ class GRegion(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        if self.name:
+            return f"{self.name} ({self.sigle})"
+        else:
+            return f"{self.abbr} ({self.sigle})"
 
     class Meta:
         verbose_name = "Großregion"
@@ -94,10 +100,10 @@ class KRegion(models.Model):
     """
     sigle = models.CharField(default="1", max_length=20, verbose_name="Kleinregion")
     abbr = models.CharField(
-        default="swestl.uMühlv.", max_length=20, verbose_name="Kürzel"
+        default="swestl.uMühlv.", max_length=50, verbose_name="Kürzel"
     )
     name = models.CharField(
-        default="südwestliches Mühlviertel", max_length=50, verbose_name="Name"
+        default="", max_length=50, verbose_name="Name"
     )
     bundesland = models.ForeignKey(
         "Bundesland",
@@ -122,7 +128,10 @@ class KRegion(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        if self.name:
+            return f"{self.name} ({self.sigle})"
+        else:
+            return f"{self.abbr} ({self.sigle})"
 
     class Meta:
         verbose_name = "Kleinregion"
@@ -139,8 +148,7 @@ class Ort(models.Model):
     """
 
     sigle = models.CharField(default="1", max_length=20, verbose_name="Ort")
-    abbr = models.CharField(default="Bad Zell", max_length=20, verbose_name="Kürzel")
-    name = models.CharField(default="Bad Zell", max_length=50, verbose_name="Name")
+    name = models.CharField(default="", max_length=250, verbose_name="Name")
     bundesland = models.ForeignKey(
         "Bundesland",
         blank=True,
@@ -171,7 +179,10 @@ class Ort(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        if self.name:
+            return f"{self.name} ({self.sigle})"
+        else:
+            return f"{self.abbr} ({self.sigle})"
 
     class Meta:
         verbose_name = "Ort"

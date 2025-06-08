@@ -1,6 +1,14 @@
 from django.contrib import admin
-from belege.models import Beleg, Citation
 from django.db import models
+
+from belege.models import (
+    Beleg,
+    Citation,
+    BundesLand,
+    GRegion,
+    KRegion,
+    Ort,
+)
 
 
 @admin.register(Beleg)
@@ -36,3 +44,35 @@ class CitationAdmin(admin.ModelAdmin):
     ]
     ordering = ["beleg", "number"]
     autocomplete_fields = ["beleg"]
+
+
+@admin.register(BundesLand)
+class BundesLandAdmin(admin.ModelAdmin):
+    list_display = ["sigle", "abbr", "name", "geonames"]
+    search_fields = ["sigle", "abbr", "name"]
+    ordering = ["name"]
+
+
+@admin.register(GRegion)
+class GRegionAdmin(admin.ModelAdmin):
+    list_display = ["sigle", "abbr", "name", "bundesland"]
+    search_fields = ["sigle", "abbr", "name"]
+    ordering = ["name"]
+    list_filter = ["bundesland"]
+
+
+@admin.register(KRegion)
+class KRegionAdmin(admin.ModelAdmin):
+    list_display = ["sigle", "abbr", "name", "bundesland", "gregion", "geonames"]
+    search_fields = ["sigle", "abbr", "name"]
+    autocomplete_fields = ["bundesland", "gregion"]
+    ordering = ["name"]
+    list_filter = ["bundesland", "gregion"]
+
+
+@admin.register(Ort)
+class OrtAdmin(admin.ModelAdmin):
+    list_display = ["sigle", "name", "bundesland", "gregion", "kregion", "geonames"]
+    search_fields = ["sigle", "name"]
+    autocomplete_fields = ["bundesland", "gregion", "kregion"]
+    ordering = ["name"]
