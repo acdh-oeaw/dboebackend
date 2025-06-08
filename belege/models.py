@@ -295,6 +295,13 @@ class Beleg(models.Model):
         verbose_name="POS",
         choices=POS_CHOICES,
     ).set_extra(xpath=".//tei:gramGrp/tei:pos", node_type="text")
+    ort = models.ForeignKey(
+        "Ort",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name="Ort",
+    ).set_extra(xpath=".//tei:place[@type='Ort']/tei:idno", node_type="text")
     import_issue = models.BooleanField(
         default=False,
         verbose_name="Import issue",
@@ -311,7 +318,7 @@ class Beleg(models.Model):
             return f"{self.dboe_id} ({self.hauptlemma})"
         return f"{self.dboe_id}"
 
-    def save(self, add_citations=False, *args, **kwargs):
+    def save(self, add_citations=False, add_places=False, *args, **kwargs):
         """
         Save the model instance with optional XML processing and citation extraction.
         This method extends the default save behavior by:
@@ -339,7 +346,9 @@ class Beleg(models.Model):
             except AttributeError:
                 doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
             for field in self._meta.fields:
-                if hasattr(field, "extra") and "xpath" in field.extra:
+                if hasattr(field, "extra") and "xpath" in field.extra and isinstance(
+                    field, (models.CharField, models.TextField)
+                ):
                     if self.orig_xml:
                         xpath_expr = field.extra["xpath"]
                         try:
@@ -370,4 +379,16 @@ class Beleg(models.Model):
                     item.save()
                 except Exception as e:
                     print(f"Error saving citation {xml_id}: {e}")
+        if self.orig_xml and add_places:
+            xpath = self._meta.get_field("ort").extra.get("xpath", None)
+            try:
+                sigle = doc.any_xpath(xpath)[0].text
+                try:
+                    ort = Ort.objects.get(sigle=sigle)
+                    self.ort = ort
+                except Ort.DoesNotExist:
+                    print(f"Ort with sigle {sigle} does not exist")
+                    pass
+            except IndexError:
+                pass
         super().save(*args, **kwargs)

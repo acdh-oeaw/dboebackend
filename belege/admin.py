@@ -16,7 +16,7 @@ class BelegAdmin(admin.ModelAdmin):
     list_display = [
         field.name
         for field in Beleg._meta.fields
-        if isinstance(field, (models.CharField, models.TextField))
+        if isinstance(field, (models.CharField, models.TextField, models.ForeignKey))
     ]
     search_fields = [
         field.name
@@ -26,6 +26,7 @@ class BelegAdmin(admin.ModelAdmin):
     search_fields = ["dboe_id", "hauptlemma"]
     list_filter = ["import_issue", "pos"]
     ordering = ["dboe_id"]
+    autocomplete_fields = ["ort"]
 
 
 @admin.register(Citation)
