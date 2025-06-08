@@ -13,9 +13,9 @@ class Command(BaseCommand):
     help = "imports dboe xmls"
 
     def handle(self, *args, **options):
-        files = sorted(glob.glob("/home/csae8092/repos/dboe/legacy-data/orig-files/*xml"))
-
-        for x in files:
+        files = sorted(glob.glob("/home/csae8092/repos/dboe/legacy-data/orig-files/*.xml"))
+        for f, x in enumerate(files, start=1):
+            print(f"{f}/{len(files)} files")
             fname = os.path.split(x)[-1]
             doc = TeiReader(x)
             items = doc.any_xpath(".//tei:entry")
@@ -26,5 +26,8 @@ class Command(BaseCommand):
                 node_as_text = ET.tostring(entry, encoding='unicode')
                 beleg, _ = Beleg.objects.get_or_create(dboe_id=xml_id)
                 beleg.orig_xml = node_as_text
-                beleg.xeno_data = xenos[i].text
+                try:
+                    beleg.xeno_data = xenos[i].text
+                except IndexError:
+                    beleg.xeno_data = "NO MATCHING ENTRY FOUND: HANSI4EVER"
                 beleg.save()
