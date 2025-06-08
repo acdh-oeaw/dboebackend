@@ -38,3 +38,4 @@ supervisord.pid
 .secret
 dboeannotation_prod_dump.sql
 foo.json
+Untitled*
