@@ -43,6 +43,11 @@ class Beleg(models.Model):
         choices=POS_CHOICES,
     ).set_extra(xpath=".//tei:gramGrp/tei:pos", node_type="text")
 
+    class Meta:
+        verbose_name = "Beleg"
+        verbose_name_plural = "Belege"
+        ordering = ["dboe_id"]
+
     def __str__(self):
         return f"{self.dboe_id}"
 
