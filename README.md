@@ -38,3 +38,18 @@ DJANGO_SECRET_KEY=random string generated on start,
 DJANGO_CORS_ORIGIN_WHITELIST=('127.0.0.1','127.0.0.1:8080','localhost:8000','localhost:8080')
 DATABASE_URL=sqlite:///$(pwd)/db.sqlite3
 ```
+
+
+## Docker
+
+### building the image
+
+```shell
+docker build -t dboeanntoation:latest .
+```
+
+### running the image
+
+```shell
+docker run -it --network="host" --rm --env-file .env dboeanntoation:latest
+```
