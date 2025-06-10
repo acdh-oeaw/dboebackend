@@ -9,5 +9,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         total = Beleg.objects.count()
         for x in tqdm(Beleg.objects.iterator(), total=total):
-            x.save(add_citations=True, add_places=True)
+            try:
+                x.save(add_citations=True, add_places=True)
+            except Exception as e:
+                print(f"failed to save {x} due to {e}")
+                x.import_issue = True
+                x.save()
         print("done")
