@@ -365,7 +365,7 @@ dependencies = [
     { name = "drf-spectacular" },
     { name = "elasticsearch" },
     { name = "elasticsearch-dsl" },
-    { name = "guardian" },
+    { name = "gunicorn" },
     { name = "psycopg2-binary" },
 ]
 
@@ -392,7 +392,7 @@ requires-dist = [
     { name = "drf-spectacular", specifier = ">=0.28.0" },
     { name = "elasticsearch", specifier = "==5.5.3" },
     { name = "elasticsearch-dsl", specifier = ">=0.0.9" },
-    { name = "guardian", specifier = ">=0.2.3" },
+    { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
 ]
 
@@ -608,16 +608,15 @@ wheels = [
 ]
 
 [[package]]
-name = "guardian"
-version = "0.2.3"
+name = "gunicorn"
+version = "23.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "jinja2" },
-    { name = "pyyaml" },
+    { name = "packaging" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7e/12/21942f59da204735115a6bce7677bfdc01d3b7c8630f27cee6c081aec028/guardian-0.2.3.tar.gz", hash = "sha256:08c8679ecf601668414284a294ffeb760aed12f3e7a5d76c9160c5217f01d373", size = 19130 }
+sdist = { url = "https://files.pythonhosted.org/packages/34/72/9614c465dc206155d93eff0ca20d42e1e35afc533971379482de953521a4/gunicorn-23.0.0.tar.gz", hash = "sha256:f014447a0101dc57e294f6c18ca6b40227a4c90e9bdb586042628030cba004ec", size = 375031 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dc/cf/8e91450a306f012eb3e61082ecdf8a8751d35870c721d040ae9c16091f84/guardian-0.2.3-py3-none-any.whl", hash = "sha256:aef5f6253eda4ce58f31f734356c443a98c76823cf759569e17184035489b4b6", size = 20306 },
+    { url = "https://files.pythonhosted.org/packages/cb/7d/6dac2a6e1eba33ee43f318edbed4ff29151a49b5d37f080aad1e6469bca4/gunicorn-23.0.0-py3-none-any.whl", hash = "sha256:ec400d38950de4dfd418cff8328b2c8faed0edb0d517d3394e457c317908ca4d", size = 85029 },
 ]
 
 [[package]]
