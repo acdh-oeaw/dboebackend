@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "django_filters",
     "django_extensions",
+    "django_spaghetti",
     "annotations",
     "belege",
 ]
@@ -102,6 +103,15 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPAGHETTI_SAUCE = {
+    "apps": [
+        "annotations",
+        "belege",
+    ],
+    "show_fields": False,
+    "exclude": {"auth": ["user"]},
 }
 
 SPECTACULAR_SETTINGS = {
