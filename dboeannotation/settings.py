@@ -17,9 +17,19 @@ SECRET_KEY = "django-insecure-^3!-pfn650#z15w994akkhjood5ew^-%cm+g7)%u5_wh7lpz%i
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ.get("DEBUG"):
+    DEBUG = True
+else:
+    DEBUG = False
 
-ALLOWED_HOSTS = []
+
+ADD_ALLOWED_HOST = os.environ.get("ALLOWED_HOST", "*")
+
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "0.0.0.0",
+    ADD_ALLOWED_HOST,
+]
 
 
 # Application definition
