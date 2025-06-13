@@ -28,7 +28,7 @@ class BundesLand(models.Model):
     official designation, abbreviation, full name, and optional GeoNames reference.
     """
 
-    sigle = models.CharField(default="1", max_length=20, verbose_name="Bundesland")
+    sigle = models.CharField(default="1", max_length=20, verbose_name="Signatur", help_text="whatever")
     abbr = models.CharField(default="OÖ", max_length=50, verbose_name="Kürzel")
     name = models.CharField(
         default="", max_length=50, verbose_name="Name"
