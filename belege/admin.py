@@ -27,6 +27,7 @@ class BelegAdmin(admin.ModelAdmin):
     list_filter = ["import_issue", "pos"]
     ordering = ["dboe_id"]
     autocomplete_fields = ["ort"]
+    list_per_page = 20
 
 
 @admin.register(Citation)
@@ -45,6 +46,7 @@ class CitationAdmin(admin.ModelAdmin):
     ]
     ordering = ["beleg", "number"]
     autocomplete_fields = ["beleg"]
+    list_per_page = 20
 
 
 @admin.register(BundesLand)
