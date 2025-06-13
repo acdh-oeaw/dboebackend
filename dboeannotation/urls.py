@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from annotations import api_views
+from belege import api_views as belege_api_views
 from rest_framework.authtoken import views
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -11,15 +12,22 @@ from django_spaghetti.views import Plate
 
 
 router = routers.DefaultRouter()
-router.register(r"users", api_views.UserViewSet)
-router.register(r"categories", api_views.CategoryViewSet)
-router.register(r"tags", api_views.TagViewSet)
-router.register(r"documents", api_views.Es_documentViewSet)
-router.register(r"collections", api_views.CollectionViewSet)
-router.register(r"annotations", api_views.AnnotationViewSet)
-router.register(r"lemmas", api_views.LemmaViewSet)
-router.register(r"author_artikel", api_views.AutorArtikelViewSet)
-router.register(r"article_edits", api_views.EditOfArticleViewSet)
+router.register("users", api_views.UserViewSet)
+router.register("categories", api_views.CategoryViewSet)
+router.register("tags", api_views.TagViewSet)
+router.register("documents", api_views.Es_documentViewSet)
+router.register("collections", api_views.CollectionViewSet)
+router.register("annotations", api_views.AnnotationViewSet)
+router.register("lemmas", api_views.LemmaViewSet)
+router.register("author_artikel", api_views.AutorArtikelViewSet)
+router.register("article_edits", api_views.EditOfArticleViewSet)
+router.register("bundeslaender", belege_api_views.BundesLandViewSet)
+router.register("gregionen", belege_api_views.GRegionViewSet)
+router.register("kregionen", belege_api_views.KRegionViewSet)
+router.register("orte", belege_api_views.OrtViewSet)
+router.register("belege", belege_api_views.BelegViewSet)
+# router.register("zitate", belege_api_views.CitationViewSet)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),

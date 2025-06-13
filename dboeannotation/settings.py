@@ -48,12 +48,12 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "rest_framework",
     "rest_framework.authtoken",
-    "drf_spectacular",
     "django_filters",
     "django_extensions",
     "django_spaghetti",
     "annotations",
     "belege",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -90,7 +90,9 @@ WSGI_APPLICATION = "dboeannotation.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.config(default="postgres://postgres:postgres@localhost/dboebackend", conn_max_age=600)
+    "default": dj_database_url.config(
+        default="postgres://postgres:postgres@localhost/dboebackend", conn_max_age=600
+    )
 }
 
 REST_FRAMEWORK = {
@@ -115,11 +117,11 @@ SPAGHETTI_SAUCE = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-    # OTHER SETTINGS
+    "TITLE": "DBÖ-Backend",
+    "DESCRIPTION": "Your project description",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": True,
+    # "DISABLE_ERRORS_AND_WARNINGS": True
 }
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -174,3 +176,4 @@ ES_DBOE = "https://walk-want-grew.acdh.oeaw.ac.at/"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+# FILTERS_DEFAULT_LOOKUP_EXPR = "icontains"
