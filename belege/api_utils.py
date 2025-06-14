@@ -19,7 +19,7 @@ def get_filterset_for_model(model_class):
             super().__init__(*args, **kwargs)
             for field in self._meta.model._meta.fields:
                 field_name = field.name
-                if isinstance(field, models.CharField):
+                if isinstance(field, models.CharField) or isinstance(field, models.TextField):
                     self.filters[f'{field_name}__icontains'] = filters.CharFilter(
                         field_name=field_name,
                         lookup_expr='icontains',
