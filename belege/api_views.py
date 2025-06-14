@@ -3,14 +3,14 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 
 from belege.api_utils import get_filterset_for_model
-from belege.serializers import get_serializer_for_model
+from belege.serializers import get_serializer_for_model, CitationSerializer
 from belege.models import BundesLand, GRegion, KRegion, Ort, Beleg, Citation
 
 
 class CustomPagination(PageNumberPagination):
     page_size = 10
-    page_size_query_param = 'page_size'
     max_page_size = 20
+    page_size_query_param = "page_size"
 
 
 class CustomViewSet(viewsets.ModelViewSet):
@@ -18,7 +18,10 @@ class CustomViewSet(viewsets.ModelViewSet):
     pagination_class = CustomPagination
 
     def get_serializer_class(self):
-        return get_serializer_for_model(self.queryset.model)
+        if self.serializer_class:
+            return self.serializer_class
+        else:
+            return get_serializer_for_model(self.queryset.model)
 
 
 class BundesLandViewSet(CustomViewSet):
@@ -46,6 +49,13 @@ class BelegViewSet(CustomViewSet):
     filterset_class = get_filterset_for_model(Beleg)
 
 
-class CitationViewSet(CustomViewSet):
+class CitationViewSet(viewsets.ModelViewSet):
+    page_size = 10
+    max_page_size = 20
+    page_size_query_param = "page_size"
+    pagination_class = CustomPagination
     queryset = Citation.objects.all()
     filterset_class = get_filterset_for_model(Citation)
+    serializer_class = CitationSerializer
+    lookup_field = "dboe_id"
+    lookup_value_regex = r'[^/]+'  # the default regex does not work with dboe_ids due to e.g. `.`
