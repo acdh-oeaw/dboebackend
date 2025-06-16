@@ -8,7 +8,6 @@ from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
 )
-from django_spaghetti.views import Plate
 
 
 router = routers.DefaultRouter()
@@ -38,6 +37,10 @@ urlpatterns = [
     path("project-info/", api_views.project_info),
     path("api/dboe-query/", api_views.dboe_query),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-    path("", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
-    path("data-model/", Plate.as_view()),
+    path(
+        "api/schema/swagger-ui/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path("", include("webpage.urls", namespace="webpage")),
 ]
