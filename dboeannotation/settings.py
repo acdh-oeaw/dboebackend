@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "annotations",
     "belege",
     "drf_spectacular",
+    "webpage",
 ]
 
 MIDDLEWARE = [
@@ -71,10 +72,11 @@ ROOT_URLCONF = "dboeannotation.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
@@ -176,4 +178,6 @@ ES_DBOE = "https://walk-want-grew.acdh.oeaw.ac.at/"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
-# FILTERS_DEFAULT_LOOKUP_EXPR = "icontains"
+
+ACDH_IMPRINT_URL = "https://imprint.acdh.oeaw.ac.at/"
+REDMINE_ID = os.environ.get("REDMINE_ID", 25258)
