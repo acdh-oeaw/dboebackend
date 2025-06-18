@@ -1,0 +1,26 @@
+<json type="object">
+    <ID>d176_qdb-d1e73</ID>
+    <Archivzeile>HK 176, t176#4.1 = t1761014.sch#4.1</Archivzeile>
+    <HL>(Ge)trēide</HL>
+    <POS>Subst</POS>
+    <BD_002fKT_002a type="array">
+        <_>schlechtestes Getreide ›KT1</_>
+    </BD_002fKT_002a>
+    <KT1>after[ne] Troad [n]</KT1>
+    <KL_002fKT1>Fg:21</KL_002fKT1>
+    <ZW1>S. HA-4690a-c</ZW1>
+    <QU>Oö. Wb.330</QU>
+    <Page>330</Page>
+    <QDB>{5} OÖ </QDB>
+    <BIBL>OöWb.(1978)</BIBL>
+    <Ort type="array">
+        <_>OÖ</_>
+    </Ort>
+    <Sigle1 type="array">
+        <_>⚠</_>
+        <_>5</_>
+    </Sigle1>
+    <Bundesland1 type="array">
+        <_>5 OÖ</_>
+    </Bundesland1>
+</json>
