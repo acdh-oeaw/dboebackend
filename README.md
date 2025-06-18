@@ -2,15 +2,10 @@
 
 REST-Service to expose, curate and enrich DBÖ-Belegzettel
 
-## About
-
-REST service to create collections from documents coming from elasticsearch index and annotate them.
-Service also handles the authentication and user management system.
-
 ## Technical setup
 
 The application is implemented using Python, [Django](https://www.djangoproject.com/) and [Django Rest Framework](https://www.django-rest-framework.org/).
-It stores the data in PostgreSQL database using PostgreSQL's native XML field to store TEI/XML modelled Belegzettel.
+It stores the data in PostgreSQL database using PostgreSQL's native XML field to store TEI/XML modelled Belegzettel. See [sample_entries.xml](sample_entries.xml).
 
 ### install
 

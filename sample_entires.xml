@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TEI-Header was removed as well as the tei:namespace -->
+<root>
+    <entry xml:id="d179_qdb-d1e286" n="65931" source="#orig-d179_qdb-d1e286">
+        <form type="hauptlemma" xml:id="tu-10127.59">
+            <orth>treu</orth>
+        </form>
+        <gramGrp>
+            <pos>Adj</pos>
+        </gramGrp>
+        <cit type="kontext" n="1" xml:id="tu-10128.4">
+            <quote xml:lang="bar">īs e͡am <pRef>dre͡i</pRef>
+                <seg type="gram"> [P] </seg> bis um
+                fira</quote>
+            <interp>Ra.</interp>
+            <note type="anmerkung" resp="O">
+                <pRef>fira</pRef> = 4 Uhr</note>
+            <note type="anmerkung" resp="B">
+                <pRef>bis um fira</pRef> = nicht lang</note>
+            <def xml:lang="de" corresp="this:WBD/KT1" xml:id="tu-10128.5">drei (3) statt treu</def>
+            <ref type="fragebogenNummer" xml:id="tu-10128.3">88E15 (F6): flatterhaftes,
+                leichtfertiges Mädchen (*)</ref>
+        </cit>
+        <ref type="archiv" xml:id="tu-10127.58">HK 179, t179#11.1 = t1790107.eck#11.1</ref>
+        <ref type="quelle" xml:id="tu-10127.60">Pottendf., Anders</ref>
+        <ref type="quelleBearbeitet" xml:id="tu-10128.1">{6.2j15}
+            sWr.Beck.:Wr.Beck.:söIndustriev.:sIndustriev.:öIndustriev.:Industriev.:NÖ </ref>
+        <ref type="bibl" corresp="this:QDB">
+            <bibl>FbB.ANDERS· (1927) [SFb./Mtlg.]</bibl>
+        </ref>
+        <usg type="geo" corresp="this:QDB">
+            <placeName type="orig">Pottendf. NÖ</placeName>
+            <listPlace corresp="sigle:6.2j15">
+                <place type="Bundesland">
+                    <placeName>NÖ</placeName>
+                    <idno>6</idno>
+                    <listPlace>
+                        <place type="Großregion">
+                            <placeName>Industriev.</placeName>
+                            <idno>6.2</idno>
+                            <listPlace>
+                                <place type="Kleinregion">
+                                    <placeName>sWr.Beck.</placeName>
+                                    <idno>6.2j</idno>
+                                    <listPlace>
+                                        <place type="Gemeinde">
+                                            <placeName>Pottendorf</placeName>
+                                            <listPlace>
+                                                <place type="Ort">
+                                                    <placeName>Pottendorf</placeName>
+                                                    <idno>6.2j15</idno>
+                                                </place>
+                                            </listPlace>
+                                        </place>
+                                    </listPlace>
+                                </place>
+                            </listPlace>
+                        </place>
+                    </listPlace>
+                </place>
+            </listPlace>
+        </usg>
+        <prefixDef ident="this" matchPattern="this:QDB" replacementPattern="#xpath(ancestor::entry//ref[@type = 'quelleBearbeitet'][position() = '$1'])" />
+    </entry>
+    <entry xml:id="d179_qdb-d1e750" n="65950" source="#orig-d179_qdb-d1e750">
+        <form type="hauptlemma" xml:id="tu-10130.50">
+            <orth>(ge)treu</orth>
+        </form>
+        <gramGrp>
+            <pos>Adj</pos>
+        </gramGrp>
+        <cit type="kontext" n="1" xml:id="tu-10130.54">
+            <quote xml:lang="bar">Wir thun allenthalb als der <pRef>getrew</pRef>
+                <seg type="gram">
+                    [P] </seg> Eckart und bitten ewer lieb unser erjnnerung nicht zu verargen, denn
+                wir thuns in trewen</quote>
+        </cit>
+        <cit type="kontext" n="2" xml:id="tu-10130.56">
+            <quote xml:lang="bar">der <pRef>getrew</pRef>
+                <seg type="gram"> [P,fl] </seg>
+                Eckart</quote>
+            <interp>Fg:A21</interp>
+        </cit>
+        <ref type="archiv" xml:id="tu-10130.49">HK 179, t179#30.1 = t1790107.eck#30.1</ref>
+        <ref type="quelle" xml:id="tu-10130.51">Briefe u.Acten [FRA XLVI], Koppitz<ref type="date">
+            <date>(Ansbach 1467)</date>
+        </ref>
+        <ref type="seite">40</ref>
+    </ref>
+    <ref type="quelleBearbeitet" xml:id="tu-10130.52">{X} hist. </ref>
+    <ref type="bibl" corresp="this:QDB">
+        <bibl>FRA 2/46</bibl>
+    </ref>
+    <ref type="dbo" xml:id="tu-10130.57">x</ref>
+</entry>
+<entry xml:id="d179_qdb-d1e29" n="65922" source="#orig-d179_qdb-d1e29">
+    <form type="hauptlemma" xml:id="tu-10126.38">
+        <orth>treu</orth>
+    </form>
+    <gramGrp>
+        <pos>Adj</pos>
+    </gramGrp>
+    <form type="lautung" n="1" xml:id="tu-10126.42">
+        <pron xml:lang="bar" notation="teuthonista">treu</pron>
+    </form>
+    <sense corresp="this:LT1" xml:id="tu-10126.43">
+        <def xml:lang="de">EHRLICH, REDLICH</def>
+        <note type="anmerkung" resp="O">Man versteht hauptsächlich nur den Begriff des
+                Ehrlichen, Redlichen darunter und nennt so eine Person, die sich nicht fremdes Gut
+                aneignet, der man solches anvertrauen kann, die nichts veruntreut. Am öftesten wird
+                dies Wort in Bezug auf Dienstboten, aber in dem angegebenen Sinne, gebraucht.</note>
+    </sense>
+    <note type="anmerkung" n="1" corresp="this:LT1" resp="O">adj.</note>
+    <ref type="archiv" xml:id="tu-10126.37">HK 179, t179#2.1 = t1790107.eck#2.1</ref>
+    <ref type="quelle" xml:id="tu-10126.39">ZsföVkde, Wiessner<ref type="seite">1,
+            228</ref>
+    </ref>
+    <ref type="quelleBearbeitet" xml:id="tu-10126.40">{wb} wissZs </ref>
+    <ref type="bibl" corresp="this:QDB">
+        <bibl>ZÖV Jg. (J.) S.</bibl>
+    </ref>
+    <usg type="geo" corresp="this:QU">
+        <placeName>Egerland</placeName>
+    </usg>
+</entry>
+</root>
