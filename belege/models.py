@@ -28,17 +28,22 @@ class BundesLand(models.Model):
     official designation, abbreviation, full name, and optional GeoNames reference.
     """
 
-    sigle = models.CharField(default="1", max_length=20, verbose_name="Signatur", help_text="whatever")
-    abbr = models.CharField(default="OÖ", max_length=50, verbose_name="Kürzel")
-    name = models.CharField(
-        default="", max_length=50, verbose_name="Name"
+    sigle = models.CharField(
+        default="1", max_length=20, verbose_name="Sigle", help_text="whatever"
     )
+    abbr = models.CharField(default="OÖ", max_length=50, verbose_name="Kürzel")
+    name = models.CharField(default="", max_length=50, verbose_name="Name")
     geonames = models.URLField(
         max_length=200,
         blank=True,
         null=True,
         verbose_name="GeoNames URL",
         help_text="Link to corresponding GeoNames entry",
+    )
+    coordinates = models.JSONField(
+        blank=True,
+        null=True,
+        verbose_name="Koordinaten",
     )
 
     def __str__(self):
@@ -62,7 +67,7 @@ class GRegion(models.Model):
     databases like GeoNames.
     """
 
-    sigle = models.CharField(default="5.4", max_length=20, verbose_name="Großregion")
+    sigle = models.CharField(default="5.4", max_length=20, verbose_name="Sigle")
     abbr = models.CharField(default="Mühlv.", max_length=50, verbose_name="Kürzel")
     name = models.CharField(default="", max_length=50, verbose_name="Name")
     bundesland = models.ForeignKey(
@@ -78,6 +83,11 @@ class GRegion(models.Model):
         null=True,
         verbose_name="GeoNames URL",
         help_text="Link to corresponding GeoNames entry",
+    )
+    coordinates = models.JSONField(
+        blank=True,
+        null=True,
+        verbose_name="Koordinaten",
     )
 
     def __str__(self):
@@ -98,13 +108,12 @@ class KRegion(models.Model):
     This model stores information about administrative subdivisions within larger regions,
     including their identifiers, names, and relationships to federal states and larger regions.
     """
-    sigle = models.CharField(default="1", max_length=20, verbose_name="Kleinregion")
+
+    sigle = models.CharField(default="1", max_length=20, verbose_name="Sigle")
     abbr = models.CharField(
         default="swestl.uMühlv.", max_length=50, verbose_name="Kürzel"
     )
-    name = models.CharField(
-        default="", max_length=50, verbose_name="Name"
-    )
+    name = models.CharField(default="", max_length=50, verbose_name="Name")
     bundesland = models.ForeignKey(
         "Bundesland",
         blank=True,
@@ -125,6 +134,11 @@ class KRegion(models.Model):
         null=True,
         verbose_name="GeoNames URL",
         help_text="Link to corresponding GeoNames entry",
+    )
+    coordinates = models.JSONField(
+        blank=True,
+        null=True,
+        verbose_name="Koordinaten",
     )
 
     def __str__(self):
@@ -147,7 +161,7 @@ class Ort(models.Model):
     It also supports linking to external GeoNames entries for additional geographical data.
     """
 
-    sigle = models.CharField(default="1", max_length=20, verbose_name="Ort")
+    sigle = models.CharField(default="1", max_length=20, verbose_name="Sigle")
     name = models.CharField(default="", max_length=250, verbose_name="Name")
     bundesland = models.ForeignKey(
         "Bundesland",
@@ -177,12 +191,17 @@ class Ort(models.Model):
         verbose_name="GeoNames URL",
         help_text="Link to corresponding GeoNames entry",
     )
+    coordinates = models.JSONField(
+        blank=True,
+        null=True,
+        verbose_name="Koordinaten",
+    )
 
     def __str__(self):
         if self.name:
             return f"{self.name} ({self.sigle})"
         else:
-            return f"{self.abbr} ({self.sigle})"
+            return f"{self.sigle}"
 
     class Meta:
         verbose_name = "Ort"
@@ -346,8 +365,10 @@ class Beleg(models.Model):
             except AttributeError:
                 doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
             for field in self._meta.fields:
-                if hasattr(field, "extra") and "xpath" in field.extra and isinstance(
-                    field, (models.CharField, models.TextField)
+                if (
+                    hasattr(field, "extra")
+                    and "xpath" in field.extra
+                    and isinstance(field, (models.CharField, models.TextField))
                 ):
                     if self.orig_xml:
                         xpath_expr = field.extra["xpath"]
