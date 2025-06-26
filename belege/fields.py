@@ -1,6 +1,6 @@
 from django.db import models
 from django import forms
-import xml.etree.ElementTree as ET
+import lxml.etree as ET
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -8,8 +8,8 @@ from django.utils.translation import gettext_lazy as _
 
 class XMLWidget(forms.widgets.Textarea):
     def format_value(self, value):
-        if isinstance(value, ET.Element):
-            return ET.tostring(value, encoding='unicode')
+        if isinstance(value, ET._Element):
+            return ET.tostring(value, encoding="unicode")
         return value
 
 
@@ -21,7 +21,7 @@ class XMLField(models.Field):
         Returns the database column data type for this field.
         For PostgreSQL, we want to use the native 'xml' type.
         """
-        return 'xml'
+        return "xml"
 
     def to_python(self, value):
         """
@@ -31,7 +31,7 @@ class XMLField(models.Field):
         if value is None:
             return value
 
-        if isinstance(value, ET.Element):
+        if isinstance(value, ET._Element):
             return value
 
         try:
@@ -47,8 +47,8 @@ class XMLField(models.Field):
         if value is None:
             return value
 
-        if isinstance(value, ET.Element):
-            return ET.tostring(value, encoding='unicode')
+        if isinstance(value, ET._Element):
+            return ET.tostring(value, encoding="unicode")
 
         try:
             ET.fromstring(value)
@@ -71,8 +71,8 @@ class XMLField(models.Field):
 
     def formfield(self, **kwargs):
         defaults = {
-            'form_class': forms.CharField,
-            'widget': XMLWidget,
+            "form_class": forms.CharField,
+            "widget": XMLWidget,
         }
         defaults.update(kwargs)
         return super().formfield(**defaults)
