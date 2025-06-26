@@ -21,11 +21,35 @@ def set_extra(self, **kwargs):
 models.Field.set_extra = set_extra
 
 
+class Facsimile(models.Model):
+    """
+    A facsimile
+    """
+
+    file_name = models.CharField(
+        max_length=250, unique=True, verbose_name="Dateiname", help_text="whatever"
+    )
+
+    @classmethod
+    def get_base_url(cls):
+        return "https://some-iiif-url/"
+
+    @property
+    def facs_url(self):
+        return f"{self.get_base_url}{self.file_name}"
+
+    def __str__(self):
+        return self.file_name
+
+    class Meta:
+        verbose_name = "Faksimile"
+        verbose_name_plural = "Faksimiles"
+        ordering = ["file_name"]
+
+
 class BundesLand(models.Model):
     """
-    Django model representing a federal state (Bundesland) in Austria.
-    This model stores information about Austrian federal states including their
-    official designation, abbreviation, full name, and optional GeoNames reference.
+    A federal state (Bundesland) in Austria.
     """
 
     sigle = models.CharField(
@@ -60,11 +84,7 @@ class BundesLand(models.Model):
 
 class GRegion(models.Model):
     """
-    Model representing a geographical greater region (Großregion) in Austria.
-    This model stores information about large geographical regions within Austrian states,
-    including their identification codes, abbreviations, and names. Each region can be
-    associated with a federal state (Bundesland) and linked to external geographical
-    databases like GeoNames.
+    A geographical greater region (Großregion) in Austria.
     """
 
     sigle = models.CharField(default="5.4", max_length=20, verbose_name="Sigle")
@@ -104,9 +124,7 @@ class GRegion(models.Model):
 
 class KRegion(models.Model):
     """
-    Model representing a small region (Kleinregion) in Austria.
-    This model stores information about administrative subdivisions within larger regions,
-    including their identifiers, names, and relationships to federal states and larger regions.
+    A small region (Kleinregion) in Austria.
     """
 
     sigle = models.CharField(default="1", max_length=20, verbose_name="Sigle")
@@ -155,10 +173,7 @@ class KRegion(models.Model):
 
 class Ort(models.Model):
     """
-    Django model representing a location/place (Ort) in the DBOE annotation system.
-    This model stores geographical information about places, including their abbreviations,
-    names, and hierarchical relationships to administrative regions (Bundesland, GRegion, KRegion).
-    It also supports linking to external GeoNames entries for additional geographical data.
+    A location/place (Ort) in the DBOE annotation system.
     """
 
     sigle = models.CharField(default="1", max_length=20, verbose_name="Sigle")
@@ -211,24 +226,7 @@ class Ort(models.Model):
 
 class Citation(models.Model):
     """
-    Django model representing a citation extracted from TEI XML documents.
-    This model stores individual citations that belong to a Beleg (tei:entry/tei:cit).
-    Each citation contains metadata, original XML content, and extracted text fields
-    that are automatically populated from the TEI XML using XPath expressions.
-    Attributes:
-        dboe_id (CharField): Primary key identifier for the citation (e.g., "tu-10130.56")
-        beleg (ForeignKey): Reference to the parent Beleg instance
-        number (PositiveIntegerField): Order number for sorting citations within a Beleg
-        orig_xml (XMLField): Original TEI citation node in XML format
-        quote_text (TextField): Plain text content extracted from TEI quote element
-        definition (TextField): Definition text extracted from TEI definition element
-    The model automatically extracts text content from XML fields during save operations
-    using XPath expressions defined in field metadata. Fields with 'extra' attributes
-    containing 'xpath' keys will be populated by querying the orig_xml content.
-    Meta:
-        verbose_name: "Zitat"
-        verbose_name_plural: "Zitate"
-        ordering: ["beleg", "number"]
+    Django model representing a citation (Kontext) extracted from TEI XML documents.
     """
 
     dboe_id = models.CharField(
@@ -253,8 +251,8 @@ class Citation(models.Model):
     ).set_extra(xpath="./tei:def", node_type="text")
 
     class Meta:
-        verbose_name = "Zitat"
-        verbose_name_plural = "Zitate"
+        verbose_name = "Kontext"
+        verbose_name_plural = "Kontexte"
         ordering = ["beleg", "number"]
 
     def save(self, *args, **kwargs):
@@ -277,9 +275,7 @@ class Citation(models.Model):
 
 class Beleg(models.Model):
     """
-    Django model representing a Beleg entry from the DBÖ (Dictionary of Bavarian Dialects in Austria) database.
-    This model stores linguistic evidence with metadata extracted from TEI-XML documents. It automatically
-    populates fields from XML using XPath expressions and can create related Citation objects.
+    A Beleg entry from the DBÖ (Dictionary of Bavarian Dialects in Austria) database.
     """
 
     dboe_id = models.CharField(
@@ -321,6 +317,13 @@ class Beleg(models.Model):
         on_delete=models.SET_NULL,
         verbose_name="Ort",
     ).set_extra(xpath=".//tei:place[@type='Ort']/tei:idno", node_type="text")
+    facsimile = models.ManyToManyField(
+        "Facsimile",
+        blank=True,
+        verbose_name="Faksimiles",
+        help_text="whatever",
+        related_name="belege",
+    )
     import_issue = models.BooleanField(
         default=False,
         verbose_name="Import issue",
