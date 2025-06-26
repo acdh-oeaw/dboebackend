@@ -4,7 +4,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from belege.api_utils import get_filterset_for_model
 from belege.serializers import get_serializer_for_model, CitationSerializer
-from belege.models import BundesLand, GRegion, KRegion, Ort, Beleg, Citation
+from belege.models import BundesLand, GRegion, KRegion, Ort, Beleg, Citation, Facsimile
 
 
 class CustomPagination(PageNumberPagination):
@@ -22,6 +22,11 @@ class CustomViewSet(viewsets.ModelViewSet):
             return self.serializer_class
         else:
             return get_serializer_for_model(self.queryset.model)
+
+
+class FacsimileViewSet(CustomViewSet):
+    queryset = Facsimile.objects.all()
+    filterset_class = get_filterset_for_model(Facsimile)
 
 
 class BundesLandViewSet(CustomViewSet):
@@ -58,4 +63,6 @@ class CitationViewSet(viewsets.ModelViewSet):
     filterset_class = get_filterset_for_model(Citation)
     serializer_class = CitationSerializer
     lookup_field = "dboe_id"
-    lookup_value_regex = r'[^/]+'  # the default regex does not work with dboe_ids due to e.g. `.`
+    lookup_value_regex = (
+        r"[^/]+"  # the default regex does not work with dboe_ids due to e.g. `.`
+    )

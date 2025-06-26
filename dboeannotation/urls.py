@@ -27,7 +27,8 @@ router.register(r"gregionen", belege_api_views.GRegionViewSet)
 router.register(r"kregionen", belege_api_views.KRegionViewSet)
 router.register(r"orte", belege_api_views.OrtViewSet)
 router.register(r"belege", belege_api_views.BelegViewSet)
-router.register(r"zitate", belege_api_views.CitationViewSet)
+router.register(r"kontexte", belege_api_views.CitationViewSet)
+router.register(r"facsimiles", belege_api_views.FacsimileViewSet)
 
 
 urlpatterns = [

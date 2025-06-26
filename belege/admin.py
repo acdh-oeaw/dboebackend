@@ -1,14 +1,24 @@
 from django.contrib import admin
 from django.db import models
 
-from belege.models import (
-    Beleg,
-    Citation,
-    BundesLand,
-    GRegion,
-    KRegion,
-    Ort,
-)
+from belege.models import Beleg, Citation, BundesLand, GRegion, KRegion, Ort, Facsimile
+
+
+@admin.register(Facsimile)
+class FacsimileAdmin(admin.ModelAdmin):
+    list_display = [
+        field.name
+        for field in Facsimile._meta.fields
+        if isinstance(field, (models.CharField, models.TextField, models.ForeignKey))
+    ]
+    search_fields = [
+        field.name
+        for field in Facsimile._meta.fields
+        if isinstance(field, (models.CharField, models.TextField))
+    ]
+    search_fields = ["file_name"]
+    ordering = ["file_name"]
+    list_per_page = 20
 
 
 @admin.register(Beleg)
@@ -26,7 +36,7 @@ class BelegAdmin(admin.ModelAdmin):
     search_fields = ["dboe_id", "hauptlemma"]
     list_filter = ["import_issue", "pos"]
     ordering = ["dboe_id"]
-    autocomplete_fields = ["ort"]
+    autocomplete_fields = ["ort", "facsimile"]
     list_per_page = 20
 
 
