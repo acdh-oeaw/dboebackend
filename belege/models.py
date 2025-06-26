@@ -258,7 +258,7 @@ class Citation(models.Model):
         ordering = ["beleg", "number"]
 
     def save(self, *args, **kwargs):
-        if self.orig_xml:
+        if self.orig_xml is not None:
             try:
                 doc = TeiReader(self.orig_xml)
             except AttributeError:
@@ -359,7 +359,7 @@ class Beleg(models.Model):
             - Uses get_or_create to avoid duplicate Citation entries
         """
 
-        if self.orig_xml:
+        if self.orig_xml is not None:
             try:
                 doc = TeiReader(self.orig_xml)
             except AttributeError:
@@ -370,7 +370,7 @@ class Beleg(models.Model):
                     and "xpath" in field.extra
                     and isinstance(field, (models.CharField, models.TextField))
                 ):
-                    if self.orig_xml:
+                    if self.orig_xml is not None:
                         xpath_expr = field.extra["xpath"]
                         try:
                             nodes = doc.any_xpath(xpath_expr)[0]
@@ -384,7 +384,7 @@ class Beleg(models.Model):
                         if isinstance(field, (models.CharField, models.TextField)):
                             value = value.strip()
                         setattr(self, field.name, value)
-        if self.orig_xml and add_citations:
+        if self.orig_xml is not None and add_citations:
             items = doc.any_xpath("./tei:cit")
             for item in items:
                 xml_id = get_xmlid(item)
@@ -400,7 +400,7 @@ class Beleg(models.Model):
                     item.save()
                 except Exception as e:
                     print(f"Error saving citation {xml_id}: {e}")
-        if self.orig_xml and add_places:
+        if self.orig_xml is not None and add_places:
             xpath = self._meta.get_field("ort").extra.get("xpath", None)
             try:
                 sigle = doc.any_xpath(xpath)[0].text
