@@ -1,3 +1,9 @@
-# from django.shortcuts import render
+from django.views.generic.detail import DetailView
 
-# Create your views here.
+from belege.models import Beleg
+
+
+class BelegDetailView(DetailView):
+    model = Beleg
+    content_type = "application/xml"
+    template_name = "belege/beleg_detail.j2"

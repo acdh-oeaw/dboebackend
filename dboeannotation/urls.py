@@ -45,6 +45,7 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="schema"),
         name="swagger-ui",
     ),
+    path("belege/", include("belege.urls", namespace="belege")),
     path("", include("webpage.urls", namespace="webpage")),
 ]
 
