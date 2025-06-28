@@ -12,6 +12,12 @@
     </gramGrp>{% if object.nebenlemma %}
     <form type="nebenlemma">
         <orth>{{ object.nebenlemma }}</orth>
-    </form>{% endif %}
+    </form>{% endif %}{% if object.archivzeile %}
+    <ref type="archiv">{{ object.archivzeile }}</ref>{% endif %}{% if object.quelle %}
+    <ref type="quelle">{{ object.quelle }}</ref>{% endif %}{% if object.quelle_bearbeitet %}
+    <ref type="quelleBearbeitet">{{ object.quelle_bearbeitet}}</ref>{% endif %}{% if object.bibl %}
+    <ref type="bibl" corresp="this:QDB">
+        <bibl>{{ object.bibl }}</bibl>
+    </ref>{% endif %}
 </entry>
 {% endblock %}
