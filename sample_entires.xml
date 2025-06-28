@@ -123,4 +123,68 @@
         <placeName>Egerland</placeName>
     </usg>
 </entry>
+
+<entry xml:id="d161_qdb-d1e918" n="15630" source="#orig-d161_qdb-d1e918">
+    <form type="hauptlemma" xml:id="tu-2342.21">
+        <orth>Till</orth>
+    </form>
+    <gramGrp>
+        <pos>Subst</pos>
+    </gramGrp>
+    <form type="lautung" n="1" xml:id="tu-2342.26">
+        <pron xml:lang="bar" notation="teuthonista">d'r Tille</pron>
+        <gramGrp>
+            <gram> [m+A]</gram>
+        </gramGrp>
+    </form>
+    <sense corresp="this:LT1" xml:id="tu-2342.27">
+        <def xml:lang="de">gelbblühendes Unkraut im Acker</def>
+        <note type="anmerkung" resp="B">Spinosa arvensis</note>
+    </sense>
+    <xr type="verweise" resp="O" xml:id="tu-2342.28">vgl. Huhn</xr>
+    <form type="nebenlemma" xml:id="tu-2342.22">
+        <orth>Tille</orth>
+        <gramGrp>
+            <pos>Subst</pos>
+        </gramGrp>
+    </form>
+    <ref type="archiv" xml:id="tu-2342.20">HK 161, d161#35.1 = T1610414.pla#35, korr. W.B.</ref>
+    <ref type="quelle" xml:id="tu-2342.23">Zell a.Ziller Umg.; Bauhofer</ref>
+    <ref type="quelleBearbeitet" xml:id="tu-2342.24">{1C.2k09} obZillert.:mNTir. </ref>
+    <ref type="bibl" corresp="this:QDB">
+        <bibl>Slg.BAUHOFER· (u.1910) [Slg."Zillert.":1910/Fb.]</bibl>
+    </ref>
+    <usg type="geo" corresp="this:QDB">
+        <placeName type="orig">(Umg.) Zell NTir.</placeName>
+        <listPlace corresp="sigle:1C.2k09">
+            <place type="Bundesland">
+                <placeName>NTir.</placeName>
+                <idno>1C</idno>
+                <listPlace>
+                    <place type="Großregion">
+                        <placeName>mNTir.</placeName>
+                        <idno>1C.2</idno>
+                        <listPlace>
+                            <place type="Kleinregion">
+                                <placeName>obZillert.</placeName>
+                                <idno>1C.2k</idno>
+                                <listPlace>
+                                    <place type="Gemeinde">
+                                        <placeName>Zell am Ziller</placeName>
+                                        <listPlace>
+                                            <place type="Ort">
+                                                <placeName>Zell am Ziller</placeName>
+                                                <idno>1C.2k09</idno>
+                                            </place>
+                                        </listPlace>
+                                    </place>
+                                </listPlace>
+                            </place>
+                        </listPlace>
+                    </place>
+                </listPlace>
+            </place>
+        </listPlace>
+    </usg>
+</entry>
 </root>

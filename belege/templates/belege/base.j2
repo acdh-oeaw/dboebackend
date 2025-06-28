@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<TEI xmlns="http://www.tei-c.org/ns/1.0">
+<TEI xmlns="http://www.tei-c.org/ns/1.0" {% block xmlid %}xml:id="foo"{% endblock %}>
     <teiHeader>
         <fileDesc>
             <titleStmt>
                 <title>{% block title %} FOO {% endblock %}</title>
             </titleStmt>
-            <publicationStmt>
-
-                <publisher key="https://ror.org/028bsh698">Austrian Centre for Digital Humanities</publisher>
-                <availability>
-                    <licence>
-                        <ref target="https://creativecommons.org/licenses/by/4.0/deed.en">CC-BY</ref>
-                    </licence>
-                </availability>
-            </publicationStmt>
-            <sourceDesc>
-                <p>born digital</p>
-            </sourceDesc>
+        <publicationStmt>
+            <publisher key="https://ror.org/028bsh698">Austrian Centre for Digital Humanities</publisher>
+            <availability>
+                <licence>
+                    <ref target="https://creativecommons.org/licenses/by/4.0/deed.en">CC-BY</ref>
+                </licence>
+            </availability>
+        </publicationStmt>
+        <sourceDesc>
+            <p>born digital</p>
+        </sourceDesc>
         </fileDesc>
     </teiHeader>
     <text>

@@ -1,9 +1,17 @@
 {% extends "belege/base.j2" %}
 {% load static %}
-
-{% block title %} {% endblock %}
+{% block xmlid %}xml:id="{{ object.dboe_id }}"{% endblock %}
+{% block title %}{{ object.hauptlemma }}{% endblock %}
 {% block entry %}
 <entry>
-
+    <form type="hauptlemma">
+        <orth>{{ object.hauptlemma }}</orth>
+    </form>
+    <gramGrp>
+        <pos>{{ object.pos }}</pos>
+    </gramGrp>{% if object.nebenlemma %}
+    <form type="nebenlemma">
+        <orth>{{ object.nebenlemma }}</orth>
+    </form>{% endif %}
 </entry>
 {% endblock %}
