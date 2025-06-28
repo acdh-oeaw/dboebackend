@@ -12,7 +12,11 @@
     </gramGrp>{% if object.nebenlemma %}
     <form type="nebenlemma">
         <orth>{{ object.nebenlemma }}</orth>
-    </form>{% endif %}{% if object.archivzeile %}
+    </form>{% endif %}{% for x in object.citations.all %}
+    <cit type="kontext" n="{{ x.number }}" xml:id="{{ x.dboe_id }}">
+        <quote>{{ x.quote_text }}</quote>{% if x.definition %}
+        <def corresp="this:WBD/KT{{ x.number }}">{{ x.definition }}</def>{% endif %}
+    </cit>{% endfor %}{% if object.archivzeile %}
     <ref type="archiv">{{ object.archivzeile }}</ref>{% endif %}{% if object.quelle %}
     <ref type="quelle">{{ object.quelle }}</ref>{% endif %}{% if object.quelle_bearbeitet %}
     <ref type="quelleBearbeitet">{{ object.quelle_bearbeitet}}</ref>{% endif %}{% if object.bibl %}
