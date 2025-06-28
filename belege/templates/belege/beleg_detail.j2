@@ -22,6 +22,26 @@
     <ref type="quelleBearbeitet">{{ object.quelle_bearbeitet}}</ref>{% endif %}{% if object.bibl %}
     <ref type="bibl" corresp="this:QDB">
         <bibl>{{ object.bibl }}</bibl>
-    </ref>{% endif %}
+    </ref>{% endif %}{% if object.ort %}
+    <usg type="geo" corresp="this:QDB">
+        <listPlace>
+            <place type="Ort">
+                <placeName>{{ object.ort.name }}</placeName>
+                <region type="Kleinregion">
+                    <placeName>{{ object.ort.kregion }}</placeName>
+                    <idno type="sigle">{{ object.ort.kregion.sigle }}</idno>
+                </region>
+                <region type="Großregion">
+                    <placeName>{{ object.ort.gregion }}</placeName>
+                    <idno type="sigle">{{ object.ort.gregion.sigle }}</idno>
+                </region>
+                <region type="Bundesland">
+                    <placeName>{{ object.ort.bundesland }}</placeName>
+                    <idno type="sigle">{{ object.ort.bundesland.sigle }}</idno>
+                </region>
+                <idno type="sigle">{{ object.ort.sigle }}</idno>
+            </place>
+        </listPlace>
+    </usg>{% endif %}
 </entry>
 {% endblock %}
