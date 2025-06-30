@@ -187,4 +187,38 @@
         </listPlace>
     </usg>
 </entry>
+<entry xml:id="d176_qdb-d1e73" n="58575" source="#orig-d176_qdb-d1e73">
+    <form type="hauptlemma" xml:id="tu-8994.10">
+        <orth>(Ge)trēide</orth>
+    </form>
+    <gramGrp>
+        <pos>Subst</pos>
+    </gramGrp>
+    <cit type="kontext" n="1" xml:id="tu-8994.15">
+        <quote xml:lang="bar">after[ne] <pRef>Troad</pRef>
+            <seg type="gram"> [n]</seg>
+        </quote>
+        <interp>Fg:21</interp>
+        <def xml:lang="de">schlechtestes Getreide</def>
+    </cit>
+    <ref type="archiv" xml:id="tu-8994.9">HK 176, t176#4.1 = t1761014.sch#4.1</ref>
+    <ref type="quelle" xml:id="tu-8994.11">Oö. Wb.<ref type="seite">330</ref>
+    </ref>
+    <ref type="quelleBearbeitet" xml:id="tu-8994.12">{5} OÖ </ref>
+    <ref type="bibl" corresp="this:QDB">
+        <bibl>OöWb.(1978)</bibl>
+    </ref>
+    <ref type="zitiereweise" xml:id="tu-8994.13">
+        <bibl>S. HA-4690a-c</bibl>
+    </ref>
+    <usg type="geo" corresp="this:QDB" resp="sigle_auto">
+        <placeName type="orig">OÖ</placeName>
+        <listPlace corresp="sigle:5">
+            <place type="Bundesland">
+                <placeName>OÖ</placeName>
+                <idno>5</idno>
+            </place>
+        </listPlace>
+    </usg>
+</entry>
 </root>
