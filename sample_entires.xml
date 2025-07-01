@@ -221,4 +221,65 @@
         </listPlace>
     </usg>
 </entry>
+<entry xml:id="d176_qdb-d1e2" n="58572" source="#orig-d176_qdb-d1e2">
+    <form type="hauptlemma" xml:id="tu-8993.43">
+        <orth>(Ge)trēide</orth>
+    </form>
+    <gramGrp>
+        <pos>Subst</pos>
+    </gramGrp>
+    <form type="lautung" n="1" xml:id="tu-8993.48">
+        <pron xml:lang="bar" notation="teuthonista">s drōɒd</pron>
+        <gramGrp>
+            <gram> [n+A]</gram>
+        </gramGrp>
+    </form>
+    <sense corresp="this:LT1" xml:id="tu-8993.49">
+        <def xml:lang="de">Getreide</def>
+    </sense>
+    <form type="nebenlemma" xml:id="tu-8993.44">
+        <orth>Trēid</orth>
+        <gramGrp>
+            <pos>Subst</pos>
+        </gramGrp>
+    </form>
+    <ref type="archiv" xml:id="tu-8993.42">HK 176, t176#1.1 = t1761014.sch#1.1</ref>
+    <ref type="quelle" xml:id="tu-8993.45">Strobl Flachgau, (1972) Bauer</ref>
+    <ref type="quelleBearbeitet" xml:id="tu-8993.46">{4.5d06} söFlachg.:Sa. </ref>
+    <ref type="bibl" corresp="this:QDB">
+        <bibl>Aufn.BAUER· (1972) [GaFb2; chTr]</bibl>
+    </ref>
+    <usg type="geo" corresp="this:QDB">
+        <placeName type="orig">Strobl Sa.</placeName>
+        <listPlace corresp="sigle:4.5d06">
+            <place type="Bundesland">
+                <placeName>Sbg.</placeName>
+                <idno>4</idno>
+                <listPlace>
+                    <place type="Großregion">
+                        <placeName>Flachg.</placeName>
+                        <idno>4.5</idno>
+                        <listPlace>
+                            <place type="Kleinregion">
+                                <placeName>söFlachg.</placeName>
+                                <idno>4.5d</idno>
+                                <listPlace>
+                                    <place type="Gemeinde">
+                                        <placeName>Strobl</placeName>
+                                        <listPlace>
+                                            <place type="Ort">
+                                                <placeName>Strobl</placeName>
+                                                <idno>4.5d06</idno>
+                                            </place>
+                                        </listPlace>
+                                    </place>
+                                </listPlace>
+                            </place>
+                        </listPlace>
+                    </place>
+                </listPlace>
+            </place>
+        </listPlace>
+    </usg>
+</entry>
 </root>
