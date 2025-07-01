@@ -12,6 +12,8 @@ POS_CHOICES = (
     ("Adj", "Adj"),
 )
 
+LANG_CHOICES = (("bar", "bar"), ("de", "de"))
+
 
 def set_extra(self, **kwargs):
     self.extra = kwargs
@@ -243,12 +245,66 @@ class Citation(models.Model):
     )
     number = models.PositiveIntegerField(default=1, verbose_name="order number")
     orig_xml = XMLField(verbose_name="original tei-cit node")
+    quote_lang = models.CharField(
+        max_length=3,
+        choices=LANG_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="Sprache (Kontext)",
+    ).set_extra(xpath="./tei:quote/@xml:lang", node_type="attribute")
     quote_text = models.TextField(
         blank=True, null=True, verbose_name="plain text"
     ).set_extra(xpath="./tei:quote", node_type="text")
+    quote_gram = models.CharField(
+        max_length=250,
+        blank=True,
+        null=True,
+        verbose_name="Grammatik",
+        help_text="whatever",
+    ).set_extra(xpath="./tei:quote/tei:seg[@type='gram']", node_type="text")
+    p_ref = models.CharField(
+        blank=True,
+        null=True,
+        verbose_name="Pronunciation reference",
+        help_text="whatever",
+    ).set_extra(xpath="./tei:quote/tei:pRef", node_type="text")
     definition = models.TextField(
         blank=True, null=True, verbose_name="definition"
     ).set_extra(xpath="./tei:def", node_type="text")
+    definition = models.CharField(
+        blank=True, null=True, verbose_name="definition"
+    ).set_extra(xpath="./tei:def", node_type="text")
+    definition_lang = models.CharField(
+        max_length=3,
+        choices=LANG_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="Sprache (Definition)",
+    ).set_extra(xpath="./tei:def/@xml:lang", node_type="attribute")
+    interpration = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="interpretation",
+        help_text="Summarizes a specific interpretative annotation which can be linked to a span of text",
+    ).set_extra(xpath="./tei:interp", node_type="text")
+    note_anmerkung_o = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Anmerkung: O",
+        help_text="Whatever",
+    ).set_extra(xpath="./tei:note[@type='anmerkung' and @resp='O']", node_type="text")
+    note_anmerkung_b = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Anmerkung: B",
+        help_text="Whatever",
+    ).set_extra(xpath="./tei:note[@type='anmerkung' and @resp='B']", node_type="text")
+    fragebogen_nummer = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Fragebogen Nummer",
+        help_text="Whatever",
+    ).set_extra(xpath="./tei:ref[@type='fragebogenNummer']", node_type="text")
 
     class Meta:
         verbose_name = "Kontext"
@@ -262,13 +318,21 @@ class Citation(models.Model):
             except AttributeError:
                 doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
             for field in self._meta.fields:
-                if hasattr(field, "extra") and "xpath" in field.extra:
+                if (
+                    hasattr(field, "extra")
+                    and "xpath" in field.extra
+                    and isinstance(field, (models.CharField, models.TextField))
+                    and not getattr(self, field.name)
+                ):
                     xpath_expr = field.extra["xpath"]
                     try:
                         nodes = doc.any_xpath(xpath_expr)[0]
                     except IndexError:
                         continue
-                    value = extract_fulltext(nodes)
+                    try:
+                        value = extract_fulltext(nodes)
+                    except AttributeError:
+                        value = nodes
                     setattr(self, field.name, value)
         super().save(*args, **kwargs)
 
@@ -372,6 +436,7 @@ class Beleg(models.Model):
                     hasattr(field, "extra")
                     and "xpath" in field.extra
                     and isinstance(field, (models.CharField, models.TextField))
+                    and not getattr(self, field.name)
                 ):
                     if self.orig_xml is not None:
                         xpath_expr = field.extra["xpath"]
@@ -379,7 +444,10 @@ class Beleg(models.Model):
                             nodes = doc.any_xpath(xpath_expr)[0]
                         except IndexError:
                             continue
-                        value = extract_fulltext(nodes)
+                        try:
+                            value = extract_fulltext(nodes)
+                        except AttributeError:
+                            value = nodes
                         if isinstance(field, models.CharField):
                             if field.max_length and len(value) > field.max_length:
                                 value = value[: field.max_length]
