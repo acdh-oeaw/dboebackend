@@ -337,6 +337,39 @@ class Citation(models.Model):
         super().save(*args, **kwargs)
 
 
+class Lautung(models.Model):
+    """
+    Django model representing tei:form[@type="lautung"] node.
+    """
+
+    dboe_id = models.CharField(
+        primary_key=True,
+        max_length=250,
+        verbose_name="DBÖ ID",
+        help_text="e.g. tu-10130.56",
+    )
+    beleg = models.ForeignKey(
+        "Beleg",
+        verbose_name="Beleg",
+        on_delete=models.CASCADE,
+        related_name="lautungen",
+    )
+    number = models.PositiveIntegerField(default=1, verbose_name="order number")
+    orig_xml = XMLField(
+        verbose_name="XML Node", help_text="tei:form[@type='lautung'] node"
+    )
+    pron = models.CharField(
+        blank=True, null=True, max_length=250, verbose_name="Pronunciation"
+    ).set_extra(xpath="./tei:pron", node_type="text")
+    quote_lang = models.CharField(
+        max_length=3,
+        choices=LANG_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="Sprache (Kontext)",
+    ).set_extra(xpath="./tei:quote/@xml:lang", node_type="attribute")
+
+
 class Beleg(models.Model):
     """
     A Beleg entry from the DBÖ (Dictionary of Bavarian Dialects in Austria) database.
