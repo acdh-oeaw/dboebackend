@@ -271,9 +271,6 @@ class Citation(models.Model):
     definition = models.TextField(
         blank=True, null=True, verbose_name="definition"
     ).set_extra(xpath="./tei:def", node_type="text")
-    definition = models.CharField(
-        blank=True, null=True, verbose_name="definition"
-    ).set_extra(xpath="./tei:def", node_type="text")
     definition_lang = models.CharField(
         max_length=3,
         choices=LANG_CHOICES,
@@ -339,7 +336,7 @@ class Citation(models.Model):
 
 class Lautung(models.Model):
     """
-    Django model representing tei:form[@type="lautung"] node.
+    Django model representing a tei:form[@type="lautung"] node.
     """
 
     dboe_id = models.CharField(
@@ -383,6 +380,85 @@ class Lautung(models.Model):
 
     def __str__(self):
         return f"{self.pron} ({self.beleg})"
+
+    def save(self, *args, **kwargs):
+        if self.orig_xml is not None:
+            try:
+                doc = TeiReader(self.orig_xml)
+            except AttributeError:
+                doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
+            for field in self._meta.fields:
+                if (
+                    hasattr(field, "extra")
+                    and "xpath" in field.extra
+                    and isinstance(field, (models.CharField, models.TextField))
+                    and not getattr(self, field.name)
+                ):
+                    xpath_expr = field.extra["xpath"]
+                    try:
+                        nodes = doc.any_xpath(xpath_expr)[0]
+                    except IndexError:
+                        continue
+                    try:
+                        value = extract_fulltext(nodes)
+                    except AttributeError:
+                        value = nodes
+                    setattr(self, field.name, value)
+        super().save(*args, **kwargs)
+
+
+class Sense(models.Model):
+    """
+    Django model representing a tei:sense node.
+    """
+
+    dboe_id = models.CharField(
+        primary_key=True,
+        max_length=250,
+        verbose_name="DBÖ ID",
+        help_text="e.g. tu-10130.56",
+    )
+    beleg = models.ForeignKey(
+        "Beleg",
+        verbose_name="Beleg",
+        on_delete=models.CASCADE,
+        related_name="bedeutungen",
+    )
+    number = models.PositiveIntegerField(default=1, verbose_name="Order number")
+    orig_xml = XMLField(verbose_name="XML Node", help_text="tei:sense node")
+    definition = models.TextField(
+        blank=True, null=True, verbose_name="definition"
+    ).set_extra(xpath="./tei:def", node_type="text")
+    corresp_to = models.CharField(
+        blank=True, null=True, max_length=20, verbose_name="Korrespondiert zu"
+    ).set_extra(xpath="./@corresp", node_type="attribute")
+    definition_lang = models.CharField(
+        max_length=3,
+        choices=LANG_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="Sprache (Definition)",
+    ).set_extra(xpath="./tei:def/@xml:lang", node_type="attribute")
+    note_anmerkung_o = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Anmerkung: O",
+        help_text="Whatever",
+    ).set_extra(xpath="./tei:note[@type='anmerkung' and @resp='O']", node_type="text")
+    note_anmerkung_b = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Anmerkung: B",
+        help_text="Whatever",
+    ).set_extra(xpath="./tei:note[@type='anmerkung' and @resp='B']", node_type="text")
+
+    class Meta:
+        verbose_name = "Bedeutung"
+        verbose_name_plural = "Bedeutungen"
+        ordering = ["beleg", "number"]
+
+    def __str__(self):
+        return f"{self.definition[:25]} ... ({self.beleg})"
 
     def save(self, *args, **kwargs):
         if self.orig_xml is not None:
@@ -482,6 +558,7 @@ class Beleg(models.Model):
         add_citations=False,
         add_places=False,
         add_lautungen=False,
+        add_sense=False,
         *args,
         **kwargs,
     ):
@@ -507,6 +584,7 @@ class Beleg(models.Model):
         """
 
         if self.orig_xml is not None:
+            self.import_issue = False
             try:
                 doc = TeiReader(self.orig_xml)
             except AttributeError:
@@ -570,6 +648,22 @@ class Beleg(models.Model):
                     item.save()
                 except Exception as e:
                     print(f"Error saving lautung {xml_id}: {e}")
+        if self.orig_xml is not None and add_sense:
+            items = doc.any_xpath("./tei:sense")
+            for i, item in enumerate(items, start=1):
+                xml_id = get_xmlid(item)
+                number = i
+                orig_xml = ET.tostring(item, encoding="unicode")
+                try:
+                    item = Sense.objects.get(dboe_id=xml_id)
+                except Sense.DoesNotExist:
+                    item = Sense(
+                        dboe_id=xml_id, beleg=self, number=number, orig_xml=orig_xml
+                    )
+                try:
+                    item.save()
+                except Exception as e:
+                    print(f"Error saving sense {xml_id}: {e}")
         if self.orig_xml is not None and add_places:
             xpath = self._meta.get_field("ort").extra.get("xpath", None)
             try:

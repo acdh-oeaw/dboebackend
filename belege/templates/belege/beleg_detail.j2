@@ -18,7 +18,12 @@
         <gramGrp>
             <gram>{{ x.pron_gram }}</gram>
         </gramGrp>{% endif %}
-    </form>{% endfor %}{% for x in object.citations.all %}
+    </form>{% endfor %}{% for x in object.bedeutungen.all %}
+    <sense corresp="{{ x.corresp_to }}" xml:id="{{ x.dboe_id }}" n="{{ x.number }}">
+        <def xml:lang="{{ x.definition_lang }}">{{ x.definition }}</def>{% if x.note_anmerkung_o %}
+        <note type="anmerkung" resp="O">{{ x.note_anmerkung_o }}</note>{% endif %}{% if x.note_anmerkung_b %}
+        <note type="anmerkung" resp="O">{{ x.note_anmerkung_b }}</note>{% endif %}
+    </sense>{% endfor %}{% for x in object.citations.all %}
     <cit type="kontext" n="{{ x.number }}" xml:id="{{ x.dboe_id }}">
         <quote xml:lang="{{ x.quote_lang }}">{{ x.quote_text }}</quote>{% if x.interpration %}
         <interp>{{ x.interpration }}</interp>{% endif %}{% if x.definition %}{% if x.note_anmerkung_o %}
