@@ -10,7 +10,25 @@ from belege.models import (
     Ort,
     Facsimile,
     Lautung,
+    Sense,
 )
+
+
+@admin.register(Sense)
+class SenseAdmin(admin.ModelAdmin):
+    list_display = [
+        field.name
+        for field in Sense._meta.fields
+        if isinstance(field, (models.CharField, models.TextField, models.ForeignKey))
+    ]
+    search_fields = [
+        field.name
+        for field in Sense._meta.fields
+        if isinstance(field, (models.CharField, models.TextField))
+    ]
+    autocomplete_fields = ["beleg"]
+    ordering = ["beleg", "number"]
+    list_per_page = 20
 
 
 @admin.register(Lautung)
