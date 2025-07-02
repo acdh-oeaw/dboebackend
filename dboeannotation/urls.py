@@ -28,6 +28,7 @@ router.register(r"kregionen", belege_api_views.KRegionViewSet)
 router.register(r"orte", belege_api_views.OrtViewSet)
 router.register(r"belege", belege_api_views.BelegViewSet)
 router.register(r"kontexte", belege_api_views.CitationViewSet)
+router.register(r"lautungen", belege_api_views.LautungViewSet)
 router.register(r"facsimiles", belege_api_views.FacsimileViewSet)
 
 

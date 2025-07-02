@@ -3,8 +3,21 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 
 from belege.api_utils import get_filterset_for_model
-from belege.serializers import get_serializer_for_model, CitationSerializer
-from belege.models import BundesLand, GRegion, KRegion, Ort, Beleg, Citation, Facsimile
+from belege.serializers import (
+    get_serializer_for_model,
+    CitationSerializer,
+    LautungSerializer,
+)
+from belege.models import (
+    BundesLand,
+    GRegion,
+    KRegion,
+    Ort,
+    Beleg,
+    Citation,
+    Facsimile,
+    Lautung,
+)
 
 
 class CustomPagination(PageNumberPagination):
@@ -66,3 +79,15 @@ class CitationViewSet(viewsets.ModelViewSet):
     lookup_value_regex = (
         r"[^/]+"  # the default regex does not work with dboe_ids due to e.g. `.`
     )
+
+
+class LautungViewSet(viewsets.ModelViewSet):
+    page_size = 10
+    max_page_size = 20
+    page_size_query_param = "page_size"
+    pagination_class = CustomPagination
+    queryset = Lautung.objects.all()
+    filterset_class = get_filterset_for_model(Lautung)
+    serializer_class = LautungSerializer
+    lookup_field = "dboe_id"
+    lookup_value_regex = r"[^/]+"

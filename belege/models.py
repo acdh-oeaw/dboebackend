@@ -354,20 +354,60 @@ class Lautung(models.Model):
         on_delete=models.CASCADE,
         related_name="lautungen",
     )
-    number = models.PositiveIntegerField(default=1, verbose_name="order number")
+    number = models.PositiveIntegerField(default=1, verbose_name="Order number")
     orig_xml = XMLField(
         verbose_name="XML Node", help_text="tei:form[@type='lautung'] node"
     )
     pron = models.CharField(
         blank=True, null=True, max_length=250, verbose_name="Pronunciation"
     ).set_extra(xpath="./tei:pron", node_type="text")
-    quote_lang = models.CharField(
+    pron_lang = models.CharField(
         max_length=3,
         choices=LANG_CHOICES,
         blank=True,
         null=True,
-        verbose_name="Sprache (Kontext)",
-    ).set_extra(xpath="./tei:quote/@xml:lang", node_type="attribute")
+        verbose_name="Sprache (Pronunciation)",
+    ).set_extra(xpath="./tei:pron/@xml:lang", node_type="attribute")
+    pron_gram = models.CharField(
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Grammatik",
+        help_text="whatever",
+    ).set_extra(xpath="./tei:gramGrp/tei:gram", node_type="text")
+
+    class Meta:
+        verbose_name = "Lautung"
+        verbose_name_plural = "Lautungen"
+        ordering = ["beleg", "number"]
+
+    def __str__(self):
+        return f"{self.pron} ({self.beleg})"
+
+    def save(self, *args, **kwargs):
+        if self.orig_xml is not None:
+            try:
+                doc = TeiReader(self.orig_xml)
+            except AttributeError:
+                doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
+            for field in self._meta.fields:
+                if (
+                    hasattr(field, "extra")
+                    and "xpath" in field.extra
+                    and isinstance(field, (models.CharField, models.TextField))
+                    and not getattr(self, field.name)
+                ):
+                    xpath_expr = field.extra["xpath"]
+                    try:
+                        nodes = doc.any_xpath(xpath_expr)[0]
+                    except IndexError:
+                        continue
+                    try:
+                        value = extract_fulltext(nodes)
+                    except AttributeError:
+                        value = nodes
+                    setattr(self, field.name, value)
+        super().save(*args, **kwargs)
 
 
 class Beleg(models.Model):
@@ -437,7 +477,14 @@ class Beleg(models.Model):
             return f"{self.dboe_id} ({self.hauptlemma})"
         return f"{self.dboe_id}"
 
-    def save(self, add_citations=False, add_places=False, *args, **kwargs):
+    def save(
+        self,
+        add_citations=False,
+        add_places=False,
+        add_lautungen=False,
+        *args,
+        **kwargs,
+    ):
         """
         Save the model instance with optional XML processing and citation extraction.
         This method extends the default save behavior by:
@@ -504,6 +551,25 @@ class Beleg(models.Model):
                     item.save()
                 except Exception as e:
                     print(f"Error saving citation {xml_id}: {e}")
+        if self.orig_xml is not None and add_lautungen:
+            items = doc.any_xpath("./tei:form[@type='lautung']")
+            for item in items:
+                xml_id = get_xmlid(item)
+                try:
+                    number = item.attrib["n"]
+                except KeyError:
+                    number = 1
+                orig_xml = ET.tostring(item, encoding="unicode")
+                try:
+                    item = Lautung.objects.get(dboe_id=xml_id)
+                except Lautung.DoesNotExist:
+                    item = Lautung(
+                        dboe_id=xml_id, beleg=self, number=number, orig_xml=orig_xml
+                    )
+                try:
+                    item.save()
+                except Exception as e:
+                    print(f"Error saving lautung {xml_id}: {e}")
         if self.orig_xml is not None and add_places:
             xpath = self._meta.get_field("ort").extra.get("xpath", None)
             try:
