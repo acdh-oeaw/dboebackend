@@ -1,7 +1,33 @@
 from django.contrib import admin
 from django.db import models
 
-from belege.models import Beleg, Citation, BundesLand, GRegion, KRegion, Ort, Facsimile
+from belege.models import (
+    Beleg,
+    Citation,
+    BundesLand,
+    GRegion,
+    KRegion,
+    Ort,
+    Facsimile,
+    Lautung,
+)
+
+
+@admin.register(Lautung)
+class LautungAdmin(admin.ModelAdmin):
+    list_display = [
+        field.name
+        for field in Lautung._meta.fields
+        if isinstance(field, (models.CharField, models.TextField, models.ForeignKey))
+    ]
+    search_fields = [
+        field.name
+        for field in Lautung._meta.fields
+        if isinstance(field, (models.CharField, models.TextField))
+    ]
+    autocomplete_fields = ["beleg"]
+    ordering = ["beleg", "number"]
+    list_per_page = 20
 
 
 @admin.register(Facsimile)
@@ -16,7 +42,6 @@ class FacsimileAdmin(admin.ModelAdmin):
         for field in Facsimile._meta.fields
         if isinstance(field, (models.CharField, models.TextField))
     ]
-    search_fields = ["file_name"]
     ordering = ["file_name"]
     list_per_page = 20
 
@@ -33,7 +58,6 @@ class BelegAdmin(admin.ModelAdmin):
         for field in Beleg._meta.fields
         if isinstance(field, (models.CharField, models.TextField))
     ]
-    search_fields = ["dboe_id", "hauptlemma"]
     list_filter = ["import_issue", "pos"]
     ordering = ["dboe_id"]
     autocomplete_fields = ["ort", "facsimile"]

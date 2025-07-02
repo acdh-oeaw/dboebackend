@@ -12,10 +12,24 @@
     </gramGrp>{% if object.nebenlemma %}
     <form type="nebenlemma">
         <orth>{{ object.nebenlemma }}</orth>
-    </form>{% endif %}{% for x in object.citations.all %}
+    </form>{% endif %}{% for x in object.lautungen.all %}
+    <form type="lautung" n="{{ x.number }}" xml:id="{{ x.dboe_id }}">
+        <pron xml:lang="{{ x.pron_lang }}" notation="teuthonista">{{ x.pron }}</pron>{% if x.pron_gram %}
+        <gramGrp>
+            <gram>{{ x.pron_gram }}</gram>
+        </gramGrp>{% endif %}
+    </form>{% endfor %}{% for x in object.citations.all %}
     <cit type="kontext" n="{{ x.number }}" xml:id="{{ x.dboe_id }}">
-        <quote>{{ x.quote_text }}</quote>{% if x.definition %}
-        <def corresp="this:WBD/KT{{ x.number }}">{{ x.definition }}</def>{% endif %}
+        <quote xml:lang="{{ x.quote_lang }}">{{ x.quote_text }}</quote>{% if x.interpration %}
+        <interp>{{ x.interpration }}</interp>{% endif %}{% if x.definition %}{% if x.note_anmerkung_o %}
+        <note type="anmerkung" resp="O">
+            {{ x.note_anmerkung_o }}
+        </note>{% endif %}{% if x.note_anmerkung_b %}
+        <note type="anmerkung" resp="B">
+            {{ x.note_anmerkung_b }}
+        </note>{% endif %}
+        <def corresp="this:WBD/KT{{ x.number }}" xml:lang="{{ x.definition_lang }}">{{ x.definition }}</def>{% endif %}{% if x.fragebogen_nummer %}
+        <ref type="fragebogenNummer">{{ x.fragebogen_nummer }}</ref>{% endif %}
     </cit>{% endfor %}{% if object.archivzeile %}
     <ref type="archiv">{{ object.archivzeile }}</ref>{% endif %}{% if object.quelle %}
     <ref type="quelle">{{ object.quelle }}</ref>{% endif %}{% if object.quelle_bearbeitet %}
