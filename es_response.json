@@ -1,0 +1,48 @@
+{
+  "results": {
+    "HL": "Teich",
+    "QU": "Eberstalzell OÖ söTraunv. Bauer (1991)",
+    "Sigle1": ["5.3i01"],
+    "locationCenter": "48.033199664024224,13.996338548539455",
+    "locationCenter_Qug": "48.033199664024224,13.996338548539455",
+    "QDB": "{5.3i01} swestl.Umg.Wels:Umg.Wels: nwTraunv.:OÖ ",
+    "Bundesland1": ["5 OÖ"],
+    "BIBL": "Bauer· (1991)",
+    "Ort": ["Eberstallzell OÖ"],
+    "GRAM/LT1": [" [sg3+7A]", "≈sg3+7A"],
+    "entry": {},
+    "GRAM/LT2": [" [m+A]", "≈m+A"],
+    "Kleinregion1": ["5.3i swestl.Umg.Wels"],
+    "POS": "Subst",
+    "Archivzeile": "HK 144, teic1130.pir, korr. I.G.",
+    "BD/LT*": [
+      "im Teich ›LT1",
+      "Teich; kleines stehendes GewässerANMO: 'Weiher' ist etwas größer, aber Ausdruck nicht sehr gebr. ›LT2",
+      "≈›LT2 Teich kleines stehendes Gewässer ANM O: Weiher ist etwas größer, aber Ausdruck nicht sehr gebr."
+    ],
+    "Gemeinde1": ["5.3i01 Eberstalzell"],
+    "location": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [14.0184016, 48.0540655],
+          [14.0184016, 48.0540655]
+        ]
+      ]
+    },
+    "LT1_teuthonista": ["į̃m daẹx̑d", "≈im daechd"],
+    "LT2_teuthonista": ["dɒ daẹx̑d", "≈da daechd"],
+    "location_Qug": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [14.0184016, 48.0540655],
+          [14.0153832, 48.0556302]
+        ]
+      ]
+    },
+    "ID": "d144_153_qdbn-d16e129",
+    "Verweis": ["O: dɒ waẹɒ  Weiher", "≈O: da waea Weiher"],
+    "Großregion1": ["5.3 Traunv."]
+  }
+}
