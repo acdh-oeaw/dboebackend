@@ -40,6 +40,11 @@ urlpatterns = [
     path("authenticate/", api_views.CustomObtainAuthToken.as_view()),
     path("project-info/", api_views.project_info),
     path("api/dboe-query/", api_views.dboe_query),
+    path(
+        "api/dboe-query-by-id/<str:dboe_id>",
+        api_views.dboe_query_by_id,
+        name="dboe_query_by_id",
+    ),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/schema/swagger-ui/",

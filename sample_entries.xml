@@ -282,4 +282,25 @@
         </listPlace>
     </usg>
 </entry>
+<entry xml:id="d200_qdb-d1e51862" n="124139" source="#orig-d200_qdb-d1e51862">
+    <form type="hauptlemma" xml:id="tu-19096.5">
+        <orth>Tüppel</orth>
+    </form>
+    <gramGrp>
+        <pos>Subst</pos>
+    </gramGrp>
+    <form type="lehnwort" n="1" xml:id="tu-19096.9">
+        <pron xml:lang="bar" notation="teuthonista">tipli</pron>
+    </form>
+    <sense corresp="this:LW1" xml:id="tu-19096.10">
+        <def xml:lang="de">Beule, Dippel, Tippel; (épit.) Dübel ("Bauwesen")</def>
+    </sense>
+    <note type="anmerkung" resp="O" corresp="this:LW1">közb.=ugs.</note>
+    <ref type="archiv" xml:id="tu-19096.4">HK 200, d200#1860.1 = tupp0920.pir#2.776</ref>
+    <ref type="quelle" xml:id="tu-19096.6">Halász Magyar-Német Szotar</ref>
+    <ref type="quelleBearbeitet" xml:id="tu-19096.7">{X} </ref>
+    <ref type="bibl" corresp="this:QDB">
+        <bibl>UngWb./H.I Bd.,S. E-1141/3-4</bibl>
+    </ref>
+</entry>
 </root>

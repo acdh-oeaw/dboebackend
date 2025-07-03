@@ -11,6 +11,10 @@
             <a href="/api/" class="btn btn-outline-secondary btn-lg px-4">API-Endpoints</a>
             <a href="{% url 'belege:beleg-detail' pk='d144_153_qdbn-d16e129' %}"
                 class="btn btn-outline-secondary btn-lg px-4">Sample TEI</a>
+            <a href="{% url 'dboe_query_by_id' dboe_id='d144_153_qdbn-d16e129' %}?format=json"
+                class="btn btn-outline-secondary btn-lg px-4">Elasticsearch</a>
+            <a href="https://dboe-data.acdh-dev.oeaw.ac.at/restvle/dicts/_qdb-TEI-02/entries/d144_153_qdbn-d16e129"
+                class="btn btn-outline-secondary btn-lg px-4">BaseX</a>
         </div>
     </div>
 </div>

@@ -18,7 +18,7 @@ from .serializers import (
     EditOfArticleUserSerializer,
     Es_documentSerializerForScans,
     Es_documentSerializerForCache,
-    Es_documentListSerializer
+    Es_documentListSerializer,
 )
 from .models import (
     Tag,
@@ -346,9 +346,7 @@ class AnnotationViewSet(viewsets.ModelViewSet):
         serializer.save(created_by=self.request.user)
 
 
-@extend_schema(
-    responses={200: {}}
-)
+@extend_schema(responses={200: {}})
 @api_view()
 def dboe_query(request):
     """
@@ -369,14 +367,42 @@ def dboe_query(request):
     return Response({"results": results})
 
 
+@extend_schema(
+    parameters=[
+        {
+            "name": "dboe_id",
+            "in": "path",
+            "required": True,
+            "description": "The ID to search in the Elasticsearch index.",
+            "schema": {"type": "string"},
+        }
+    ],
+    responses={200: {}},
+)
+@api_view()
+def dboe_query_by_id(request, dboe_id):
+    """
+    Search elastic search index by dboe-id
+
+    """
+    client = Elasticsearch(settings.ES_DBOE)
+
+    my_query = Q("multi_match", query=dboe_id, fields=["_id"])
+    search = Search(using=client, index="dboe").query(my_query)
+    count = search.count()
+    results = search[0:count].execute()
+    results = results.to_dict()
+
+    return Response({"results": results["hits"]["hits"][0]["_source"]})
+
+
 #################################################################
 #                    project info view                          #
 #################################################################
 
-@extend_schema(
-    responses={200: Dict[str, str]}
-)
-@api_view(['GET'])
+
+@extend_schema(responses={200: Dict[str, str]})
+@api_view(["GET"])
 def project_info(request):
     """
     returns a dict providing metadata about the current project
