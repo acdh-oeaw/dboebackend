@@ -13,13 +13,11 @@ def get_serializer_for_model(model_class, field_to_serialize="__all__"):
 
 
 class BelegSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="belege-elastic-search-detail")
     hl = serializers.CharField(source="hauptlemma", required=False)
     id = serializers.CharField(source="dboe_id", required=False)
     qu = serializers.CharField(source="quelle", required=False)
     sigle1 = serializers.CharField(source="ort.sigle", required=False)
-    locationcenter = serializers.SerializerMethodField(required=False)
-    locationcenter_quq = serializers.SerializerMethodField(required=False)
-    bundesland1 = serializers.SerializerMethodField(required=False)
 
     class Meta:
         model = Beleg
@@ -29,10 +27,9 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
             "hl",
             "qu",
             "sigle1",
-            "locationcenter",
-            "locationcenter_quq",
-            "bundesland1",
             "bibl",
+            "pos",
+            "archivzeile",
         ]
 
     def get_locationcenter(self, instance):
@@ -41,23 +38,44 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
     def get_locationcenter_quq(self, instance):
         return "48.033199664024224,13.996338548539455"
 
-    def get_bundesland1(self, instance):
-        try:
-            return f"{instance.ort.bundesland.sigle} {instance.ort.bundesland.abbr}"
-        except AttributeError:
-            return ""
-
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         for x in instance.lautungen.all():
             gram_key = f"GRAM/LT{x.number}"
-            ret[gram_key] = x.pron_gram
+            ret[gram_key] = [x.pron_gram]
             teut_key = f"LT{x.number}_teuthonista"
-            ret[teut_key] = x.pron
+            ret[teut_key] = [x.pron]
 
         ret["BD/LT*"] = []
         for x in instance.bedeutungen.all():
-            ret["BD/LT*"].append(x.definition)
+            if x.note_anmerkung_o:
+                ret["BD/LT*"].append(
+                    f"{x.definition}ANMO: {x.note_anmerkung_o} ›LT{x.number}"
+                )
+            else:
+                ret["BD/LT*"].append(f"{x.definition} ›LT{x.number}")
+        try:
+            ret["Gemeinde1"] = [f"{instance.ort.sigle} {instance.ort.name}"]
+        except AttributeError:
+            ret["Gemeinde1"] = []
+        try:
+            ret["Kleinregion1"] = [
+                f"{instance.ort.kregion.sigle} {instance.ort.kregion.abbr}"
+            ]
+        except AttributeError:
+            ret["Kleinregion1"] = []
+        try:
+            ret["Großregion1"] = [
+                f"{instance.ort.gregion.sigle} {instance.ort.gregion.abbr}"
+            ]
+        except AttributeError:
+            ret["Großregion1"] = []
+        try:
+            ret["Bundesland1"] = [
+                f"{instance.ort.bundesland.sigle} {instance.ort.bundesland.abbr}"
+            ]
+        except AttributeError:
+            ret["Bundesland1"] = []
 
         return ret
 

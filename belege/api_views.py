@@ -63,7 +63,12 @@ class OrtViewSet(CustomViewSet):
     filterset_class = get_filterset_for_model(Ort)
 
 
-class BelegViewSet(viewsets.ModelViewSet):
+class BelegViewSet(CustomViewSet):
+    queryset = Beleg.objects.all()
+    filterset_class = get_filterset_for_model(Beleg)
+
+
+class BelegViewSetElasticSearch(viewsets.ModelViewSet):
     page_size = 10
     max_page_size = 20
     page_size_query_param = "page_size"

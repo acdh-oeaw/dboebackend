@@ -303,4 +303,72 @@
         <bibl>UngWb./H.I Bd.,S. E-1141/3-4</bibl>
     </ref>
 </entry>
+
+<entry xml:id="d144_153_qdbn-d16e129" n="82" source="#orig-d144_153_qdbn-d16e129">
+    <form type="hauptlemma" xml:id="tu-14.50">
+        <orth>Teich</orth>
+    </form>
+    <gramGrp>
+        <pos>Subst</pos>
+    </gramGrp>
+    <form type="lautung" n="1" xml:id="tu-14.54">
+        <pron xml:lang="bar" notation="teuthonista">į̃m daẹx̑d</pron>
+        <gramGrp>
+            <gram> [sg3+7A]</gram>
+        </gramGrp>
+    </form>
+    <form type="lautung" n="2" xml:id="tu-14.55">
+        <pron xml:lang="bar" notation="teuthonista">dɒ daẹx̑d</pron>
+        <gramGrp>
+            <gram> [m+A]</gram>
+        </gramGrp>
+    </form>
+    <sense corresp="this:LT1" xml:id="tu-14.56">
+        <def xml:lang="de">im Teich</def>
+    </sense>
+    <sense corresp="this:LT2" xml:id="tu-14.57">
+        <def xml:lang="de">Teich; kleines stehendes Gewässer</def>
+        <note type="anmerkung" resp="O">'Weiher' ist etwas größer, aber Ausdruck nicht sehr gebr.</note>
+    </sense>
+    <xr type="verweise" resp="O" xml:id="tu-14.58">
+        <pRef>dɒ waẹɒ</pRef> Weiher</xr>
+    <ref type="archiv" xml:id="tu-14.49">HK 144, teic1130.pir, korr. I.G.</ref>
+    <ref type="quelle" xml:id="tu-14.51">Eberstalzell OÖ söTraunv. Bauer (1991)</ref>
+    <ref type="quelleBearbeitet" xml:id="tu-14.52">{5.3i01} swestl.Umg.Wels:Umg.Wels: nwTraunv.:OÖ </ref>
+    <ref type="bibl" corresp="this:QDB">
+        <bibl>Bauer· (1991)</bibl>
+    </ref>
+    <usg type="geo" corresp="this:QDB">
+        <placeName type="orig">Eberstallzell OÖ</placeName>
+        <listPlace corresp="sigle:5.3i01">
+            <place type="Bundesland">
+                <placeName>OÖ</placeName>
+                <idno>5</idno>
+                <listPlace>
+                    <place type="Großregion">
+                        <placeName>Traunv.</placeName>
+                        <idno>5.3</idno>
+                        <listPlace>
+                            <place type="Kleinregion">
+                                <placeName>swestl.Umg.Wels</placeName>
+                                <idno>5.3i</idno>
+                                <listPlace>
+                                    <place type="Gemeinde">
+                                        <placeName>Eberstalzell</placeName>
+                                        <listPlace>
+                                            <place type="Ort">
+                                                <placeName>Eberstalzell</placeName>
+                                                <idno>5.3i01</idno>
+                                            </place>
+                                        </listPlace>
+                                    </place>
+                                </listPlace>
+                            </place>
+                        </listPlace>
+                    </place>
+                </listPlace>
+            </place>
+        </listPlace>
+    </usg>
+</entry>
 </root>
