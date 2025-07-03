@@ -7,6 +7,7 @@ from belege.serializers import (
     get_serializer_for_model,
     CitationSerializer,
     LautungSerializer,
+    BelegSerializer,
 )
 from belege.models import (
     BundesLand,
@@ -62,9 +63,18 @@ class OrtViewSet(CustomViewSet):
     filterset_class = get_filterset_for_model(Ort)
 
 
-class BelegViewSet(CustomViewSet):
+class BelegViewSet(viewsets.ModelViewSet):
+    page_size = 10
+    max_page_size = 20
+    page_size_query_param = "page_size"
+    pagination_class = CustomPagination
     queryset = Beleg.objects.all()
     filterset_class = get_filterset_for_model(Beleg)
+    serializer_class = BelegSerializer
+    # lookup_field = "dboe_id"
+    # lookup_value_regex = (
+    #     r"[^/]+"  # the default regex does not work with dboe_ids due to e.g. `.`
+    # )
 
 
 class CitationViewSet(viewsets.ModelViewSet):
