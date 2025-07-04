@@ -226,6 +226,75 @@ class Ort(models.Model):
         ordering = ["name"]
 
 
+class ZusatzLemma(models.Model):
+    """
+    Django model representing a tei:re node extracted a tei:cit node.
+    """
+
+    dboe_id = models.CharField(
+        primary_key=True,
+        max_length=250,
+        verbose_name="DBÖ ID",
+        help_text="e.g. tu-10130.56",
+    )
+    citation = models.ForeignKey(
+        "Citation",
+        verbose_name="Citation",
+        on_delete=models.CASCADE,
+        related_name="zusatz_lemma",
+    )
+    number = models.PositiveIntegerField(default=1, verbose_name="Order number")
+    orig_xml = XMLField(
+        verbose_name="XML Node", help_text="tei:form[@type='lautung'] node"
+    )
+    form_orth = models.CharField(
+        blank=True, null=True, max_length=250, verbose_name="Lemma"
+    ).set_extra(xpath="./tei:form/tei:orth", node_type="text")
+    pos = models.CharField(
+        blank=True,
+        null=True,
+        max_length=20,
+        verbose_name="POS",
+        choices=POS_CHOICES,
+    ).set_extra(xpath="./tei:gramGrp/tei:pos", node_type="text")
+
+    class Meta:
+        verbose_name = "Zusatzlemma"
+        verbose_name_plural = "Zusatzlemmata"
+        ordering = ["citation", "number"]
+
+    def __str__(self):
+        if self.form_orth:
+            return f"{self.form_orth}"
+        else:
+            return f"{self.dboe_id}"
+
+    def save(self, *args, **kwargs):
+        if self.orig_xml is not None:
+            try:
+                doc = TeiReader(self.orig_xml)
+            except AttributeError:
+                doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
+            for field in self._meta.fields:
+                if (
+                    hasattr(field, "extra")
+                    and "xpath" in field.extra
+                    and isinstance(field, (models.CharField, models.TextField))
+                    and not getattr(self, field.name)
+                ):
+                    xpath_expr = field.extra["xpath"]
+                    try:
+                        nodes = doc.any_xpath(xpath_expr)[0]
+                    except IndexError:
+                        continue
+                    try:
+                        value = extract_fulltext(nodes)
+                    except AttributeError:
+                        value = nodes
+                    setattr(self, field.name, value)
+        super().save(*args, **kwargs)
+
+
 class Citation(models.Model):
     """
     Django model representing a citation (Kontext) extracted from TEI XML documents.
@@ -308,7 +377,7 @@ class Citation(models.Model):
         verbose_name_plural = "Kontexte"
         ordering = ["beleg", "number"]
 
-    def save(self, *args, **kwargs):
+    def save(self, add_zusatzlemma=False, *args, **kwargs):
         if self.orig_xml is not None:
             try:
                 doc = TeiReader(self.orig_xml)
@@ -331,6 +400,21 @@ class Citation(models.Model):
                     except AttributeError:
                         value = nodes
                     setattr(self, field.name, value)
+        if self.orig_xml is not None and add_zusatzlemma:
+            items = doc.any_xpath("./tei:re")
+            for number, item in enumerate(items, start=1):
+                xml_id = get_xmlid(item)
+                orig_xml = ET.tostring(item, encoding="unicode")
+                try:
+                    item = ZusatzLemma.objects.get(dboe_id=xml_id)
+                except ZusatzLemma.DoesNotExist:
+                    item = ZusatzLemma(
+                        dboe_id=xml_id, citation=self, number=number, orig_xml=orig_xml
+                    )
+                try:
+                    item.save()
+                except Exception as e:
+                    print(f"Error saving ZusatzLemma {xml_id}: {e}")
         super().save(*args, **kwargs)
 
 

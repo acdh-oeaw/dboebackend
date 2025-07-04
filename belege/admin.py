@@ -11,7 +11,33 @@ from belege.models import (
     Facsimile,
     Lautung,
     Sense,
+    ZusatzLemma,
 )
+
+
+@admin.register(ZusatzLemma)
+class ZusatzLemmaAdmin(admin.ModelAdmin):
+    list_display = [
+        field.name
+        for field in ZusatzLemma._meta.fields
+        if isinstance(
+            field,
+            (
+                models.CharField,
+                models.TextField,
+                models.ForeignKey,
+                models.PositiveIntegerField,
+            ),
+        )
+    ]
+    search_fields = [
+        field.name
+        for field in ZusatzLemma._meta.fields
+        if isinstance(field, (models.CharField, models.TextField))
+    ]
+    autocomplete_fields = ["citation"]
+    ordering = ["citation", "number"]
+    list_per_page = 20
 
 
 @admin.register(Sense)
@@ -19,7 +45,15 @@ class SenseAdmin(admin.ModelAdmin):
     list_display = [
         field.name
         for field in Sense._meta.fields
-        if isinstance(field, (models.CharField, models.TextField, models.ForeignKey))
+        if isinstance(
+            field,
+            (
+                models.CharField,
+                models.TextField,
+                models.ForeignKey,
+                models.PositiveIntegerField,
+            ),
+        )
     ]
     search_fields = [
         field.name
@@ -36,7 +70,15 @@ class LautungAdmin(admin.ModelAdmin):
     list_display = [
         field.name
         for field in Lautung._meta.fields
-        if isinstance(field, (models.CharField, models.TextField, models.ForeignKey))
+        if isinstance(
+            field,
+            (
+                models.CharField,
+                models.TextField,
+                models.ForeignKey,
+                models.PositiveIntegerField,
+            ),
+        )
     ]
     search_fields = [
         field.name
@@ -53,7 +95,15 @@ class FacsimileAdmin(admin.ModelAdmin):
     list_display = [
         field.name
         for field in Facsimile._meta.fields
-        if isinstance(field, (models.CharField, models.TextField, models.ForeignKey))
+        if isinstance(
+            field,
+            (
+                models.CharField,
+                models.TextField,
+                models.ForeignKey,
+                models.PositiveIntegerField,
+            ),
+        )
     ]
     search_fields = [
         field.name
@@ -69,7 +119,15 @@ class BelegAdmin(admin.ModelAdmin):
     list_display = [
         field.name
         for field in Beleg._meta.fields
-        if isinstance(field, (models.CharField, models.TextField, models.ForeignKey))
+        if isinstance(
+            field,
+            (
+                models.CharField,
+                models.TextField,
+                models.ForeignKey,
+                models.PositiveIntegerField,
+            ),
+        )
     ]
     search_fields = [
         field.name
