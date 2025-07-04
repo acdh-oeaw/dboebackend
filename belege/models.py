@@ -260,7 +260,7 @@ class ZusatzLemma(models.Model):
     gram = models.CharField(
         blank=True,
         null=True,
-        max_length=20,
+        max_length=250,
         verbose_name="Grammatik",
         choices=POS_CHOICES,
     ).set_extra(xpath="./tei:gramGrp/tei:gram", node_type="text")

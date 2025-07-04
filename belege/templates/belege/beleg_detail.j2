@@ -26,13 +26,22 @@
     </sense>{% endfor %}{% for x in object.citations.all %}
     <cit type="kontext" n="{{ x.number }}" xml:id="{{ x.dboe_id }}">
         <quote xml:lang="{{ x.quote_lang }}">{{ x.quote_text }}</quote>{% if x.interpration %}
-        <interp>{{ x.interpration }}</interp>{% endif %}{% if x.definition %}{% if x.note_anmerkung_o %}
+        <interp>{{ x.interpration }}</interp>{% endif %}{% if x.note_anmerkung_o %}
         <note type="anmerkung" resp="O">
             {{ x.note_anmerkung_o }}
         </note>{% endif %}{% if x.note_anmerkung_b %}
         <note type="anmerkung" resp="B">
             {{ x.note_anmerkung_b }}
-        </note>{% endif %}
+        </note>{% endif %}{% for y in x.zusatz_lemma.all %}
+        <re type="zusatzlemma" xml:id="{{ y.dboe_id }}">
+            <form>
+                <orth>{{ y.form_orth }}</orth>
+            </form>
+            <gramGrp>
+                <pos>{{ y.pos }}</pos>{% if y.gram %}
+                <gram>Z</gram>{% endif %}
+            </gramGrp>
+        </re>{% endfor %}{% if x.definition %}
         <def corresp="this:WBD/KT{{ x.number }}" xml:lang="{{ x.definition_lang }}">{{ x.definition }}</def>{% endif %}{% if x.fragebogen_nummer %}
         <ref type="fragebogenNummer">{{ x.fragebogen_nummer }}</ref>{% endif %}
     </cit>{% endfor %}{% if object.archivzeile %}
