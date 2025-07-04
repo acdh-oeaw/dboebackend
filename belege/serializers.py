@@ -15,6 +15,7 @@ def get_serializer_for_model(model_class, field_to_serialize="__all__"):
 class BelegSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="belege-elastic-search-detail")
     hl = serializers.CharField(source="hauptlemma", required=False)
+    nl = serializers.CharField(source="nebenlemma", required=False)
     id = serializers.CharField(source="dboe_id", required=False)
     qu = serializers.CharField(source="quelle", required=False)
     sigle1 = serializers.CharField(source="ort.sigle", required=False)
@@ -25,6 +26,7 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
             "url",
             "id",
             "hl",
+            "nl",
             "qu",
             "sigle1",
             "bibl",
@@ -45,6 +47,21 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
             ret[gram_key] = [x.pron_gram]
             teut_key = f"LT{x.number}_teuthonista"
             ret[teut_key] = [x.pron]
+
+        ret["ANM/KT*"] = []
+        ret["BD/KT*"] = []
+        for x in instance.citations.all():
+            ret["BD/KT*"].append(f"{x.definition} ›KT {x.number}")
+            ret[f"KT{x.number}"] = [x.quote_text]
+            for y in x.zusatz_lemma.all():
+                ret[f"ZL{y.number}/KT{x.number}"] = [
+                    f"{y.form_orth}||{y.pos}||{y.gram}"
+                ]
+
+            if x.note_anmerkung_b:
+                ret["ANM/KT*"].append(f"O: {x.note_anmerkung_o} ›KT{x.number}")
+            if x.note_anmerkung_b:
+                ret["ANM/KT*"].append(f"B: {x.note_anmerkung_b} ›KT{x.number}")
 
         ret["BD/LT*"] = []
         for x in instance.bedeutungen.all():
