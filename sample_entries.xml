@@ -371,4 +371,110 @@
         </listPlace>
     </usg>
 </entry>
+
+<entry xml:id="d193_qdb-d1e51250" n="102696" source="#orig-d193_qdb-d1e51250">
+    <form type="hauptlemma" xml:id="tu-15805.17">
+        <orth>(Wërk-tag)für-tůch</orth>
+    </form>
+    <gramGrp>
+        <pos>Subst</pos>
+    </gramGrp>
+    <cit type="kontext" n="1" xml:id="tu-15805.22">
+        <quote xml:lang="bar">φęσ̌τ πɒ̃n hęσ̌τ hǭ̃-į mā̃e we̩σ̌τAφiσ̌τA φAπrę̃nτ ũnd-hōȋɒ τσɒ̃n he̩riστκhiσ̌τA κhaφ-į-mã wīdɒ-A nōės <pRef>we̩σ̌τAφiσ̌τA</pRef>
+            <seg type="gram"> [n]</seg>
+        </quote>
+        <def xml:lang="de">Voriges Jahr habe ich beim Herd meine Werktagsschürze verbrannt; heuer kaufe ich mir beim Kirtag im Herbst wieder eine neue Werktagsschürze</def>
+        <note type="anmerkung" resp="O">Spottspruch</note>
+        <note type="anmerkung" resp="B">- steht für einen Bogen</note>
+        <re type="zusatzlemma" xml:id="tu-15805.24">
+            <form>
+                <orth>fërt</orth>
+            </form>
+            <gramGrp>
+                <pos>Adv</pos>
+                <gram>Z</gram>
+            </gramGrp>
+        </re>
+        <re type="zusatzlemma" xml:id="tu-15805.25">
+            <form>
+                <orth>Hërd</orth>
+            </form>
+            <gramGrp>
+                <pos>Subst</pos>
+            </gramGrp>
+        </re>
+        <re type="zusatzlemma" xml:id="tu-15805.26">
+            <form>
+                <orth>(Herbst)kirch-tag</orth>
+            </form>
+            <gramGrp>
+                <pos>Subst</pos>
+            </gramGrp>
+        </re>
+        <re type="zusatzlemma" xml:id="tu-15805.27">
+            <form>
+                <orth>(fer)prennen</orth>
+            </form>
+            <gramGrp>
+                <pos>Verb</pos>
+                <gram>P2</gram>
+            </gramGrp>
+        </re>
+        <re type="zusatzlemma" xml:id="tu-15805.28">
+            <form>
+                <orth>kāufen</orth>
+            </form>
+            <gramGrp>
+                <pos>Verb</pos>
+                <gram>sg1</gram>
+            </gramGrp>
+        </re>
+    </cit>
+    <form type="nebenlemma" xml:id="tu-15805.18">
+        <orth>(Wërk-tags)für-tůch</orth>
+        <gramGrp>
+            <pos>Subst</pos>
+        </gramGrp>
+    </form>
+    <ref type="archiv" xml:id="tu-15805.16">HK 193, d193#2099.1 = tuch0607.res#0.0</ref>
+    <ref type="quelle" xml:id="tu-15805.19">Resch Dreiländerecke NÖ OÖ St. (1968)<ref type="seite">64</ref>
+    </ref>
+    <ref type="quelleBearbeitet" xml:id="tu-15805.20">{3.2n,3.2o,3.2r,3.2s,5.3i,5.3j,5.3k,5.3l,6.1a,6.1b,6.1 d,6.1f,6.1g,6.1h,6.1i} mkDiss./MdaLtg.:Lgg. </ref>
+    <ref type="bibl" corresp="this:QDB">
+        <bibl>RESCH· (1968) S. [Dw-4070]</bibl>
+    </ref>
+    <usg type="geo" corresp="this:QU">
+        <placeName type="orig">Admont</placeName>
+        <listPlace corresp="sigle:3.2p01">
+            <place type="Bundesland">
+                <placeName>Stmk.</placeName>
+                <idno>3</idno>
+                <listPlace>
+                    <place type="Großregion">
+                        <placeName>mbair.ObStmk.</placeName>
+                        <idno>3.2</idno>
+                        <listPlace>
+                            <place type="Kleinregion">
+                                <placeName>Gesäuse</placeName>
+                                <idno>3.2p</idno>
+                                <listPlace>
+                                    <place type="Gemeinde">
+                                        <placeName>Admont</placeName>
+                                        <listPlace>
+                                            <place type="Ort">
+                                                <placeName>Admont</placeName>
+                                                <idno>3.2p01</idno>
+                                                <note>Johnsbach, Hall und Weng im Gesäuse seit 2015 bei Gem. Admont</note>
+                                            </place>
+                                        </listPlace>
+                                    </place>
+                                </listPlace>
+                            </place>
+                        </listPlace>
+                    </place>
+                </listPlace>
+            </place>
+        </listPlace>
+    </usg>
+</entry>
 </root>

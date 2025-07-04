@@ -257,6 +257,13 @@ class ZusatzLemma(models.Model):
         verbose_name="POS",
         choices=POS_CHOICES,
     ).set_extra(xpath="./tei:gramGrp/tei:pos", node_type="text")
+    gram = models.CharField(
+        blank=True,
+        null=True,
+        max_length=20,
+        verbose_name="Grammatik",
+        choices=POS_CHOICES,
+    ).set_extra(xpath="./tei:gramGrp/tei:gram", node_type="text")
 
     class Meta:
         verbose_name = "Zusatzlemma"
