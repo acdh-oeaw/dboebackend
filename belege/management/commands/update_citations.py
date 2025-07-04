@@ -10,7 +10,7 @@ class Command(BaseCommand):
         total = Citation.objects.count()
         for x in tqdm(Citation.objects.iterator(), total=total):
             try:
-                x.save()
+                x.save(add_zusatzlemma=True)
             except Exception as e:
                 print(f"failed to save {x} due to {e}")
                 continue
