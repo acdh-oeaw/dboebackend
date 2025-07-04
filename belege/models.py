@@ -530,6 +530,24 @@ class Beleg(models.Model):
         on_delete=models.SET_NULL,
         verbose_name="Ort",
     ).set_extra(xpath=".//tei:place[@type='Ort']/tei:idno", node_type="text")
+    ref_type_dbo = models.CharField(
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Verweis (ref/@type='dbo')",
+    ).set_extra(xpath=".//tei:ref[@type='dbo']", node_type="text")
+    ref_type_sni = models.CharField(
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Verweis (ref/@type='sni')",
+    ).set_extra(xpath=".//tei:ref[@type='sni']", node_type="text")
+    xr_type_verweise = models.CharField(
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Verweis (xr/@type='verweise')",
+    ).set_extra(xpath=".//tei:xr[@type='verweise']", node_type="text")
     facsimile = models.ManyToManyField(
         "Facsimile",
         blank=True,
