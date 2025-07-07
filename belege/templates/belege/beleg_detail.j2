@@ -52,7 +52,10 @@
     <ref type="quelleBearbeitet">{{ object.quelle_bearbeitet}}</ref>{% endif %}{% if object.bibl %}
     <ref type="bibl" corresp="this:QDB">
         <bibl>{{ object.bibl }}</bibl>
-    </ref>{% endif %}{% if object.ref_type_sni %}
+    </ref>{% endif %}{% for x in object.zitierweise %}
+    <ref type="zitierweise">
+        <bibl>{{ x }}</bibl>
+    </ref>{% endfor %}{% if object.ref_type_sni %}
     <ref type="sni">{{ object.ref_type_sni }}</ref>{% endif %}{% if object.ref_type_dbo %}
     <ref type="dbo">{{ object.ref_type_dbo }}</ref>{% endif %}{% if object.ort %}
     <usg type="geo" corresp="this:QDB">

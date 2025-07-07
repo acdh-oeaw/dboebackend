@@ -94,6 +94,9 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
         except AttributeError:
             ret["Bundesland1"] = []
 
+        for i, x in enumerate(instance.zitierweise, start=1):
+            ret[f"ZW{i}"] = [x]
+
         return ret
 
 
