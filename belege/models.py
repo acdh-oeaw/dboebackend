@@ -633,12 +633,18 @@ class Beleg(models.Model):
         max_length=250,
         verbose_name="Verweis (ref/@type='sni')",
     ).set_extra(xpath=".//tei:ref[@type='sni']", node_type="text")
-    xr_type_verweise = models.CharField(
+    xr_type_verweise_o = models.CharField(
         blank=True,
         null=True,
         max_length=250,
-        verbose_name="Verweis (xr/@type='verweise')",
-    ).set_extra(xpath=".//tei:xr[@type='verweise']", node_type="text")
+        verbose_name="Verweis (xr/@type='verweise' and @resp='O')",
+    ).set_extra(xpath=".//tei:xr[@type='verweise' and @resp='O']", node_type="text")
+    xr_type_verweise_b = models.CharField(
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Verweis (xr/@type='verweise' and @resp='B')",
+    ).set_extra(xpath=".//tei:xr[@type='verweise' and @resp='B']", node_type="text")
     facsimile = models.ManyToManyField(
         "Facsimile",
         blank=True,
