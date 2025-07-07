@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+from django_jsonform.models.fields import ArrayField
 from django.db import models
 from belege.fields import XMLField
 from acdh_tei_pyutils.tei import TeiReader
@@ -607,6 +608,13 @@ class Beleg(models.Model):
     bibl = models.CharField(
         blank=True, null=True, max_length=250, verbose_name="Literatur"
     ).set_extra(xpath=".//tei:ref[@type='bibl']/tei:bibl", node_type="text")
+    zitierweise = ArrayField(
+        models.CharField(blank=True, max_length=250, null=True),
+        blank=True,
+        default=list,
+        verbose_name="Zitierweise",
+        help_text="whatever",
+    ).set_extra(xpath=".//tei:ref[@type='zitiereweise']/tei:bibl", node_type="list")
     pos = models.CharField(
         blank=True,
         null=True,
