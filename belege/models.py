@@ -736,6 +736,22 @@ class Beleg(models.Model):
                         if isinstance(field, (models.CharField, models.TextField)):
                             value = value.strip()
                         setattr(self, field.name, value)
+                if isinstance(field, ArrayField) and not getattr(self, field.name):
+                    xpath_expr = field.extra["xpath"]
+                    try:
+                        nodes = doc.any_xpath(xpath_expr)
+                    except IndexError:
+                        continue
+                    values = []
+                    for node in nodes:
+                        try:
+                            value = extract_fulltext(node)
+                        except AttributeError:
+                            value = node
+                        if isinstance(value, str):
+                            value = value.strip()
+                        values.append(value)
+                    setattr(self, field.name, values)
         if self.orig_xml is not None and add_citations:
             items = doc.any_xpath("./tei:cit")
             for item in items:
