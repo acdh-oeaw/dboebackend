@@ -44,13 +44,17 @@
         </re>{% endfor %}{% if x.definition %}
         <def corresp="this:WBD/KT{{ x.number }}" xml:lang="{{ x.definition_lang }}">{{ x.definition }}</def>{% endif %}{% if x.fragebogen_nummer %}
         <ref type="fragebogenNummer">{{ x.fragebogen_nummer }}</ref>{% endif %}
-    </cit>{% endfor %}{% if object.archivzeile %}
+    </cit>{% endfor %}{% if object.xr_type_verweise_o %}
+    <xr type="verweise" resp="O">{{ object.xr_type_verweise_o }}</xr>{% endif %}{% if object.xr_type_verweise_b %}
+    <xr type="verweise" resp="B">{{ object.xr_type_verweise_b }}</xr>{% endif %}{% if object.archivzeile %}
     <ref type="archiv">{{ object.archivzeile }}</ref>{% endif %}{% if object.quelle %}
     <ref type="quelle">{{ object.quelle }}</ref>{% endif %}{% if object.quelle_bearbeitet %}
     <ref type="quelleBearbeitet">{{ object.quelle_bearbeitet}}</ref>{% endif %}{% if object.bibl %}
     <ref type="bibl" corresp="this:QDB">
         <bibl>{{ object.bibl }}</bibl>
-    </ref>{% endif %}{% if object.ort %}
+    </ref>{% endif %}{% if object.ref_type_sni %}
+    <ref type="sni">{{ object.ref_type_sni }}</ref>{% endif %}{% if object.ref_type_dbo %}
+    <ref type="dbo">{{ object.ref_type_dbo }}</ref>{% endif %}{% if object.ort %}
     <usg type="geo" corresp="this:QDB">
         <listPlace>
             <place type="Ort">
