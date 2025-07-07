@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "guardian",
+    "django_jsonform",
     "crispy_forms",
     "crispy_bootstrap5",
     "rest_framework",
