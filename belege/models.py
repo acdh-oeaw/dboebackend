@@ -653,6 +653,19 @@ class Beleg(models.Model):
         max_length=250,
         verbose_name="Verweis (xr/@type='verweise' and @resp='B')",
     ).set_extra(xpath=".//tei:xr[@type='verweise' and @resp='B']", node_type="text")
+    fragebogen_nummer = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Fragebogen Nummer",
+        help_text="Whatever",
+    ).set_extra(xpath="./tei:ref[@type='fragebogenNummer']", node_type="text")
+    note_diverse = ArrayField(
+        models.TextField(blank=True, null=True),
+        blank=True,
+        default=list,
+        verbose_name="Anmerkung (diverse)",
+        help_text="whatever",
+    ).set_extra(xpath="./tei:note[@type='diverse']", node_type="list")
     facsimile = models.ManyToManyField(
         "Facsimile",
         blank=True,
