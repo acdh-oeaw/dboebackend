@@ -4,6 +4,7 @@ from django.db import models
 from belege.fields import XMLField
 from acdh_tei_pyutils.tei import TeiReader
 from acdh_tei_pyutils.utils import extract_fulltext, get_xmlid
+from acdh_xml_pyutils.xml import NSMAP
 
 
 POS_CHOICES = (
@@ -528,6 +529,13 @@ class AnmerkungLautung(models.Model):
         blank=True, null=True, max_length=20, verbose_name="Korrespondiert zu"
     )
     content = models.TextField(blank=True, null=True, verbose_name="Anmerkung")
+    p_ref = ArrayField(
+        models.TextField(blank=True, null=True),
+        blank=True,
+        default=list,
+        verbose_name="Pronunciation reference",
+        help_text="Iindicates a reference to the pronunciation(s) of the headword",
+    )
 
     class Meta:
         verbose_name = "Anmerkung (Lautung)"
@@ -822,7 +830,11 @@ class Beleg(models.Model):
                 item_object.number = number
                 item_object.corresp_to = item.attrib["corresp"]
                 item_object.resp = item.attrib["resp"]
-                item_object.content = item.text
+                item_object.content = extract_fulltext(item)
+                p_refs = []
+                for x in item.xpath(".//tei:pRef", namespaces=NSMAP):
+                    p_refs.append(extract_fulltext(x))
+                item_object.p_ref = p_refs
                 try:
                     item_object.save()
                 except Exception as e:
