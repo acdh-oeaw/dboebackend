@@ -12,7 +12,33 @@ from belege.models import (
     Lautung,
     Sense,
     ZusatzLemma,
+    AnmerkungLautung,
 )
+
+
+@admin.register(AnmerkungLautung)
+class AnmerkungLautungAdmin(admin.ModelAdmin):
+    list_display = [
+        field.name
+        for field in AnmerkungLautung._meta.fields
+        if isinstance(
+            field,
+            (
+                models.CharField,
+                models.TextField,
+                models.ForeignKey,
+                models.PositiveIntegerField,
+            ),
+        )
+    ]
+    search_fields = [
+        field.name
+        for field in ZusatzLemma._meta.fields
+        if isinstance(field, (models.CharField, models.TextField))
+    ]
+    autocomplete_fields = ["beleg"]
+    ordering = ["beleg", "number"]
+    list_per_page = 20
 
 
 @admin.register(ZusatzLemma)

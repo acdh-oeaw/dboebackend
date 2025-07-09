@@ -15,6 +15,8 @@ POS_CHOICES = (
 
 LANG_CHOICES = (("bar", "bar"), ("de", "de"))
 
+RESP_OPTIONS = (("O", "O"), ("B", "B"))
+
 
 def set_extra(self, **kwargs):
     self.extra = kwargs
@@ -499,6 +501,43 @@ class Lautung(models.Model):
         super().save(*args, **kwargs)
 
 
+class AnmerkungLautung(models.Model):
+    """Django model representing a tei:note related to a Lautung object"""
+
+    dboe_id = models.CharField(
+        primary_key=True,
+        max_length=250,
+        verbose_name="DBÖ ID",
+        help_text="Kombination of the Beleg-ID and the @n",
+    )
+    beleg = models.ForeignKey(
+        "Beleg",
+        verbose_name="Beleg",
+        on_delete=models.CASCADE,
+        related_name="note_lautung",
+    )
+    number = models.PositiveIntegerField(default=1, verbose_name="Order number")
+    resp = models.CharField(
+        choices=RESP_OPTIONS,
+        max_length=1,
+        default="O",
+        verbose_name="Responsible (O/B)",
+        help_text="whatever",
+    )
+    corresp_to = models.CharField(
+        blank=True, null=True, max_length=20, verbose_name="Korrespondiert zu"
+    )
+    content = models.TextField(blank=True, null=True, verbose_name="Anmerkung")
+
+    class Meta:
+        verbose_name = "Anmerkung (Lautung)"
+        verbose_name_plural = "Anmerkungen (Lautung)"
+        ordering = ["beleg", "number"]
+
+    def __str__(self):
+        return f"{self.dboe_id}"
+
+
 class Sense(models.Model):
     """
     Django model representing a tei:sense node.
@@ -695,6 +734,7 @@ class Beleg(models.Model):
         add_places=False,
         add_lautungen=False,
         add_sense=False,
+        add_anmkerung_laut=False,
         *args,
         **kwargs,
     ):
@@ -765,6 +805,28 @@ class Beleg(models.Model):
                             value = value.strip()
                         values.append(value)
                     setattr(self, field.name, values)
+        if self.orig_xml is not None and add_anmkerung_laut:
+            items = doc.any_xpath(
+                "./tei:note[@type='anmerkung' and @resp and @corresp]"
+            )
+            for i, item in enumerate(items, start=1):
+
+                try:
+                    number = item.attrib["number"]
+                except KeyError:
+                    number = i
+                dboe_id = f"{self.dboe_id}_{number:0>2}"
+                item_object, _ = AnmerkungLautung.objects.get_or_create(
+                    dboe_id=dboe_id, beleg=self
+                )
+                item_object.number = number
+                item_object.corresp_to = item.attrib["corresp"]
+                item_object.resp = item.attrib["resp"]
+                item_object.content = item.text
+                try:
+                    item_object.save()
+                except Exception as e:
+                    print(f"Error saving AnmerkungLautung {dboe_id}: {e}")
         if self.orig_xml is not None and add_citations:
             items = doc.any_xpath("./tei:cit")
             for item in items:
