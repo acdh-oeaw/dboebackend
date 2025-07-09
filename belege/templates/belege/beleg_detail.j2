@@ -51,7 +51,8 @@
     <ref type="quelle">{{ object.quelle }}</ref>{% endif %}{% if object.quelle_bearbeitet %}
     <ref type="quelleBearbeitet">{{ object.quelle_bearbeitet}}</ref>{% endif %}{% if object.fragebogen_nummer %}
     <ref type="fragebogenNummer">{{ object.fragebogen_nummer }}</ref>{% endif %}{% for x in object.note_diverse %}
-    <note type="diverse" n="{{ forloop.counter }} ">{{ x }}</note>{% endfor %}{% if object.bibl %}
+    <note type="diverse" n="{{ forloop.counter }} ">{{ x }}</note>{% endfor %}{% for x in object.note_lautung.all %}
+    <note type="anmkerung" resp="{{ x.resp }}" corresp="{{ x.corresp_to }}" xml:id="{{ x.dboe_id }}">{{ x.content }}</note>{% endfor %}{% if object.bibl %}
     <ref type="bibl" corresp="this:QDB">
         <bibl>{{ object.bibl }}</bibl>
     </ref>{% endif %}{% for x in object.zitierweise %}
