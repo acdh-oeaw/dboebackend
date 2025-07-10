@@ -42,6 +42,17 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
+        verweise = []
+        for x in [
+            "ref_type_dbo",
+            "ref_type_sni",
+            "xr_type_verweise_o",
+            "xr_type_verweise_b",
+        ]:
+            if getattr(instance, x):
+                verweise.append(getattr(instance, x))
+        ret["Verweise"] = verweise
+
         for x in instance.lautungen.all():
             gram_key = f"GRAM/LT{x.number}"
             ret[gram_key] = [x.pron_gram]
