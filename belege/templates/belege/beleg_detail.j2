@@ -49,9 +49,11 @@
         <ref type="fragebogenNummer">{{ x.fragebogen_nummer }}</ref>{% endif %}
     </cit>{% endfor %}{% if object.xr_type_verweise_o %}
     <xr type="verweise" resp="O">{{ object.xr_type_verweise_o }}</xr>{% endif %}{% if object.xr_type_verweise_b %}
-    <xr type="verweise" resp="B">{{ object.xr_type_verweise_b }}</xr>{% endif %}{% if object.archivzeile %}
+    <xr type="verweise" resp="B">{{ object.xr_type_verweise_b }}</xr>{% endif %}{% for x in object.etym %}
+    <etym resp="B">{{ x }}</etym>{% endfor %}{% for x in object.note_notabene %}
+    <note type="notabene">{{ x }}</note>{% endfor %}{% if object.archivzeile %}
     <ref type="archiv">{{ object.archivzeile }}</ref>{% endif %}{% if object.quelle %}
-    <ref type="quelle">{{ object.quelle }}</ref>{% endif %}{% if object.quelle_bearbeitet %}
+    <ref type="quelle">{{ object.quelle }}{% if object.quelle_page %}<ref type="seite">{{ object.quelle_page }}</ref>{% endif %}</ref>{% endif %}{% if object.quelle_bearbeitet %}
     <ref type="quelleBearbeitet">{{ object.quelle_bearbeitet}}</ref>{% endif %}{% if object.fragebogen_nummer %}
     <ref type="fragebogenNummer">{{ object.fragebogen_nummer }}</ref>{% endif %}{% for x in object.note_diverse %}
     <note type="diverse" n="{{ forloop.counter }} ">{{ x }}</note>{% endfor %}{% for x in object.note_lautung.all %}
