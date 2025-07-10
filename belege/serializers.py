@@ -52,6 +52,8 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
             if getattr(instance, x):
                 verweise.append(getattr(instance, x))
         ret["Verweise"] = verweise
+        ret["PAGE"] = instance.quelle_page
+        ret["Etym"] = instance.etym
 
         for x in instance.lautungen.all():
             gram_key = f"GRAM/LT{x.number}"
