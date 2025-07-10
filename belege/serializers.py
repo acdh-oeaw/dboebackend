@@ -68,9 +68,11 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
                 ret["ANM/KT*"].append(f"O: {x.note_anmerkung_o} ›KT{x.number}")
             if x.note_anmerkung_b:
                 ret["ANM/KT*"].append(f"B: {x.note_anmerkung_b} ›KT{x.number}")
-
+        ret["BD/LW*"] = instance.bedeutungen.filter(
+            corresp_to__contains="LW"
+        ).values_list("definition", flat=True)
         ret["BD/LT*"] = []
-        for x in instance.bedeutungen.all():
+        for x in instance.bedeutungen.filter(corresp_to__contains="LT"):
             if x.note_anmerkung_o:
                 ret["BD/LT*"].append(
                     f"{x.definition}ANMO: {x.note_anmerkung_o} ›LT{x.number}"
