@@ -48,6 +48,10 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
             teut_key = f"LT{x.number}_teuthonista"
             ret[teut_key] = [x.pron]
 
+        for x in instance.lehnwoerter.all():
+            number = x.number
+            ret[f"LW{number}"] = x.pron
+
         ret["ANM/KT*"] = []
         ret["BD/KT*"] = []
         for x in instance.citations.all():

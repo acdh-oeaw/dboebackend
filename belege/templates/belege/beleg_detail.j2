@@ -18,6 +18,9 @@
         <gramGrp>
             <gram>{{ x.pron_gram }}</gram>
         </gramGrp>{% endif %}
+    </form>{% endfor %}{% for x in object.lehnwoerter.all %}
+    <form type="lehnwort" xml:id="{{ x.dboe_id }}" n="{{ x.number }}">
+        <pron xml:lang="{{ x.pron_lang }}" notation="teuthonista">{{ x.pron }}</pron>
     </form>{% endfor %}{% for x in object.bedeutungen.all %}
     <sense corresp="{{ x.corresp_to }}" xml:id="{{ x.dboe_id }}" n="{{ x.number }}">
         <def xml:lang="{{ x.definition_lang }}">{{ x.definition }}</def>{% if x.note_anmerkung_o %}
