@@ -712,43 +712,48 @@ class Beleg(models.Model):
     )
     hauptlemma = models.CharField(
         blank=True, null=True, max_length=250, verbose_name="Hauptlemma"
-    ).set_extra(xpath=".//tei:form[@type='hauptlemma'][1]/tei:orth", node_type="text")
+    ).set_extra(xpath="./tei:form[@type='hauptlemma'][1]/tei:orth", node_type="text")
     nebenlemma = models.CharField(
         blank=True, null=True, max_length=250, verbose_name="Nebenlemma"
-    ).set_extra(xpath=".//tei:form[@type='nebenlemma']/tei:orth", node_type="text")
+    ).set_extra(xpath="./tei:form[@type='nebenlemma']/tei:orth", node_type="text")
     archivzeile = models.CharField(
         blank=True, null=True, max_length=250, verbose_name="Archivzeile"
-    ).set_extra(xpath=".//tei:ref[@type='archiv']", node_type="text")
+    ).set_extra(xpath="./tei:ref[@type='archiv']", node_type="text")
     quelle = models.CharField(
         blank=True, null=True, max_length=250, verbose_name="Quelle"
-    ).set_extra(xpath=".//tei:ref[@type='quelle']", node_type="text")
+    ).set_extra(xpath="./tei:ref[@type='quelle']", node_type="text")
+    quelle_page = models.CharField(
+        blank=True, null=True, max_length=250, verbose_name="Seite"
+    ).set_extra(
+        xpath="./tei:ref[@type='quelle']/tei:ref[@type='seite']", node_type="text"
+    )
     quelle_bearbeitet = models.CharField(
         blank=True, null=True, max_length=250, verbose_name="Quelle bearbeitet"
-    ).set_extra(xpath=".//tei:ref[@type='quelleBearbeitet']", node_type="text")
+    ).set_extra(xpath="./tei:ref[@type='quelleBearbeitet']", node_type="text")
     bibl = models.CharField(
         blank=True, null=True, max_length=250, verbose_name="Literatur"
-    ).set_extra(xpath=".//tei:ref[@type='bibl']/tei:bibl", node_type="text")
+    ).set_extra(xpath="./tei:ref[@type='bibl']/tei:bibl", node_type="text")
     zitierweise = ArrayField(
         models.CharField(blank=True, max_length=250, null=True),
         blank=True,
         default=list,
         verbose_name="Zitierweise",
         help_text="whatever",
-    ).set_extra(xpath=".//tei:ref[@type='zitiereweise']/tei:bibl", node_type="list")
+    ).set_extra(xpath="./tei:ref[@type='zitiereweise']/tei:bibl", node_type="list")
     pos = models.CharField(
         blank=True,
         null=True,
         max_length=20,
         verbose_name="POS",
         choices=POS_CHOICES,
-    ).set_extra(xpath=".//tei:gramGrp/tei:pos", node_type="text")
+    ).set_extra(xpath="./tei:gramGrp/tei:pos", node_type="text")
     ort = models.ForeignKey(
         "Ort",
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
         verbose_name="Ort",
-    ).set_extra(xpath=".//tei:place[@type='Ort']/tei:idno", node_type="text")
+    ).set_extra(xpath="./tei:place[@type='Ort']/tei:idno", node_type="text")
     ref_type_dbo = models.CharField(
         blank=True,
         null=True,
@@ -760,25 +765,39 @@ class Beleg(models.Model):
         null=True,
         max_length=250,
         verbose_name="Verweis (ref/@type='sni')",
-    ).set_extra(xpath=".//tei:ref[@type='sni']", node_type="text")
+    ).set_extra(xpath="./tei:ref[@type='sni']", node_type="text")
     xr_type_verweise_o = models.CharField(
         blank=True,
         null=True,
         max_length=250,
         verbose_name="Verweis (xr/@type='verweise' and @resp='O')",
-    ).set_extra(xpath=".//tei:xr[@type='verweise' and @resp='O']", node_type="text")
+    ).set_extra(xpath="./tei:xr[@type='verweise' and @resp='O']", node_type="text")
     xr_type_verweise_b = models.CharField(
         blank=True,
         null=True,
         max_length=250,
         verbose_name="Verweis (xr/@type='verweise' and @resp='B')",
-    ).set_extra(xpath=".//tei:xr[@type='verweise' and @resp='B']", node_type="text")
+    ).set_extra(xpath="./tei:xr[@type='verweise' and @resp='B']", node_type="text")
     fragebogen_nummer = models.TextField(
         blank=True,
         null=True,
         verbose_name="Fragebogen Nummer",
         help_text="Whatever",
     ).set_extra(xpath="./tei:ref[@type='fragebogenNummer']", node_type="text")
+    etym = ArrayField(
+        models.TextField(blank=True, null=True),
+        blank=True,
+        default=list,
+        verbose_name="Etymologie",
+        help_text="whatever",
+    ).set_extra(xpath="./tei:etym", node_type="list")
+    note_notabene = ArrayField(
+        models.TextField(blank=True, null=True),
+        blank=True,
+        default=list,
+        verbose_name="Notabene",
+        help_text="whatever",
+    ).set_extra(xpath="./tei:note[@type='notabene']", node_type="list")
     note_diverse = ArrayField(
         models.TextField(blank=True, null=True),
         blank=True,
