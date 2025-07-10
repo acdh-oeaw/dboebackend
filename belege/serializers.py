@@ -51,7 +51,7 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
         ]:
             if getattr(instance, x):
                 verweise.append(getattr(instance, x))
-        ret["Verweise"] = verweise
+        ret["Verweis"] = verweise
         ret["PAGE"] = instance.quelle_page
         ret["Etym"] = instance.etym
         ret["A"] = instance.archivzeile
