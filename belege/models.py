@@ -502,6 +502,79 @@ class Lautung(models.Model):
         super().save(*args, **kwargs)
 
 
+class LehnWort(models.Model):
+    """
+    Django model representing a tei:form[@type="lautung"] node.
+    """
+
+    dboe_id = models.CharField(
+        primary_key=True,
+        max_length=250,
+        verbose_name="DBÖ ID",
+        help_text="e.g. tu-10130.56",
+    )
+    beleg = models.ForeignKey(
+        "Beleg",
+        verbose_name="Beleg",
+        on_delete=models.CASCADE,
+        related_name="lehnwoerter",
+    )
+    number = models.PositiveIntegerField(default=1, verbose_name="Order number")
+    orig_xml = XMLField(
+        verbose_name="XML Node", help_text="tei:form[@type='lehnwort'] node"
+    )
+    pron = models.CharField(
+        blank=True, null=True, max_length=250, verbose_name="Pronunciation"
+    ).set_extra(xpath="./tei:pron", node_type="text")
+    pron_lang = models.CharField(
+        max_length=3,
+        choices=LANG_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="Sprache (Pronunciation)",
+    ).set_extra(xpath="./tei:pron/@xml:lang", node_type="attribute")
+    pron_gram = models.CharField(
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Grammatik",
+        help_text="whatever",
+    ).set_extra(xpath="./tei:gramGrp/tei:gram", node_type="text")
+
+    class Meta:
+        verbose_name = "Lehnwort"
+        verbose_name_plural = "Lehnwörter"
+        ordering = ["beleg", "number"]
+
+    def __str__(self):
+        return f"{self.pron} ({self.beleg})"
+
+    def save(self, *args, **kwargs):
+        if self.orig_xml is not None:
+            try:
+                doc = TeiReader(self.orig_xml)
+            except AttributeError:
+                doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
+            for field in self._meta.fields:
+                if (
+                    hasattr(field, "extra")
+                    and "xpath" in field.extra
+                    and isinstance(field, (models.CharField, models.TextField))
+                    and not getattr(self, field.name)
+                ):
+                    xpath_expr = field.extra["xpath"]
+                    try:
+                        nodes = doc.any_xpath(xpath_expr)[0]
+                    except IndexError:
+                        continue
+                    try:
+                        value = extract_fulltext(nodes)
+                    except AttributeError:
+                        value = nodes
+                    setattr(self, field.name, value)
+        super().save(*args, **kwargs)
+
+
 class AnmerkungLautung(models.Model):
     """Django model representing a tei:note related to a Lautung object"""
 
@@ -743,6 +816,7 @@ class Beleg(models.Model):
         add_lautungen=False,
         add_sense=False,
         add_anmkerung_laut=False,
+        add_lehnwort=False,
         *args,
         **kwargs,
     ):
@@ -874,6 +948,25 @@ class Beleg(models.Model):
                     item.save()
                 except Exception as e:
                     print(f"Error saving lautung {xml_id}: {e}")
+        if self.orig_xml is not None and add_lehnwort:
+            items = doc.any_xpath("./tei:form[@type='lehnwort']")
+            for item in items:
+                xml_id = get_xmlid(item)
+                try:
+                    number = item.attrib["n"]
+                except KeyError:
+                    number = 1
+                orig_xml = ET.tostring(item, encoding="unicode")
+                try:
+                    item = LehnWort.objects.get(dboe_id=xml_id)
+                except LehnWort.DoesNotExist:
+                    item = LehnWort(
+                        dboe_id=xml_id, beleg=self, number=number, orig_xml=orig_xml
+                    )
+                try:
+                    item.save()
+                except Exception as e:
+                    print(f"Error saving LehnWort {xml_id}: {e}")
         if self.orig_xml is not None and add_sense:
             items = doc.any_xpath("./tei:sense")
             for i, item in enumerate(items, start=1):
