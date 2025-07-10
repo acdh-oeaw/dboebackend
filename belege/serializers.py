@@ -52,6 +52,8 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
             number = x.number
             ret[f"LW{number}"] = x.pron
 
+        ret["ANM/LT*"] = instance.note_lautung.all().values_list("content", flat=True)
+
         ret["ANM/KT*"] = []
         ret["BD/KT*"] = []
         for x in instance.citations.all():
