@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 
 from belege.models import Beleg, Citation, Lautung
@@ -78,6 +79,10 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
             ret[f"LW{number}"] = x.pron
 
         ret["ANM/LT*"] = instance.note_lautung.all().values_list("content", flat=True)
+        try:
+            ret["KL/KT1"] = instance.citations.get(number=1).interpration
+        except ObjectDoesNotExist:
+            pass
 
         ret["ANM/KT*"] = []
         ret["BD/KT*"] = []
