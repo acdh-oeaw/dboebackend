@@ -1,11 +1,12 @@
 import xml.etree.ElementTree as ET
-from django_jsonform.models.fields import ArrayField
-from django.db import models
-from belege.fields import XMLField
+
 from acdh_tei_pyutils.tei import TeiReader
 from acdh_tei_pyutils.utils import extract_fulltext, get_xmlid
 from acdh_xml_pyutils.xml import NSMAP
+from django.db import models
+from django_jsonform.models.fields import ArrayField
 
+from belege.fields import XMLField
 
 POS_CHOICES = (
     ("Subst", "Subst"),
@@ -232,7 +233,7 @@ class Ort(models.Model):
 
 class ZusatzLemma(models.Model):
     """
-    Django model representing a tei:re node extracted a tei:cit node.
+    Django model representing a tei:re node extracted from a tei:cit node.
     """
 
     dboe_id = models.CharField(
@@ -333,7 +334,10 @@ class Citation(models.Model):
         verbose_name="Sprache (Kontext)",
     ).set_extra(xpath="./tei:quote/@xml:lang", node_type="attribute")
     quote_text = models.TextField(
-        blank=True, null=True, verbose_name="plain text"
+        blank=True,
+        null=True,
+        verbose_name="Kontext",
+        help_text="No help text provided",
     ).set_extra(xpath="./tei:quote", node_type="text")
     quote_gram = models.CharField(
         max_length=250,
@@ -349,7 +353,10 @@ class Citation(models.Model):
         help_text="whatever",
     ).set_extra(xpath="./tei:quote/tei:pRef", node_type="text")
     definition = models.TextField(
-        blank=True, null=True, verbose_name="definition"
+        blank=True,
+        null=True,
+        verbose_name="Bedeutung des Kontexts",
+        help_text='Diese Information beschreibt die Bedeutung des in Spalte "Belegsatz 1", "Belegsatz 2" etc. angegebenen Belegsatze',  # noqa: E501
     ).set_extra(xpath="./tei:def", node_type="text")
     definition_lang = models.CharField(
         max_length=3,
@@ -451,21 +458,26 @@ class Lautung(models.Model):
         verbose_name="XML Node", help_text="tei:form[@type='lautung'] node"
     )
     pron = models.CharField(
-        blank=True, null=True, max_length=250, verbose_name="Pronunciation"
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Lautung",
+        help_text="Die angegebene Information umfasst die lautliche Transkription des vorliegenden Belegs.",
     ).set_extra(xpath="./tei:pron", node_type="text")
     pron_lang = models.CharField(
         max_length=3,
         choices=LANG_CHOICES,
         blank=True,
         null=True,
-        verbose_name="Sprache (Pronunciation)",
+        verbose_name="Sprache (Lautung)",
+        help_text="No help text provided",
     ).set_extra(xpath="./tei:pron/@xml:lang", node_type="attribute")
     pron_gram = models.CharField(
         blank=True,
         null=True,
         max_length=250,
-        verbose_name="Grammatik",
-        help_text="whatever",
+        verbose_name="Grammatikangabe zur Lautung",
+        help_text="No help text provided",
     ).set_extra(xpath="./tei:gramGrp/tei:gram", node_type="text")
 
     class Meta:
@@ -524,7 +536,11 @@ class LehnWort(models.Model):
         verbose_name="XML Node", help_text="tei:form[@type='lehnwort'] node"
     )
     pron = models.CharField(
-        blank=True, null=True, max_length=250, verbose_name="Pronunciation"
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Lehnwort",
+        help_text="no help text provided",
     ).set_extra(xpath="./tei:pron", node_type="text")
     pron_lang = models.CharField(
         max_length=3,
@@ -639,7 +655,10 @@ class Sense(models.Model):
     number = models.PositiveIntegerField(default=1, verbose_name="Order number")
     orig_xml = XMLField(verbose_name="XML Node", help_text="tei:sense node")
     definition = models.TextField(
-        blank=True, null=True, verbose_name="definition"
+        blank=True,
+        null=True,
+        verbose_name="Bedeutung der Lautung",
+        help_text="Diese Information beschreibt die Bedeutung der Lautungsangabe auf dem Beleg.",
     ).set_extra(xpath="./tei:def", node_type="text")
     corresp_to = models.CharField(
         blank=True, null=True, max_length=20, verbose_name="Korrespondiert zu"
@@ -704,47 +723,77 @@ class Beleg(models.Model):
     """
 
     dboe_id = models.CharField(
-        primary_key=True, max_length=250, verbose_name="DBÖ ID", help_text="The DBÖ ID"
+        primary_key=True,
+        max_length=250,
+        verbose_name="Beleg ID",
+        help_text="No help text provided",
     )
     orig_xml = XMLField(blank=True, null=True, verbose_name="original tei-xml entry")
     xeno_data = models.TextField(
         blank=True, null=True, verbose_name="legacy transkription?"
     )
     hauptlemma = models.CharField(
-        blank=True, null=True, max_length=250, verbose_name="Hauptlemma"
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Hauptlemma",
+        help_text="Hauptlemma' beinhaltet sämtliche Einträge (inklusive Komposita und Wortbildungsvarianten), die einem bestimmten Lemma zugeordnet werden können",  # noqa: E501
     ).set_extra(xpath="./tei:form[@type='hauptlemma'][1]/tei:orth", node_type="text")
     nebenlemma = models.CharField(
-        blank=True, null=True, max_length=250, verbose_name="Nebenlemma"
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Nebenlemma",
+        help_text="Ein Nebenlemma ist einem Hauptlemma zugeordnet. Das Nebenlemma teilt sich mit dem übergeordneten Hauptlemma (in weiten Teilen) den historisch-etymologischen Lemmaansatz, kann jedoch in anderer Hinsicht (z.B. Schreibung, Lautung) vom Hauptlemma abweichen.",  # noqa: E501
     ).set_extra(xpath="./tei:form[@type='nebenlemma']/tei:orth", node_type="text")
     archivzeile = models.CharField(
-        blank=True, null=True, max_length=250, verbose_name="Archivzeile"
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Archivzeile",
+        help_text="No helptext provided",
     ).set_extra(xpath="./tei:ref[@type='archiv']", node_type="text")
     quelle = models.CharField(
-        blank=True, null=True, max_length=250, verbose_name="Quelle"
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Quelle",
+        help_text="No helptext provided",
     ).set_extra(xpath="./tei:ref[@type='quelle']", node_type="text")
     quelle_page = models.CharField(
         blank=True, null=True, max_length=250, verbose_name="Seite"
     ).set_extra(
-        xpath="./tei:ref[@type='quelle']/tei:ref[@type='seite']", node_type="text"
+        xpath="./tei:ref[@type='quelle']/tei:ref[@type='seite']",
+        node_type="text",
+        help_text="No helptext provided",
     )
     quelle_bearbeitet = models.CharField(
         blank=True, null=True, max_length=250, verbose_name="Quelle bearbeitet"
-    ).set_extra(xpath="./tei:ref[@type='quelleBearbeitet']", node_type="text")
+    ).set_extra(
+        xpath="./tei:ref[@type='quelleBearbeitet']",
+        node_type="text",
+        help_text="No helptext provided",
+    )
     bibl = models.CharField(
-        blank=True, null=True, max_length=250, verbose_name="Literatur"
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Literatur",
+        help_text="No helptext provided",
     ).set_extra(xpath="./tei:ref[@type='bibl']/tei:bibl", node_type="text")
     zitierweise = ArrayField(
         models.CharField(blank=True, max_length=250, null=True),
         blank=True,
         default=list,
         verbose_name="Zitierweise",
-        help_text="whatever",
+        help_text="No helptext provided",
     ).set_extra(xpath="./tei:ref[@type='zitiereweise']/tei:bibl", node_type="list")
     pos = models.CharField(
         blank=True,
         null=True,
         max_length=20,
-        verbose_name="POS",
+        verbose_name="Part of Speech",
+        help_text="Diese Angabe benennt die Wortart des jeweiligen Belegs.",
         choices=POS_CHOICES,
     ).set_extra(xpath="./tei:gramGrp/tei:pos", node_type="text")
     ort = models.ForeignKey(
@@ -911,7 +960,6 @@ class Beleg(models.Model):
                 "./tei:note[@type='anmerkung' and @resp and @corresp]"
             )
             for i, item in enumerate(items, start=1):
-
                 try:
                     number = item.attrib["number"]
                 except KeyError:
