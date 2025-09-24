@@ -51,6 +51,17 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
         ]:
             if getattr(instance, x):
                 verweise.append(getattr(instance, x))
+        try:
+            cit_fragebogen_nr = " ".join(
+                instance.citations.all().values_list("fragebogen_nummer", flat=True)
+            )
+        except TypeError:
+            cit_fragebogen_nr = ""
+        if instance.fragebogen_nummer:
+            fragebogen_nr = f"{instance.fragebogen_nummer} "
+        else:
+            fragebogen_nr = ""
+        ret["NR"] = f"{fragebogen_nr}{cit_fragebogen_nr}"
         ret["Verweis"] = verweise
         ret["PAGE"] = instance.quelle_page
         ret["Etym"] = instance.etym
