@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from belege.models import Citation, Lautung, Beleg
+
+from belege.models import Beleg, Citation, Lautung
 
 
 def get_serializer_for_model(model_class, field_to_serialize="__all__"):
-
     class DynamicSerlizer(serializers.HyperlinkedModelSerializer):
         class Meta:
             model = model_class
@@ -78,7 +78,7 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
                     f"{y.form_orth}||{y.pos}||{y.gram}"
                 ]
 
-            if x.note_anmerkung_b:
+            if x.note_anmerkung_o:
                 ret["ANM/KT*"].append(f"O: {x.note_anmerkung_o} ›KT{x.number}")
             if x.note_anmerkung_b:
                 ret["ANM/KT*"].append(f"B: {x.note_anmerkung_b} ›KT{x.number}")
