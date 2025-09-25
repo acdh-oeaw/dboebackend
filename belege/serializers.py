@@ -86,8 +86,12 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
 
         ret["ANM/KT*"] = []
         ret["BD/KT*"] = []
+        ret["WBD/KT*"] = []
         for x in instance.citations.all():
-            ret["BD/KT*"].append(f"{x.definition} ›KT {x.number}")
+            if x.definition_corresp is None:
+                ret["BD/KT*"].append(f"{x.definition} ›KT {x.number}")
+            else:
+                ret["WBD/KT*"].append(f"{x.definition} ›WBD/KT{x.number}/KT{x.number}")
             ret[f"KT{x.number}"] = [x.quote_text]
             for y in x.zusatz_lemma.all():
                 ret[f"ZL{y.number}/KT{x.number}"] = [
@@ -101,6 +105,12 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
         ret["BD/LW*"] = instance.bedeutungen.filter(
             corresp_to__contains="LW"
         ).values_list("definition", flat=True)
+        ret["ANM/LW*"] = []
+        for x in instance.note_lautung.filter(corresp_to__icontains="this:LW1"):
+            ret["ANM/LW*"].append(
+                f"{x.resp}: {x.content} ›{x.corresp_to.replace('this:', '')}"
+            )
+
         ret["BD/LT*"] = []
         for x in instance.bedeutungen.filter(corresp_to__contains="LT"):
             if x.note_anmerkung_o:

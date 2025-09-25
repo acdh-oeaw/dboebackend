@@ -365,6 +365,12 @@ class Citation(models.Model):
         null=True,
         verbose_name="Sprache (Definition)",
     ).set_extra(xpath="./tei:def/@xml:lang", node_type="attribute")
+    definition_corresp = models.CharField(
+        max_length=250,
+        blank=True,
+        null=True,
+        verbose_name="Definition korrespondiert zu Kontext",
+    ).set_extra(xpath="./tei:def/@corresp", node_type="attribute")
     interpration = models.TextField(
         blank=True,
         null=True,
