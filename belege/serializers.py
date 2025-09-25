@@ -91,7 +91,7 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
             ret[f"KT{x.number}"] = [x.quote_text]
             for y in x.zusatz_lemma.all():
                 ret[f"ZL{y.number}/KT{x.number}"] = [
-                    f"{y.form_orth}||{y.pos}||{y.gram}"
+                    f"{y.form_orth}||{y.pos}||{getattr(y, 'foo', None) or ''}"
                 ]
 
             if x.note_anmerkung_o:
