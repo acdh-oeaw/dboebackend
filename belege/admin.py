@@ -2,18 +2,18 @@ from django.contrib import admin
 from django.db import models
 
 from belege.models import (
+    AnmerkungLautung,
     Beleg,
-    Citation,
     BundesLand,
+    Citation,
+    Facsimile,
     GRegion,
     KRegion,
-    Ort,
-    Facsimile,
     Lautung,
+    LehnWort,
+    Ort,
     Sense,
     ZusatzLemma,
-    AnmerkungLautung,
-    LehnWort,
 )
 
 
@@ -57,11 +57,12 @@ class AnmerkungLautungAdmin(admin.ModelAdmin):
             ),
         )
     ]
+    # Include foreign key fields and their related object's string representation in search_fields
     search_fields = [
         field.name
-        for field in ZusatzLemma._meta.fields
+        for field in AnmerkungLautung._meta.fields
         if isinstance(field, (models.CharField, models.TextField))
-    ]
+    ] + ["beleg__dboe_id"]
     autocomplete_fields = ["beleg"]
     ordering = ["beleg", "number"]
     list_per_page = 20
