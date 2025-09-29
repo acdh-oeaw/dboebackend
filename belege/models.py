@@ -395,6 +395,13 @@ class Citation(models.Model):
         verbose_name="Fragebogen Nummer",
         help_text="Whatever",
     ).set_extra(xpath="./tei:ref[@type='fragebogenNummer']", node_type="text")
+    xr = models.CharField(
+        max_length=300,
+        blank=True,
+        null=True,
+        verbose_name="Cross-reference phrase",
+        help_text="Contains a phrase, sentence, or icon referring the reader to some other location in this or another text",  # noqa: E501
+    ).set_extra(xpath="./tei:xr[@type='verweise']", node_type="text")
 
     class Meta:
         verbose_name = "Kontext"
