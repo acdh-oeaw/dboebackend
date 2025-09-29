@@ -206,7 +206,7 @@ class CitationAdmin(admin.ModelAdmin):
         field.name
         for field in Citation._meta.fields
         if isinstance(field, (models.CharField, models.TextField))
-    ]
+    ] + ["beleg__dboe_id"]
     ordering = ["beleg", "number"]
     autocomplete_fields = ["beleg"]
     list_per_page = 20
