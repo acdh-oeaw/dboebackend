@@ -365,6 +365,12 @@ class Citation(models.Model):
         null=True,
         verbose_name="Sprache (Definition)",
     ).set_extra(xpath="./tei:def/@xml:lang", node_type="attribute")
+    corresp = models.CharField(
+        max_length=250,
+        blank=True,
+        null=True,
+        verbose_name="Korrespondiert zu",
+    ).set_extra(xpath="./@corresp", node_type="attribute")
     definition_corresp = models.CharField(
         max_length=250,
         blank=True,
@@ -1018,9 +1024,12 @@ class Beleg(models.Model):
                     print(f"Error saving AnmerkungLautung {dboe_id}: {e}")
         if self.orig_xml is not None and add_citations:
             items = doc.any_xpath("./tei:cit")
-            for item in items:
+            for n, item in enumerate(items, start=1):
                 xml_id = get_xmlid(item)
-                number = item.attrib["n"]
+                try:
+                    number = item.attrib["n"]
+                except KeyError:
+                    number = n
                 orig_xml = ET.tostring(item, encoding="unicode")
                 try:
                     item = Citation.objects.get(dboe_id=xml_id)

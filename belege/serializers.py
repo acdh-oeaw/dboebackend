@@ -90,10 +90,17 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
         ret["VRW/KT*"] = []
         ret["DV/KT*"] = []
         for x in instance.citations.all():
-            if x.definition_corresp is None:
+            if "this:LT" in x.corresp:
+                cur_lt = x.corresp.split(":")[-1]
+                key = f"KT/{cur_lt}"
+                value = x.quote_text
+                ret[key] = value
+            if x.definition_corresp is None and x.definition:
                 ret["BD/KT*"].append(f"{x.definition} ›KT {x.number}")
-            else:
+            elif x.definition:
                 ret["WBD/KT*"].append(f"{x.definition} ›WBD/KT{x.number}/KT{x.number}")
+            else:
+                pass
             ret[f"KT{x.number}"] = [x.quote_text]
             for y in x.zusatz_lemma.all():
                 ret[f"ZL{y.number}/KT{x.number}"] = [
