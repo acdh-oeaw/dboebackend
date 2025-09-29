@@ -402,6 +402,13 @@ class Citation(models.Model):
         verbose_name="Cross-reference phrase",
         help_text="Contains a phrase, sentence, or icon referring the reader to some other location in this or another text",  # noqa: E501
     ).set_extra(xpath="./tei:xr[@type='verweise']", node_type="text")
+    note_diverse = ArrayField(
+        models.TextField(blank=True, null=True),
+        blank=True,
+        default=list,
+        verbose_name="Anmerkung (diverse)",
+        help_text="whatever",
+    ).set_extra(xpath="./tei:note[@type='diverse']", node_type="list")
 
     class Meta:
         verbose_name = "Kontext"
@@ -431,6 +438,22 @@ class Citation(models.Model):
                     except AttributeError:
                         value = nodes
                     setattr(self, field.name, value)
+                if isinstance(field, ArrayField) and not getattr(self, field.name):
+                    xpath_expr = field.extra["xpath"]
+                    try:
+                        nodes = doc.any_xpath(xpath_expr)
+                    except IndexError:
+                        continue
+                    values = []
+                    for node in nodes:
+                        try:
+                            value = extract_fulltext(node)
+                        except AttributeError:
+                            value = node
+                        if isinstance(value, str):
+                            value = value.strip()
+                        values.append(value)
+                    setattr(self, field.name, values)
         if self.orig_xml is not None and add_zusatzlemma:
             items = doc.any_xpath("./tei:re")
             for number, item in enumerate(items, start=1):
