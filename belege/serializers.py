@@ -88,6 +88,7 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
         ret["BD/KT*"] = []
         ret["WBD/KT*"] = []
         ret["VRW/KT*"] = []
+        ret["DV/KT*"] = []
         for x in instance.citations.all():
             if x.definition_corresp is None:
                 ret["BD/KT*"].append(f"{x.definition} ›KT {x.number}")
@@ -98,6 +99,8 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
                 ret[f"ZL{y.number}/KT{x.number}"] = [
                     f"{y.form_orth}||{y.pos}||{getattr(y, 'foo', None) or ''}"
                 ]
+            for y in x.note_diverse:
+                ret["DV/KT*"].append(f"{y} ›KT {x.number}")
             if x.xr:
                 ret["VRW/KT*"].append(f"O: {x.xr} ›KT{x.number}")
             if x.note_anmerkung_o:
