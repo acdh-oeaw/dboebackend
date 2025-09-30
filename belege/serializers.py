@@ -122,6 +122,10 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
             ret[f"BD/KT/LT{i}"] = instance.citations.filter(
                 corresp=f"this:LT{i}", definition_corresp=None, definition__isnull=False
             ).values_list("definition", flat=True)
+            ret[f"KT/LT{i}"] = instance.citations.filter(
+                corresp=f"this:LT{i}", quote_text__isnull=False
+            ).values_list("quote_text", flat=True)
+
         ret["ANM/LW*"] = []
         for x in instance.note_lautung.filter(corresp_to__icontains="this:LW1"):
             ret["ANM/LW*"].append(
