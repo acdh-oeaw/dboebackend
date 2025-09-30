@@ -89,8 +89,9 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
         ret["WBD/KT*"] = []
         ret["VRW/KT*"] = []
         ret["DV/KT*"] = []
+
         for x in instance.citations.all():
-            if "this:LT" in x.corresp:
+            if x.corresp and "this:LT" in x.corresp:
                 cur_lt = x.corresp.split(":")[-1]
                 key = f"KT/{cur_lt}"
                 value = x.quote_text
