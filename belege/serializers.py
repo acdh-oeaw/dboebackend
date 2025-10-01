@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 
-from belege.models import Beleg, Citation, Lautung
+from belege.models import Beleg, Citation, Lautung, ZusatzLemma
 
 
 def get_serializer_for_model(model_class, field_to_serialize="__all__"):
@@ -105,7 +105,7 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
             ret[f"KT{x.number}"] = [x.quote_text]
             for y in x.zusatz_lemma.all():
                 ret[f"ZL{y.number}/KT{x.number}"] = [
-                    f"{y.form_orth}||{y.pos}||{getattr(y, 'foo', None) or ''}"
+                    f"{y.form_orth}||{y.pos}||{getattr(y, 'gram', None) or ''}"
                 ]
             for y in x.note_diverse:
                 ret["DV/KT*"].append(f"{y} ›KT {x.number}")
@@ -125,6 +125,14 @@ class BelegSerializer(serializers.HyperlinkedModelSerializer):
             ret[f"KT/LT{i}"] = instance.citations.filter(
                 corresp=f"this:LT{i}", quote_text__isnull=False
             ).values_list("quote_text", flat=True)
+            kontext = instance.citations.filter(corresp=f"this:LT{i}")
+            zl = ZusatzLemma.objects.filter(citation__in=kontext)
+            ret[f"ZL1/KT/LT{i}"] = ""
+            ret[f"ZL2/KT/LT{i}"] = ""
+            for n, y in enumerate(zl, start=1):
+                ret[f"ZL{n}/KT/LT{i}"] = (
+                    f"{y.form_orth}||{getattr(y, 'pos', None) or ''}||{getattr(y, 'gram', None) or ''}"
+                )
 
         ret["ANM/LW*"] = []
         for x in instance.note_lautung.filter(corresp_to__icontains="this:LW1"):
