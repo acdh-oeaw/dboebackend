@@ -41,3 +41,6 @@ foo.json
 Untitled*
 dboebackend_dump.sql
 schema.yaml
+
+#belege-json-dumps
+media/belege/*.json
