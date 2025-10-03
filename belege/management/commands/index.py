@@ -23,14 +23,16 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        cur_nr = 0
         total = Beleg.objects.count()
         batch_size = options.get("batch_size") or 5000
         if batch_size <= 0:
             raise ValueError("batch-size must be a positive integer")
-        batch_index = 1  # used for file numbering
+        cur_nr + 1  # used for file numbering
         batch = []
         # Iterate lazily over all Beleg instances
         for x in tqdm(Beleg.objects.iterator(), total=total):
+            cur_nr += 1
             # Collect the processed Typesense object
             try:
                 batch.append(x.create_typesense_object())
@@ -40,17 +42,17 @@ class Command(BaseCommand):
 
             # If we reached the batch size, flush to disk
             if len(batch) >= batch_size:
-                out_file = f"belege_{batch_index:05}.json"
+                out_file = f"belege_{cur_nr:05}.json"
                 save_path = os.path.join(beleg_json_dir, out_file)
                 with open(save_path, "w", encoding="utf-8") as fp:
                     json.dump(batch, fp, ensure_ascii=False)
                 print(f"wrote {len(batch)} records to {save_path}")
-                batch_index += 1
+                cur_nr += 1
                 batch = []
 
         # Flush remaining records (if any)
         if batch:
-            out_file = f"belege_{batch_index:05}.json"
+            out_file = f"belege_{cur_nr:05}.json"
             save_path = os.path.join(beleg_json_dir, out_file)
 
             with open(save_path, "w", encoding="utf-8") as fp:
