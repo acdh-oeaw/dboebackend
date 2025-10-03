@@ -3,10 +3,12 @@ import xml.etree.ElementTree as ET
 from acdh_tei_pyutils.tei import TeiReader
 from acdh_tei_pyutils.utils import extract_fulltext, get_xmlid
 from acdh_xml_pyutils.xml import NSMAP
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django_jsonform.models.fields import ArrayField
 
 from belege.fields import XMLField
+from belege.search_utils import transform_record
 
 POS_CHOICES = (
     ("Subst", "Subst"),
@@ -1108,3 +1110,162 @@ class Beleg(models.Model):
             except IndexError:
                 pass
         super().save(*args, **kwargs)
+
+    def build_representation(self, base: dict | None = None) -> dict:
+        """Return a dict identical to ``BelegSerializer.to_representation``."""
+
+        # Build the initial base if none was provided
+        if base is None:
+            base = {
+                "id": self.dboe_id,
+                "hl": self.hauptlemma,
+                "nl": self.nebenlemma,
+                "qu": self.quelle,
+                "sigle1": getattr(self.ort, "sigle", None) if self.ort else None,
+                "bibl": self.bibl,
+                "pos": self.pos,
+                "archivzeile": self.archivzeile,
+            }
+
+        ret = dict(base)  # copy so we don't mutate caller provided dict
+
+        # Collect simple references
+        verweise = []
+        for x in [
+            "ref_type_dbo",
+            "ref_type_sni",
+            "xr_type_verweise_o",
+            "xr_type_verweise_b",
+        ]:
+            value = getattr(self, x, None)
+            if value:
+                verweise.append(value)
+
+        try:
+            cit_fragebogen_nr = " ".join(
+                self.citations.all().values_list("fragebogen_nummer", flat=True)
+            )
+        except TypeError:
+            cit_fragebogen_nr = ""
+        if self.fragebogen_nummer:
+            fragebogen_nr = f"{self.fragebogen_nummer} "
+        else:
+            fragebogen_nr = ""
+        ret["NR"] = f"{fragebogen_nr}{cit_fragebogen_nr}"
+        ret["Verweis"] = verweise
+        ret["PAGE"] = self.quelle_page
+        ret["Etym"] = self.etym
+        ret["A"] = self.archivzeile
+
+        # Lautungen
+        for x in self.lautungen.all():
+            gram_key = f"GRAM/LT{x.number}"
+            ret[gram_key] = [x.pron_gram]
+            teut_key = f"LT{x.number}_teuthonista"
+            ret[teut_key] = [x.pron]
+
+        # Lehnwörter
+        for x in self.lehnwoerter.all():
+            number = x.number
+            ret[f"LW{number}"] = x.pron
+
+        # Notes Lautung
+        ret["ANM/LT*"] = self.note_lautung.all().values_list("content", flat=True)
+        try:
+            ret["KL/KT1"] = self.citations.get(number=1).interpration
+        except ObjectDoesNotExist:
+            pass
+
+        ret["ANM/KT*"] = []
+        ret["BD/KT*"] = []
+        ret["WBD/KT*"] = []
+        ret["VRW/KT*"] = []
+        ret["DV/KT*"] = []
+
+        for x in self.citations.all():
+            if x.corresp and "this:LT" in x.corresp:
+                cur_lt = x.corresp.split(":")[-1]
+                key = f"KT/{cur_lt}"
+                value = x.quote_text
+                ret[key] = value
+            if x.definition_corresp is None and x.definition:
+                ret["BD/KT*"].append(f"{x.definition} ›KT {x.number}")
+            elif x.definition:
+                ret["WBD/KT*"].append(f"{x.definition} ›WBD/KT{x.number}/KT{x.number}")
+            ret[f"KT{x.number}"] = [x.quote_text]
+            for y in x.zusatz_lemma.all():
+                ret[f"ZL{y.number}/KT{x.number}"] = [
+                    f"{y.form_orth}||{y.pos}||{getattr(y, 'gram', None) or ''}"
+                ]
+            for y in x.note_diverse:
+                ret["DV/KT*"].append(f"{y} ›KT {x.number}")
+            if x.xr:
+                ret["VRW/KT*"].append(f"O: {x.xr} ›KT{x.number}")
+            if x.note_anmerkung_o:
+                ret["ANM/KT*"].append(f"O: {x.note_anmerkung_o} ›KT{x.number}")
+            if x.note_anmerkung_b:
+                ret["ANM/KT*"].append(f"B: {x.note_anmerkung_b} ›KT{x.number}")
+
+        ret["BD/LW*"] = self.bedeutungen.filter(corresp_to__contains="LW").values_list(
+            "definition", flat=True
+        )
+        for i in ["1", "2"]:
+            ret[f"BD/KT/LT{i}"] = self.citations.filter(
+                corresp=f"this:LT{i}",
+                definition_corresp=None,
+                definition__isnull=False,
+            ).values_list("definition", flat=True)
+            ret[f"KT/LT{i}"] = self.citations.filter(
+                corresp=f"this:LT{i}", quote_text__isnull=False
+            ).values_list("quote_text", flat=True)
+            kontext = self.citations.filter(corresp=f"this:LT{i}")
+            zl = ZusatzLemma.objects.filter(citation__in=kontext)
+            ret[f"ZL1/KT/LT{i}"] = ""
+            ret[f"ZL2/KT/LT{i}"] = ""
+            for n, y in enumerate(zl, start=1):
+                ret[f"ZL{n}/KT/LT{i}"] = (
+                    f"{y.form_orth}||{getattr(y, 'pos', None) or ''}||{getattr(y, 'gram', None) or ''}"
+                )
+
+        ret["ANM/LW*"] = []
+        for x in self.note_lautung.filter(corresp_to__icontains="this:LW1"):
+            ret["ANM/LW*"].append(
+                f"{x.resp}: {x.content} ›{x.corresp_to.replace('this:', '')}"
+            )
+
+        ret["BD/LT*"] = []
+        for x in self.bedeutungen.filter(corresp_to__contains="LT"):
+            if x.note_anmerkung_o:
+                ret["BD/LT*"].append(
+                    f"{x.definition}ANMO: {x.note_anmerkung_o} ›LT{x.number}"
+                )
+            else:
+                ret["BD/LT*"].append(f"{x.definition} ›LT{x.number}")
+        try:
+            ret["Gemeinde1"] = [f"{self.ort.sigle} {self.ort.name}"]
+        except AttributeError:
+            ret["Gemeinde1"] = []
+        try:
+            ret["Kleinregion1"] = [f"{self.ort.kregion.sigle} {self.ort.kregion.abbr}"]
+        except AttributeError:
+            ret["Kleinregion1"] = []
+        try:
+            ret["Großregion1"] = [f"{self.ort.gregion.sigle} {self.ort.gregion.abbr}"]
+        except AttributeError:
+            ret["Großregion1"] = []
+        try:
+            ret["Bundesland1"] = [
+                f"{self.ort.bundesland.sigle} {self.ort.bundesland.abbr}"
+            ]
+        except AttributeError:
+            ret["Bundesland1"] = []
+
+        for i, x in enumerate(self.zitierweise, start=1):
+            ret[f"ZW{i}"] = [x]
+
+        return ret
+
+    def create_typesense_object(self):
+        raw = self.build_representation()
+        processed = transform_record(raw)
+        return processed
