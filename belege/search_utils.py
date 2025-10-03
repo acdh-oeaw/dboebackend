@@ -1,3 +1,7 @@
+from typing import Iterable
+
+from django.db.models.query import QuerySet
+
 belege_schema = {
     "name": "dboe_belege",
     "fields": [
@@ -64,12 +68,32 @@ def transform_record(raw: dict) -> dict:
         key = sanitize_key(k)
         if key not in beleg_names:
             continue
+        # Normalize QuerySets explicitly
+        if isinstance(v, QuerySet):
+            v = list(v)
+        # Some Django related managers may appear (e.g. ManyRelatedManager);
+        # catch generic iterables except strings/bytes
+        elif (
+            not isinstance(v, (str, bytes, list, dict))
+            and hasattr(v, "__iter__")
+            and not isinstance(v, Iterable)  # narrow - safety; Iterable imported
+        ):
+            # Fallback path (likely not hit often)
+            try:
+                v = list(v)  # type: ignore[arg-type]
+            except Exception:
+                pass
+
         if key == "id":
-            out[key] = v
-        elif v in ("", None, []) or hasattr(v, "exists") and not v.exists():
+            # Keep primary key as-is (string)
+            out[key] = str(v)
+        elif v in ("", None, []):
+            out[key] = []
+        elif hasattr(v, "exists") and callable(getattr(v, "exists")) and not v.exists():
             out[key] = []
         elif isinstance(v, list):
-            out[key] = v
+            # Coerce every element to string for Typesense
+            out[key] = [str(x) for x in v if x not in (None, "")]
         else:
-            out[key] = [v]
+            out[key] = [str(v)]
     return out

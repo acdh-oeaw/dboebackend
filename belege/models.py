@@ -3,7 +3,6 @@ import xml.etree.ElementTree as ET
 from acdh_tei_pyutils.tei import TeiReader
 from acdh_tei_pyutils.utils import extract_fulltext, get_xmlid
 from acdh_xml_pyutils.xml import NSMAP
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django_jsonform.models.fields import ArrayField
 
@@ -1172,8 +1171,8 @@ class Beleg(models.Model):
         # Notes Lautung
         ret["ANM/LT*"] = self.note_lautung.all().values_list("content", flat=True)
         try:
-            ret["KL/KT1"] = self.citations.get(number=1).interpration
-        except ObjectDoesNotExist:
+            ret["KL/KT1"] = self.citations.filter(number=1).first().interpration
+        except AttributeError:
             pass
 
         ret["ANM/KT*"] = []

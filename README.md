@@ -40,6 +40,11 @@ After this is done, run
 uv run manage.py update
 ```
 
+write belege as json ot disk (default batch-size is 5000)
+```shell
+uv run manage.py index --batch-size 200
+```
+
 ## implementation details
 
 ### XMLField
@@ -73,3 +78,5 @@ docker build -t dboeannotation:latest .
 ```shell
 docker run -it --network="host" --rm --env-file .env dboeanntoation:latest
 ```
+
+
