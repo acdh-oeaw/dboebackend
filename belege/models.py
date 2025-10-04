@@ -7,7 +7,7 @@ from django.db import models
 from django_jsonform.models.fields import ArrayField
 
 from belege.fields import XMLField
-from belege.search_utils import transform_record
+from belege.search_utils import normalize_value, transform_record
 
 POS_CHOICES = (
     ("Subst", "Subst"),
@@ -27,6 +27,335 @@ def set_extra(self, **kwargs):
 
 
 models.Field.set_extra = set_extra
+
+
+class BelegFlatten(models.Model):
+    # Basic identifiers
+    id = models.CharField(max_length=1000, verbose_name="ID", primary_key=True)
+    dboe_id = models.ForeignKey("Beleg", on_delete=models.CASCADE, verbose_name="Beleg")
+    nr = models.CharField(max_length=1000, blank=True, null=True, verbose_name="NR")
+    hl = models.CharField(max_length=1000, blank=True, null=True, verbose_name="HL")
+    nl = models.CharField(max_length=1000, blank=True, null=True, verbose_name="NL")
+    pos = models.CharField(max_length=1000, blank=True, null=True, verbose_name="POS")
+
+    # Bedeutung/Lautung and Bedeutung/Kontext
+    bd_lt_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="BD/LT*"
+    )
+    bd_kt_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="BD/KT*"
+    )
+
+    # Lautung (LT) series with Teuthonista and Grammar
+    lt1_teuthonista = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="LT1 Teuthonista"
+    )
+    gram_lt1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="GRAM/LT1"
+    )
+    lt2_teuthonista = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="LT2 Teuthonista"
+    )
+    gram_lt2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="GRAM/LT2"
+    )
+    lt3_teuthonista = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="LT3 Teuthonista"
+    )
+    gram_lt3 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="GRAM/LT3"
+    )
+    lt4_teuthonista = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="LT4 Teuthonista"
+    )
+    gram_lt4 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="GRAM/LT4"
+    )
+    lt5_teuthonista = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="LT5 Teuthonista"
+    )
+    gram_lt5 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="GRAM/LT5"
+    )
+    lt6_teuthonista = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="LT6 Teuthonista"
+    )
+    gram_lt6 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="GRAM/LT6"
+    )
+    lt7_teuthonista = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="LT7 Teuthonista"
+    )
+    gram_lt7 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="GRAM/LT7"
+    )
+    lt8_teuthonista = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="LT8 Teuthonista"
+    )
+    gram_lt8 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="GRAM/LT8"
+    )
+    lt9_teuthonista = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="LT9 Teuthonista"
+    )
+    gram_lt9 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="GRAM/LT9"
+    )
+
+    # Anmerkung Lautung
+    anm_lt_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="ANM/LT*"
+    )
+
+    # Kontext (KT) series with additional fields
+    kt1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Kontext 1"
+    )
+    kl_kt1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="KL/KT1"
+    )
+    zl1_kt1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 1/KT1"
+    )
+    zl2_kt1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 2/KT1"
+    )
+
+    kt2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Kontext 2"
+    )
+    kl_kt2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="KL/KT2"
+    )
+    zl1_kt2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 1/KT2"
+    )
+    zl2_kt2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 2/KT2"
+    )
+
+    kt3 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Kontext 3"
+    )
+    kl_kt3 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="KL/KT3"
+    )
+    zl1_kt3 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 1/KT3"
+    )
+    zl2_kt3 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 2/KT3"
+    )
+
+    kt4 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Kontext 4"
+    )
+    kl_kt4 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="KL/KT4"
+    )
+    zl1_kt4 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 1/KT4"
+    )
+    zl2_kt4 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 2/KT4"
+    )
+
+    kt5 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Kontext 5"
+    )
+    kl_kt5 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="KL/KT5"
+    )
+    zl1_kt5 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 1/KT5"
+    )
+    zl2_kt5 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 2/KT5"
+    )
+
+    kt6 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Kontext 6"
+    )
+    kl_kt6 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="KL/KT6"
+    )
+    zl1_kt6 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 1/KT6"
+    )
+    zl2_kt6 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 2/KT6"
+    )
+
+    kt7 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Kontext 7"
+    )
+    kl_kt7 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="KL/KT7"
+    )
+    zl1_kt7 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 1/KT7"
+    )
+    zl2_kt7 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 2/KT7"
+    )
+
+    kt8 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Kontext 8"
+    )
+    kl_kt8 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="KL/KT8"
+    )
+    zl1_kt8 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 1/KT8"
+    )
+    zl2_kt8 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 2/KT8"
+    )
+
+    # Wortbedeutung
+    wbd = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Wortbedeutung"
+    )
+    wbd_kt_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Wortbedeutung/KT*"
+    )
+
+    # Ort Lautung
+    ort_lt_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Ort/LT*"
+    )
+
+    # Leitwort (LW) series
+    lw1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Leitwort 1"
+    )
+    lw2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Leitwort 2"
+    )
+    lw3 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Leitwort 3"
+    )
+    lw4 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Leitwort 4"
+    )
+    lw5 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Leitwort 5"
+    )
+    lw6 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Leitwort 6"
+    )
+    lw7 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Leitwort 7"
+    )
+    lw8 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Leitwort 8"
+    )
+
+    # Bedeutung/Anmerkung/Datenverweis/Ort für Leitwort
+    bd_lw_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Bedeutung/LW*"
+    )
+    anm_lw_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Anmerkung/LW*"
+    )
+    dv_lw_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Datenverweis/LW*"
+    )
+    ort_lw_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Ort/LW*"
+    )
+
+    # Zusatzlemma
+    zusatzlemma = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma"
+    )
+
+    # Verweis/Anmerkung/Datenverweis für Kontext
+    vrw_kt_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Verweis/KT*"
+    )
+    anm_kt_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Anmerkung/KT*"
+    )
+    dv_kt_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Datenverweis/KT*"
+    )
+
+    # Kontext/Lautung combinations
+    kt_lt1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Kontext/LT1"
+    )
+    kl_kt_lt1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="KL/Kontext/LT1"
+    )
+    bd_kt_lt1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Bedeutung/Kontext/LT1"
+    )
+    wbd_kt_lt1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Wortbedeutung/Kontext/LT1"
+    )
+    zl1_kt_lt1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 1/Kontext/LT1"
+    )
+    zl2_kt_lt1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 2/Kontext/LT1"
+    )
+    note_kt_lt1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Note/Kontext/LT1"
+    )
+
+    kt_lt2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Kontext/LT2"
+    )
+    kl_kt_lt2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="KL/Kontext/LT2"
+    )
+    bd_kt_lt2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Bedeutung/Kontext/LT2"
+    )
+    wbd_kt_lt2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Wortbedeutung/Kontext/LT2"
+    )
+    zl1_kt_lt2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 1/Kontext/LT2"
+    )
+    zl2_kt_lt2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 2/Kontext/LT2"
+    )
+    note_kt_lt2 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Note/Kontext/LT2"
+    )
+
+    # Kontext/Leitwort combination
+    kt_lw1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Kontext/LW1"
+    )
+    kl_kt_lw1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="KL/Kontext/LW1"
+    )
+    bd_kt_lw1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Bedeutung/Kontext/LW1"
+    )
+    wbd_kt_lw1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Wortbedeutung/Kontext/LW1"
+    )
+    zl1_kt_lw1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 1/Kontext/LW1"
+    )
+    zl2_kt_lw1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Zusatzlemma 2/Kontext/LW1"
+    )
+    note_kt_lw1 = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Note/Kontext/LW1"
+    )
+
+    # Verweis
+    verweis = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Verweis"
+    )
+
+    def __str__(self):
+        return self.id
 
 
 class Facsimile(models.Model):
@@ -1108,6 +1437,7 @@ class Beleg(models.Model):
                     pass
             except IndexError:
                 pass
+        self.create_beleg_flatten_copy()
         super().save(*args, **kwargs)
 
     def build_representation(self, base: dict | None = None) -> dict:
@@ -1150,119 +1480,147 @@ class Beleg(models.Model):
             fragebogen_nr = f"{self.fragebogen_nummer} "
         else:
             fragebogen_nr = ""
-        ret["NR"] = f"{fragebogen_nr}{cit_fragebogen_nr}"
-        ret["Verweis"] = verweise
-        ret["PAGE"] = self.quelle_page
-        ret["Etym"] = self.etym
-        ret["A"] = self.archivzeile
+        ret["nr"] = f"{fragebogen_nr}{cit_fragebogen_nr}"
+        ret["verweis"] = verweise
+        ret["page"] = self.quelle_page
+        ret["etym"] = self.etym
+        ret["a"] = self.archivzeile
 
         # Lautungen
         for x in self.lautungen.all():
-            gram_key = f"GRAM/LT{x.number}"
+            gram_key = f"gram_lt{x.number}"
             ret[gram_key] = [x.pron_gram]
-            teut_key = f"LT{x.number}_teuthonista"
+            teut_key = f"lt{x.number}_teuthonista"
             ret[teut_key] = [x.pron]
 
         # Lehnwörter
         for x in self.lehnwoerter.all():
             number = x.number
-            ret[f"LW{number}"] = x.pron
+            ret[f"lw{number}"] = x.pron
 
         # Notes Lautung
-        ret["ANM/LT*"] = self.note_lautung.all().values_list("content", flat=True)
+        ret["anm_lt_star"] = self.note_lautung.all().values_list("content", flat=True)
         try:
-            ret["KL/KT1"] = self.citations.filter(number=1).first().interpration
+            ret["kl_kt1"] = self.citations.filter(number=1).first().interpration
         except AttributeError:
             pass
 
-        ret["ANM/KT*"] = []
-        ret["BD/KT*"] = []
-        ret["WBD/KT*"] = []
-        ret["VRW/KT*"] = []
-        ret["DV/KT*"] = []
+        ret["anm_kt_star"] = []
+        ret["bd_kt_star"] = []
+        ret["wbd_kt_star"] = []
+        ret["vrw_kt_star"] = []
+        ret["dv_kt_star"] = []
 
         for x in self.citations.all():
             if x.corresp and "this:LT" in x.corresp:
                 cur_lt = x.corresp.split(":")[-1]
-                key = f"KT/{cur_lt}"
+                key = f"kt_{cur_lt.lower()}"
                 value = x.quote_text
                 ret[key] = value
             if x.definition_corresp is None and x.definition:
-                ret["BD/KT*"].append(f"{x.definition} ›KT {x.number}")
+                ret["bd_kt_star"].append(f"{x.definition} ›KT {x.number}")
             elif x.definition:
-                ret["WBD/KT*"].append(f"{x.definition} ›WBD/KT{x.number}/KT{x.number}")
-            ret[f"KT{x.number}"] = [x.quote_text]
+                ret["wbd_kt_star"].append(
+                    f"{x.definition} ›WBD/KT{x.number}/KT{x.number}"
+                )
+            ret[f"kt{x.number}"] = [x.quote_text]
             for y in x.zusatz_lemma.all():
-                ret[f"ZL{y.number}/KT{x.number}"] = [
+                ret[f"zl{y.number}_kt{x.number}"] = [
                     f"{y.form_orth}||{y.pos}||{getattr(y, 'gram', None) or ''}"
                 ]
             for y in x.note_diverse:
-                ret["DV/KT*"].append(f"{y} ›KT {x.number}")
+                ret["dv_kt_star"].append(f"{y} ›KT {x.number}")
             if x.xr:
-                ret["VRW/KT*"].append(f"O: {x.xr} ›KT{x.number}")
+                ret["vrw_kt_star"].append(f"O: {x.xr} ›KT{x.number}")
             if x.note_anmerkung_o:
-                ret["ANM/KT*"].append(f"O: {x.note_anmerkung_o} ›KT{x.number}")
+                ret["anm_kt_star"].append(f"O: {x.note_anmerkung_o} ›KT{x.number}")
             if x.note_anmerkung_b:
-                ret["ANM/KT*"].append(f"B: {x.note_anmerkung_b} ›KT{x.number}")
+                ret["anm_kt_star"].append(f"B: {x.note_anmerkung_b} ›KT{x.number}")
 
-        ret["BD/LW*"] = self.bedeutungen.filter(corresp_to__contains="LW").values_list(
-            "definition", flat=True
-        )
+        ret["bd_lw_star"] = self.bedeutungen.filter(
+            corresp_to__contains="LW"
+        ).values_list("definition", flat=True)
         for i in ["1", "2"]:
-            ret[f"BD/KT/LT{i}"] = self.citations.filter(
+            ret[f"bd_kt_lt{i}"] = self.citations.filter(
                 corresp=f"this:LT{i}",
                 definition_corresp=None,
                 definition__isnull=False,
             ).values_list("definition", flat=True)
-            ret[f"KT/LT{i}"] = self.citations.filter(
+            ret[f"kt_lt{i}"] = self.citations.filter(
                 corresp=f"this:LT{i}", quote_text__isnull=False
             ).values_list("quote_text", flat=True)
             kontext = self.citations.filter(corresp=f"this:LT{i}")
             zl = ZusatzLemma.objects.filter(citation__in=kontext)
-            ret[f"ZL1/KT/LT{i}"] = ""
-            ret[f"ZL2/KT/LT{i}"] = ""
+            ret[f"zl1_kt_lt{i}"] = ""
+            ret[f"zl2_kt_lt{i}"] = ""
             for n, y in enumerate(zl, start=1):
-                ret[f"ZL{n}/KT/LT{i}"] = (
+                ret[f"zl{n}_kt_lt{i}"] = (
                     f"{y.form_orth}||{getattr(y, 'pos', None) or ''}||{getattr(y, 'gram', None) or ''}"
                 )
 
-        ret["ANM/LW*"] = []
+        ret["anm_lw_star"] = []
         for x in self.note_lautung.filter(corresp_to__icontains="this:LW1"):
-            ret["ANM/LW*"].append(
+            ret["anm_lw_star"].append(
                 f"{x.resp}: {x.content} ›{x.corresp_to.replace('this:', '')}"
             )
 
-        ret["BD/LT*"] = []
+        ret["bd_lt_star"] = []
         for x in self.bedeutungen.filter(corresp_to__contains="LT"):
             if x.note_anmerkung_o:
-                ret["BD/LT*"].append(
+                ret["bd_lt_star"].append(
                     f"{x.definition}ANMO: {x.note_anmerkung_o} ›LT{x.number}"
                 )
             else:
-                ret["BD/LT*"].append(f"{x.definition} ›LT{x.number}")
+                ret["bd_lt_star"].append(f"{x.definition} ›LT{x.number}")
         try:
-            ret["Gemeinde1"] = [f"{self.ort.sigle} {self.ort.name}"]
+            ret["gemeinde1"] = [f"{self.ort.sigle} {self.ort.name}"]
         except AttributeError:
-            ret["Gemeinde1"] = []
+            ret["gemeinde1"] = []
         try:
-            ret["Kleinregion1"] = [f"{self.ort.kregion.sigle} {self.ort.kregion.abbr}"]
+            ret["kleinregion1"] = [f"{self.ort.kregion.sigle} {self.ort.kregion.abbr}"]
         except AttributeError:
-            ret["Kleinregion1"] = []
+            ret["kleinregion1"] = []
         try:
-            ret["Großregion1"] = [f"{self.ort.gregion.sigle} {self.ort.gregion.abbr}"]
+            ret["großregion1"] = [f"{self.ort.gregion.sigle} {self.ort.gregion.abbr}"]
         except AttributeError:
-            ret["Großregion1"] = []
+            ret["großregion1"] = []
         try:
-            ret["Bundesland1"] = [
+            ret["bundesland1"] = [
                 f"{self.ort.bundesland.sigle} {self.ort.bundesland.abbr}"
             ]
         except AttributeError:
-            ret["Bundesland1"] = []
+            ret["bundesland1"] = []
 
         for i, x in enumerate(self.zitierweise, start=1):
-            ret[f"ZW{i}"] = [x]
-
+            ret[f"zw{i}"] = [x]
         return ret
+
+    def create_beleg_flatten_copy(self):
+        """
+        Create a BelegFlatten copy using the build_representation method.
+        """
+
+        # Get the representation data
+        data = self.build_representation()
+
+        # Get field names from BelegFlatten model (excluding id and dboe_id which are handled separately)
+        beleg_flatten_fields = {
+            field.name
+            for field in BelegFlatten._meta.fields
+            if field.name not in ("id", "dboe_id")
+        }
+
+        # Normalize values from the data dict, only including keys that match BelegFlatten fields
+        flatten_data = {}
+        for key, value in data.items():
+            if key in beleg_flatten_fields:
+                flatten_data[key] = normalize_value(value)
+
+        # Create or update the BelegFlatten instance
+        beleg_flatten, created = BelegFlatten.objects.update_or_create(
+            id=self.dboe_id, defaults={"dboe_id": self, **flatten_data}
+        )
+        return beleg_flatten
 
     def create_typesense_object(self):
         raw = self.build_representation()

@@ -4,6 +4,7 @@ from django.db import models
 from belege.models import (
     AnmerkungLautung,
     Beleg,
+    BelegFlatten,
     BundesLand,
     Citation,
     Facsimile,
@@ -15,6 +16,31 @@ from belege.models import (
     Sense,
     ZusatzLemma,
 )
+
+
+@admin.register(BelegFlatten)
+class BelegFlattenAdmin(admin.ModelAdmin):
+    list_display = [
+        field.name
+        for field in BelegFlatten._meta.fields
+        if isinstance(
+            field,
+            (
+                models.CharField,
+                models.TextField,
+                models.ForeignKey,
+                models.PositiveIntegerField,
+            ),
+        )
+    ]
+    search_fields = [
+        field.name
+        for field in BelegFlatten._meta.fields
+        if isinstance(field, (models.CharField, models.TextField))
+    ]
+    ordering = ["dboe_id"]
+    autocomplete_fields = ["dboe_id"]
+    list_per_page = 20
 
 
 @admin.register(LehnWort)
