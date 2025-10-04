@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     "belege",
     "drf_spectacular",
     "webpage",
-    "flat",
 ]
 
 MIDDLEWARE = [

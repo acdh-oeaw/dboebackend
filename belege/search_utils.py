@@ -97,3 +97,18 @@ def transform_record(raw: dict) -> dict:
         else:
             out[key] = [str(v)]
     return out
+
+
+def normalize_value(value):
+    """Convert list values to strings, handle None values."""
+    if value is None:
+        return ""
+    if isinstance(value, list):
+        if not value:
+            return ""
+        # For single item lists, return the first item
+        if len(value) == 1:
+            return str(value[0]) if value[0] is not None else ""
+        # For multiple items, join with separator
+        return " | ".join(str(v) for v in value if v is not None)
+    return str(value)
