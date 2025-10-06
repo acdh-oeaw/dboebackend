@@ -32,7 +32,12 @@ models.Field.set_extra = set_extra
 class BelegFlatten(models.Model):
     # Basic identifiers
     id = models.CharField(max_length=1000, verbose_name="ID", primary_key=True)
-    dboe_id = models.ForeignKey("Beleg", on_delete=models.CASCADE, verbose_name="Beleg")
+    dboe_id = models.ForeignKey(
+        "Beleg",
+        on_delete=models.CASCADE,
+        verbose_name="Beleg",
+        related_name="flatten_beleg",
+    )
     nr = models.CharField(max_length=1000, blank=True, null=True, verbose_name="NR")
     hl = models.CharField(max_length=1000, blank=True, null=True, verbose_name="HL")
     nl = models.CharField(max_length=1000, blank=True, null=True, verbose_name="NL")

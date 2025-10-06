@@ -10,6 +10,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         total = Beleg.objects.count()
         for x in tqdm(Beleg.objects.iterator(), total=total):
+            if x.flatten_beleg.all():
+                continue
             try:
                 x.create_beleg_flatten_copy()
             except Exception as e:
