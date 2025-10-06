@@ -32,24 +32,29 @@ class Command(BaseCommand):
         total = Beleg.objects.count()
         for item in tqdm(Beleg.objects.iterator(), total=total):
             doc = TeiReader(ET.tostring(item.orig_xml).decode("utf-8"))
-            for x in doc.any_xpath(".//tei:usg"):
-                try:
-                    corresp = x.attrib["corresp"]
-                except KeyError:
-                    corresp = None
-                try:
-                    y = x.xpath(".//tei:place", namespaces=namespaces)[-1]
-                except IndexError:
-                    continue
-                place_type = y.attrib["type"]
-                try:
-                    place_sigle = y.xpath("./tei:idno/text()", namespaces=namespaces)[0]
-                except IndexError:
-                    continue
-                if place_type in mapping.keys():
-                    geo_model, place_model = mapping[place_type]
-                    place_obj = place_model.objects.get(sigle=place_sigle)
-                    geo_model.objects.get_or_create(
-                        beleg=item, ort=place_obj, corresp=corresp
-                    )
+            try:
+                for x in doc.any_xpath(".//tei:usg"):
+                    try:
+                        corresp = x.attrib["corresp"]
+                    except KeyError:
+                        corresp = None
+                    try:
+                        y = x.xpath(".//tei:place", namespaces=namespaces)[-1]
+                    except IndexError:
+                        continue
+                    place_type = y.attrib["type"]
+                    try:
+                        place_sigle = y.xpath(
+                            "./tei:idno/text()", namespaces=namespaces
+                        )[0]
+                    except IndexError:
+                        continue
+                    if place_type in mapping.keys():
+                        geo_model, place_model = mapping[place_type]
+                        place_obj = place_model.objects.get(sigle=place_sigle)
+                        geo_model.objects.get_or_create(
+                            beleg=item, ort=place_obj, corresp=corresp
+                        )
+            except Exception as e:
+                print(f"Error in {item}: {e}")
         print("done")
