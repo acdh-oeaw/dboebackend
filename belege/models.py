@@ -111,6 +111,9 @@ class BelegFlatten(models.Model):
     anm_lt_star = models.CharField(
         max_length=1000, blank=True, null=True, verbose_name="ANM/LT*"
     )
+    dv_lt_star = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="DV/LT*"
+    )
 
     # Kontext (KT) series with additional fields
     kt1 = models.CharField(
@@ -1490,6 +1493,11 @@ class Beleg(models.Model):
         ret["page"] = self.quelle_page
         ret["etym"] = self.etym
         ret["a"] = self.archivzeile
+
+        # DV/LW*
+        ret["dv_lt_star"] = []
+        for x in self.note_diverse:
+            ret["dv_lt_star"].append(x)
 
         # Lautungen
         for x in self.lautungen.all():
