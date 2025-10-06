@@ -8,6 +8,10 @@ from belege.models import (
     BundesLand,
     Citation,
     Facsimile,
+    GeoRelationBundesland,
+    GeoRelationGregion,
+    GeoRelationKregion,
+    GeoRelationOrt,
     GRegion,
     KRegion,
     Lautung,
@@ -16,6 +20,42 @@ from belege.models import (
     Sense,
     ZusatzLemma,
 )
+
+
+@admin.register(GeoRelationBundesland)
+class GeoRelationBundeslandAdmin(admin.ModelAdmin):
+    list_display = ["beleg", "ort"]
+    search_fields = ["beleg__dboe_id", "ort__name"]
+    autocomplete_fields = ["beleg", "ort"]
+    ordering = ["beleg", "ort"]
+    list_per_page = 20
+
+
+@admin.register(GeoRelationGregion)
+class GeoRelationGregionAdmin(admin.ModelAdmin):
+    list_display = ["beleg", "ort"]
+    search_fields = ["beleg__dboe_id", "ort__name"]
+    autocomplete_fields = ["beleg", "ort"]
+    ordering = ["beleg", "ort"]
+    list_per_page = 20
+
+
+@admin.register(GeoRelationKregion)
+class GeoRelationKregionAdmin(admin.ModelAdmin):
+    list_display = ["beleg", "ort"]
+    search_fields = ["beleg__dboe_id", "ort__name"]
+    autocomplete_fields = ["beleg", "ort"]
+    ordering = ["beleg", "ort"]
+    list_per_page = 20
+
+
+@admin.register(GeoRelationOrt)
+class GeoRelationOrtAdmin(admin.ModelAdmin):
+    list_display = ["beleg", "ort"]
+    search_fields = ["beleg__dboe_id", "ort__name"]
+    autocomplete_fields = ["beleg", "ort"]
+    ordering = ["beleg", "ort"]
+    list_per_page = 20
 
 
 @admin.register(BelegFlatten)
