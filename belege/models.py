@@ -1176,13 +1176,21 @@ class Beleg(models.Model):
         help_text="Diese Angabe benennt die Wortart des jeweiligen Belegs.",
         choices=POS_CHOICES,
     ).set_extra(xpath="./tei:gramGrp/tei:pos", node_type="text")
-    ort = models.ForeignKey(
-        "Ort",
+    bundesland = models.ManyToManyField(
+        "Bundesland",
         blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        verbose_name="Ort",
-    ).set_extra(xpath="./tei:place[@type='Ort']/tei:idno", node_type="text")
+        verbose_name="Bundesland",
+        through="GeoRelationBundesLand",
+    )
+    gregion = models.ManyToManyField(
+        "GRegion", blank=True, verbose_name="Großregion", through="GeoRelationGRegion"
+    )
+    kregion = models.ManyToManyField(
+        "KRegion", blank=True, verbose_name="Kleinregion", through="GeoRelationKRegion"
+    )
+    ort = models.ManyToManyField(
+        "Ort", blank=True, verbose_name="Ort", through="GeoRelationOrt"
+    )
     ref_type_dbo = models.CharField(
         blank=True,
         null=True,
@@ -1260,7 +1268,6 @@ class Beleg(models.Model):
     def save(
         self,
         add_citations=False,
-        add_places=False,
         add_lautungen=False,
         add_sense=False,
         add_anmkerung_laut=False,
@@ -1433,18 +1440,6 @@ class Beleg(models.Model):
                     item.save()
                 except Exception as e:
                     print(f"Error saving sense {xml_id}: {e}")
-        if self.orig_xml is not None and add_places:
-            xpath = self._meta.get_field("ort").extra.get("xpath", None)
-            try:
-                sigle = doc.any_xpath(xpath)[0].text
-                try:
-                    ort = Ort.objects.get(sigle=sigle)
-                    self.ort = ort
-                except Ort.DoesNotExist:
-                    print(f"Ort with sigle {sigle} does not exist")
-                    pass
-            except IndexError:
-                pass
         self.create_beleg_flatten_copy()
         super().save(*args, **kwargs)
 
@@ -1639,3 +1634,71 @@ class Beleg(models.Model):
         raw = self.build_representation()
         processed = transform_record(raw)
         return processed
+
+
+class GeoRelationBundesland(models.Model):
+    beleg = models.ForeignKey(Beleg, on_delete=models.CASCADE)
+    ort = models.ForeignKey(BundesLand, on_delete=models.CASCADE)
+    corresp = models.CharField(
+        max_length=50, blank=True, null=True, verbose_name="@corrsp"
+    )
+    resp = models.CharField(max_length=50, blank=True, null=True, verbose_name="@resp")
+
+    class Meta:
+        verbose_name = "GeoRelation Bundesland"
+        verbose_name_plural = "GeoRelation Bundesländer"
+        ordering = ["ort"]
+
+    def __str__(self):
+        return f"{self.ort} ({self.beleg})"
+
+
+class GeoRelationGregion(models.Model):
+    beleg = models.ForeignKey(Beleg, on_delete=models.CASCADE)
+    ort = models.ForeignKey(GRegion, on_delete=models.CASCADE)
+    corresp = models.CharField(
+        max_length=50, blank=True, null=True, verbose_name="@corrsp"
+    )
+    resp = models.CharField(max_length=50, blank=True, null=True, verbose_name="@resp")
+
+    class Meta:
+        verbose_name = "GeoRelation Großregion"
+        verbose_name_plural = "GeoRelation Großregionen"
+        ordering = ["ort"]
+
+    def __str__(self):
+        return f"{self.ort} ({self.beleg})"
+
+
+class GeoRelationKregion(models.Model):
+    beleg = models.ForeignKey(Beleg, on_delete=models.CASCADE)
+    ort = models.ForeignKey(KRegion, on_delete=models.CASCADE)
+    corresp = models.CharField(
+        max_length=50, blank=True, null=True, verbose_name="@corrsp"
+    )
+    resp = models.CharField(max_length=50, blank=True, null=True, verbose_name="@resp")
+
+    class Meta:
+        verbose_name = "GeoRelation Kleinregion"
+        verbose_name_plural = "GeoRelation Kleinregionen"
+        ordering = ["ort"]
+
+    def __str__(self):
+        return f"{self.ort} ({self.beleg})"
+
+
+class GeoRelationOrt(models.Model):
+    beleg = models.ForeignKey(Beleg, on_delete=models.CASCADE)
+    ort = models.ForeignKey(Ort, on_delete=models.CASCADE)
+    corresp = models.CharField(
+        max_length=50, blank=True, null=True, verbose_name="@corrsp"
+    )
+    resp = models.CharField(max_length=50, blank=True, null=True, verbose_name="@resp")
+
+    class Meta:
+        verbose_name = "GeoRelation Ort"
+        verbose_name_plural = "GeoRelation Orte"
+        ordering = ["ort"]
+
+    def __str__(self):
+        return f"{self.ort} ({self.beleg})"
