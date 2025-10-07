@@ -41,7 +41,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--batch-size",
             type=int,
-            default=5000,
+            default=1000,
             help="Number of records per JSON batch file (default: 5000)",
         )
         parser.add_argument(
