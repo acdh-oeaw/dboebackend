@@ -43,6 +43,11 @@ belege_schema = {
         {"name": "zl2_kt_lt2", "type": "string[]", "optional": True},
         {"name": "anm_lw_star", "type": "string[]", "optional": True},
         {"name": "bd_lt_star", "type": "string[]", "optional": True},
+        {"name": "bundeslaender", "type": "string[]", "optional": True, "facet": True},
+        {"name": "gregionen", "type": "string[]", "optional": True, "facet": True},
+        {"name": "kregionen", "type": "string[]", "optional": True, "facet": True},
+        {"name": "orte", "type": "string[]", "optional": True, "facet": True},
+        {"name": "siglen", "type": "string[]", "optional": True, "facet": True},
         {"name": ".*", "type": "auto"},
     ],
 }
