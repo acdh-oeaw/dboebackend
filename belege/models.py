@@ -559,7 +559,7 @@ class Ort(models.Model):
 
     def __str__(self):
         if self.name:
-            return f"{self.name} ({self.sigle})"
+            return f"{self.name} ({self.sigle} {self.gregion} {self.bundesland})"
         else:
             return f"{self.sigle}"
 
@@ -1503,6 +1503,10 @@ class Beleg(models.Model):
             beleg=self, corresp__icontains="this:LT"
         ):
             ret["ort_lt_star"].append(f"{x.ort} ›{x.corresp.replace('this:', '')}")
+        for x in GeoRelationBundesland.objects.filter(
+            beleg=self, corresp__icontains="this:LT"
+        ):
+            ret["ort_lt_star"].append(f"{x.ort} ›{x.corresp.replace('this:', '')}")
 
         # Ort/LW*
         ret["ort_lw_star"] = []
@@ -1518,6 +1522,25 @@ class Beleg(models.Model):
             beleg=self, corresp__icontains="this:LW"
         ):
             ret["ort_lw_star"].append(f"{x.ort} ›{x.corresp.replace('this:', '')}")
+        for x in GeoRelationBundesland.objects.filter(
+            beleg=self, corresp__icontains="this:LW"
+        ):
+            ret["ort_lw_star"].append(f"{x.ort} ›{x.corresp.replace('this:', '')}")
+
+        mapping = [
+            ("bundeslaender", GeoRelationBundesland),
+            ("gregionen", GeoRelationGregion),
+            ("kregionen", GeoRelationKregion),
+            ("orte", GeoRelationOrt),
+        ]
+        siglen = set()
+        for key, model in mapping:
+            ret[key] = set()
+            for x in model.objects.filter(beleg=self):
+                ret[key].add(f"{x.ort}")
+                siglen.add(f"{x.ort.sigle}")
+            ret[key] = list(ret[key])
+        ret["siglen"] = list(siglen)
 
         # DV/LW*
         ret["dv_lw_star"] = []
@@ -1610,24 +1633,6 @@ class Beleg(models.Model):
                 )
             else:
                 ret["bd_lt_star"].append(f"{x.definition} ›LT{x.number}")
-        try:
-            ret["gemeinde1"] = [f"{self.ort.sigle} {self.ort.name}"]
-        except AttributeError:
-            ret["gemeinde1"] = []
-        try:
-            ret["kleinregion1"] = [f"{self.ort.kregion.sigle} {self.ort.kregion.abbr}"]
-        except AttributeError:
-            ret["kleinregion1"] = []
-        try:
-            ret["großregion1"] = [f"{self.ort.gregion.sigle} {self.ort.gregion.abbr}"]
-        except AttributeError:
-            ret["großregion1"] = []
-        try:
-            ret["bundesland1"] = [
-                f"{self.ort.bundesland.sigle} {self.ort.bundesland.abbr}"
-            ]
-        except AttributeError:
-            ret["bundesland1"] = []
 
         for i, x in enumerate(self.zitierweise, start=1):
             ret[f"zw{i}"] = [x]

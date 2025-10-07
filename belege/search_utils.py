@@ -43,31 +43,14 @@ belege_schema = {
         {"name": "zl2_kt_lt2", "type": "string[]", "optional": True},
         {"name": "anm_lw_star", "type": "string[]", "optional": True},
         {"name": "bd_lt_star", "type": "string[]", "optional": True},
-        # Region fields
-        {"name": "gemeinde1", "type": "string[]", "optional": True, "facet": True},
-        {"name": "kleinregion1", "type": "string[]", "optional": True, "facet": True},
-        {"name": "grossregion1", "type": "string[]", "optional": True, "facet": True},
-        {"name": "bundesland1", "type": "string[]", "optional": True, "facet": True},
+        {"name": ".*", "type": "auto"},
     ],
 }
-
-beleg_names = {value for field in belege_schema["fields"] if (value := field["name"])}
-
-
-def sanitize_key(key: str) -> str:
-    key = key.lower()
-    key = key.replace("/", "_")
-    key = key.replace("*", "_star")
-    key = key.replace("ß", "ss")
-    return key
 
 
 def transform_record(raw: dict) -> dict:
     out = {}
-    for k, v in raw.items():
-        key = sanitize_key(k)
-        if key not in beleg_names:
-            continue
+    for key, v in raw.items():
         # Normalize QuerySets explicitly
         if isinstance(v, QuerySet):
             v = list(v)
