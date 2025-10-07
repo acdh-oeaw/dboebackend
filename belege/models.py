@@ -1504,6 +1504,21 @@ class Beleg(models.Model):
         ):
             ret["ort_lt_star"].append(f"{x.ort} ›{x.corresp.replace('this:', '')}")
 
+        # Ort/LW*
+        ret["ort_lw_star"] = []
+        for x in GeoRelationOrt.objects.filter(
+            beleg=self, corresp__icontains="this:LW"
+        ):
+            ret["ort_lw_star"].append(f"{x.ort} ›{x.corresp.replace('this:', '')}")
+        for x in GeoRelationKregion.objects.filter(
+            beleg=self, corresp__icontains="this:LW"
+        ):
+            ret["ort_lw_star"].append(f"{x.ort} ›{x.corresp.replace('this:', '')}")
+        for x in GeoRelationGregion.objects.filter(
+            beleg=self, corresp__icontains="this:LW"
+        ):
+            ret["ort_lw_star"].append(f"{x.ort} ›{x.corresp.replace('this:', '')}")
+
         # DV/LW*
         ret["dv_lw_star"] = []
         for x in self.note_diverse:
