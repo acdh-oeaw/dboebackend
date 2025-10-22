@@ -12,12 +12,11 @@ class Command(BaseCommand):
         for x in tqdm(Beleg.objects.iterator(), total=total):
             try:
                 x.save(
-                    add_citations=False,
-                    add_places=False,
-                    add_lautungen=False,
-                    add_sense=False,
-                    add_anmkerung_laut=False,
-                    add_lehnwort=False,
+                    add_citations=True,
+                    add_lautungen=True,
+                    add_sense=True,
+                    add_anmkerung_laut=True,
+                    add_lehnwort=True,
                 )
             except Exception as e:
                 print(f"failed to save {x} due to {e}")

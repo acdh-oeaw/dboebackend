@@ -31,7 +31,11 @@ class Command(BaseCommand):
         }
         total = Beleg.objects.count()
         for item in tqdm(Beleg.objects.iterator(), total=total):
-            doc = TeiReader(ET.tostring(item.orig_xml).decode("utf-8"))
+            try:
+                doc = TeiReader(ET.tostring(item.orig_xml).decode("utf-8"))
+            except Exception as e:
+                print(f"failed to process {item.id} due to {e}")
+                continue
             try:
                 for x in doc.any_xpath(".//tei:usg"):
                     try:

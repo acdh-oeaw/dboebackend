@@ -1440,7 +1440,10 @@ class Beleg(models.Model):
                     item.save()
                 except Exception as e:
                     print(f"Error saving sense {xml_id}: {e}")
-        self.create_beleg_flatten_copy()
+        try:
+            self.create_beleg_flatten_copy()
+        except Exception as e:
+            print(f"faild to save flattend Beleg for {self.id} du to {e}")
         super().save(*args, **kwargs)
 
     def build_representation(self, base: dict | None = None) -> dict:
