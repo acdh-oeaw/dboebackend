@@ -4,7 +4,6 @@ from django.db import models
 from belege.models import (
     AnmerkungLautung,
     Beleg,
-    BelegFlatten,
     BundesLand,
     Citation,
     Facsimile,
@@ -55,31 +54,6 @@ class GeoRelationOrtAdmin(admin.ModelAdmin):
     search_fields = ["beleg__dboe_id", "ort__name"]
     autocomplete_fields = ["beleg", "ort"]
     ordering = ["beleg", "ort"]
-    list_per_page = 20
-
-
-@admin.register(BelegFlatten)
-class BelegFlattenAdmin(admin.ModelAdmin):
-    list_display = [
-        field.name
-        for field in BelegFlatten._meta.fields
-        if isinstance(
-            field,
-            (
-                models.CharField,
-                models.TextField,
-                models.ForeignKey,
-                models.PositiveIntegerField,
-            ),
-        )
-    ]
-    search_fields = [
-        field.name
-        for field in BelegFlatten._meta.fields
-        if isinstance(field, (models.CharField, models.TextField))
-    ]
-    ordering = ["dboe_id"]
-    autocomplete_fields = ["dboe_id"]
     list_per_page = 20
 
 
