@@ -369,8 +369,8 @@ dependencies = [
     { name = "elasticsearch" },
     { name = "elasticsearch-dsl" },
     { name = "gunicorn" },
+    { name = "opensearch-py" },
     { name = "psycopg2-binary" },
-    { name = "typesense" },
 ]
 
 [package.dev-dependencies]
@@ -401,8 +401,8 @@ requires-dist = [
     { name = "elasticsearch", specifier = "==5.5.3" },
     { name = "elasticsearch-dsl", specifier = ">=0.0.9" },
     { name = "gunicorn", specifier = ">=23.0.0" },
+    { name = "opensearch-py", specifier = ">=3.0.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
-    { name = "typesense", specifier = ">=1.1.1" },
 ]
 
 [package.metadata.requires-dev]
@@ -611,6 +611,14 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/2f/fe/99d8b134fe5e50f7d3527772d227ec41c33fff224db26ae7c8ce001160de/elasticsearch-dsl-0.0.9.tar.gz", hash = "sha256:72c108f794a79b154c32cf594a1185459338d6aaec337051f03b2034a16eacbd", size = 28952, upload-time = "2015-10-26T20:42:44.515Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2a/b7/890e200f2cd1e22d1c987060c0a1af088731da5851766d2ca2f120ec8778/elasticsearch_dsl-0.0.9-py2.py3-none-any.whl", hash = "sha256:9b5404180d2747fa2e43c2e5cd78d39241cb80d041f492cccdd2a2e6272b0bda", size = 38707, upload-time = "2015-10-26T20:42:50.288Z" },
+]
+
+[[package]]
+name = "events"
+version = "0.5"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/25/ed/e47dec0626edd468c84c04d97769e7ab4ea6457b7f54dcb3f72b17fcd876/Events-0.5-py3-none-any.whl", hash = "sha256:a7286af378ba3e46640ac9825156c93bdba7502174dd696090fdfcd4d80a1abd", size = 6758, upload-time = "2023-07-31T08:23:13.645Z" },
 ]
 
 [[package]]
@@ -1288,6 +1296,22 @@ wheels = [
 ]
 
 [[package]]
+name = "opensearch-py"
+version = "3.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "certifi" },
+    { name = "events" },
+    { name = "python-dateutil" },
+    { name = "requests" },
+    { name = "urllib3" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b8/58/ecec7f855aae7bcfb08f570088c6cb993f68c361a0727abab35dbf021acb/opensearch_py-3.0.0.tar.gz", hash = "sha256:ebb38f303f8a3f794db816196315bcddad880be0dc75094e3334bc271db2ed39", size = 248890, upload-time = "2025-06-17T05:39:48.453Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/71/e0/69fd114c607b0323d3f864ab4a5ecb87d76ec5a172d2e36a739c8baebea1/opensearch_py-3.0.0-py3-none-any.whl", hash = "sha256:842bf5d56a4a0d8290eda9bb921c50f3080e5dc4e5fefb9c9648289da3f6a8bb", size = 371491, upload-time = "2025-06-17T05:39:46.539Z" },
+]
+
+[[package]]
 name = "overrides"
 version = "7.7.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1926,18 +1950,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/ef/88/d65ed807393285204ab6e2801e5d11fbbea811adcaa979a2ed3b67a5ef41/types_python_dateutil-2.9.0.20250516.tar.gz", hash = "sha256:13e80d6c9c47df23ad773d54b2826bd52dbbb41be87c3f339381c1700ad21ee5", size = 13943, upload-time = "2025-05-16T03:06:58.385Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c5/3f/b0e8db149896005adc938a1e7f371d6d7e9eca4053a29b108978ed15e0c2/types_python_dateutil-2.9.0.20250516-py3-none-any.whl", hash = "sha256:2b2b3f57f9c6a61fba26a9c0ffb9ea5681c9b83e69cd897c6b5f668d9c0cab93", size = 14356, upload-time = "2025-05-16T03:06:57.249Z" },
-]
-
-[[package]]
-name = "typesense"
-version = "1.1.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "requests" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/9b/2c/6f012a17934d50f73d20f1138b3bc42cfb7ec465052bd8e56c0dcf8ce92d/typesense-1.1.1.tar.gz", hash = "sha256:876280e5f2bb8a4a24ae427863ee8216d2e9e76cfe96e0a87a379e66078dc591", size = 45214, upload-time = "2025-05-20T18:13:32.865Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/1b/8f/6306446e5ce28ddddd8babf407597b9afa3fff521794fe2dcfb16f12e16a/typesense-1.1.1-py3-none-any.whl", hash = "sha256:633aeb26c24e17be654ea22f20d3f76f87c804f259d0a560b7e0ae817f24077a", size = 70604, upload-time = "2025-05-20T18:13:30.975Z" },
 ]
 
 [[package]]
