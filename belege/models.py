@@ -7,6 +7,7 @@ from django.db import models
 from django_jsonform.models.fields import ArrayField
 
 from belege.fields import XMLField
+from belege.opensearch_client import OS_CONNECTION, client
 from belege.utils import transform_record
 
 POS_CHOICES = (
@@ -1103,6 +1104,10 @@ class Beleg(models.Model):
                     item.save()
                 except Exception as e:
                     print(f"Error saving sense {xml_id}: {e}")
+        if OS_CONNECTION:
+            document = self.sanitize_representation()
+            id = document["id"]
+            client.index(index="dboe", body=document, id=id, refresh=True)
         super().save(*args, **kwargs)
 
     def build_representation(self, base: dict | None = None) -> dict:

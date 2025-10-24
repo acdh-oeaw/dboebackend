@@ -21,8 +21,8 @@ dependencies = [
     "elasticsearch==5.5.3",
     "elasticsearch-dsl>=0.0.9",
     "gunicorn>=23.0.0",
+    "opensearch-py>=3.0.0",
     "psycopg2-binary>=2.9.10",
-    "typesense>=1.1.1",
 ]
 
 [dependency-groups]
