@@ -2,6 +2,8 @@ import os
 
 from opensearchpy import OpenSearch
 
+OS_INDEX_NAME = "dboe"
+
 host = "localhost"
 port = 9200
 auth = (
