@@ -2,7 +2,7 @@ import os
 
 from opensearchpy import OpenSearch
 
-OS_INDEX_NAME = "dboe"
+OS_INDEX_NAME = os.environ.get("OS_INDEX_NAME", "dboe-django")
 
 host = "localhost"
 port = 9200
