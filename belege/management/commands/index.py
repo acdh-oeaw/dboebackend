@@ -3,9 +3,11 @@ import os
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from opensearchpy.helpers import bulk
 from tqdm import tqdm
 
 from belege.models import Beleg
+from belege.opensearch_client import OS_INDEX_NAME, client
 
 beleg_json_dir = os.path.join(settings.MEDIA_ROOT, "belege")
 os.makedirs(beleg_json_dir, exist_ok=True)
@@ -44,12 +46,26 @@ class Command(BaseCommand):
                 print(f"failed to serialize {x} due to {e}")
                 continue
             if len(batch) >= batch_size:
+                actions = []
+                for x in batch:
+                    actions.append(
+                        {
+                            "_op_type": "index",
+                            "_index": OS_INDEX_NAME,
+                            "_id": x["id"],
+                            "_source": x,
+                        }
+                    )
+                _, failed = bulk(client, actions)
+                if failed:
+                    print(f"{failed=}")
                 if dump_to_file:
                     out_file = f"belege_{cur_nr:05}.json"
                     save_path = os.path.join(beleg_json_dir, out_file)
                     with open(save_path, "w", encoding="utf-8") as fp:
                         json.dump(batch, fp, ensure_ascii=False)
                     print(f"wrote {len(batch)} records to {save_path}")
+
                 batch = []
 
         # Flush remaining records (if any)

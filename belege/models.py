@@ -7,7 +7,7 @@ from django.db import models
 from django_jsonform.models.fields import ArrayField
 
 from belege.fields import XMLField
-from belege.opensearch_client import OS_CONNECTION, client
+from belege.opensearch_client import OS_CONNECTION, OS_INDEX_NAME, client
 from belege.utils import transform_record
 
 POS_CHOICES = (
@@ -1107,7 +1107,7 @@ class Beleg(models.Model):
         if OS_CONNECTION:
             document = self.sanitize_representation()
             id = document["id"]
-            client.index(index="dboe", body=document, id=id, refresh=True)
+            client.index(index=OS_INDEX_NAME, body=document, id=id, refresh=True)
         super().save(*args, **kwargs)
 
     def build_representation(self, base: dict | None = None) -> dict:
