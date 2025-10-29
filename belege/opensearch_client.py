@@ -5,7 +5,7 @@ from opensearchpy import OpenSearch
 OS_INDEX_NAME = os.environ.get("OS_INDEX_NAME", "dboe-django")
 
 host = os.environ.get("OS_HOST", "localhost")
-port = os.environ.get("OS_POST", "9200")
+port = os.environ.get("OS_PORT", "9200")
 auth = (
     os.environ.get("OS_USER", "admin"),
     os.environ.get("OS_PW", "Hansi4ever!"),
