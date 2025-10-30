@@ -33,7 +33,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         cur_nr = 0
         total = Beleg.objects.count()
-        batch_size = options.get("batch_size") or 5000
+        batch_size = options.get("batch_size") or 1000
         dump_to_file = options.get("dump", False)
         if batch_size <= 0:
             raise ValueError("batch-size must be a positive integer")
