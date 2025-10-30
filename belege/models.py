@@ -1140,6 +1140,7 @@ class Beleg(models.Model):
 
         # Collect simple references
         ret["tustep"] = self.xeno_data
+        ret["facs"] = self.facs.values_list("file_name", flat=True)
         verweise = []
         for x in [
             "ref_type_dbo",
