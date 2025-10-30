@@ -2,12 +2,12 @@ import os
 
 from opensearchpy import OpenSearch
 
-OS_INDEX_NAME = os.environ.get("OS_INDEX_NAME", "dboe-django")
+OS_INDEX_NAME = os.environ.get("OS_INDEX_NAME", "dboe")
 
-host = os.environ.get("OS_HOST", "localhost")
-port = os.environ.get("OS_PORT", "9200")
+host = os.environ.get("OS_HOST", "opensearch-api.acdh-ch-dev.oeaw.ac.at")
+port = os.environ.get("OS_PORT", "443")
 auth = (
-    os.environ.get("OS_USER", "admin"),
+    os.environ.get("OS_USER", "drupal-writer"),
     os.environ.get("OS_PW", "Hansi4ever!"),
 )
 client = OpenSearch(
