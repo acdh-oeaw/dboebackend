@@ -4,6 +4,7 @@ from django.db import models
 from belege.models import (
     AnmerkungLautung,
     Beleg,
+    BelegFacs,
     BundesLand,
     Citation,
     Facsimile,
@@ -19,6 +20,23 @@ from belege.models import (
     Sense,
     ZusatzLemma,
 )
+
+
+@admin.register(Facsimile)
+class FacsimileAdmin(admin.ModelAdmin):
+    list_display = ["file_name"]
+    search_fields = ["file_name"]
+    ordering = ["file_name"]
+    list_per_page = 20
+
+
+@admin.register(BelegFacs)
+class BelegFacsAdmin(admin.ModelAdmin):
+    list_display = ["beleg", "facsimile", "created_at", "updated_at"]
+    search_fields = ["beleg__dboe_id", "facsimile__identifier"]
+    autocomplete_fields = ["beleg", "facsimile"]
+    ordering = ["beleg", "facsimile"]
+    list_per_page = 20
 
 
 @admin.register(GeoRelationBundesland)
@@ -183,30 +201,6 @@ class LautungAdmin(admin.ModelAdmin):
     list_per_page = 20
 
 
-@admin.register(Facsimile)
-class FacsimileAdmin(admin.ModelAdmin):
-    list_display = [
-        field.name
-        for field in Facsimile._meta.fields
-        if isinstance(
-            field,
-            (
-                models.CharField,
-                models.TextField,
-                models.ForeignKey,
-                models.PositiveIntegerField,
-            ),
-        )
-    ]
-    search_fields = [
-        field.name
-        for field in Facsimile._meta.fields
-        if isinstance(field, (models.CharField, models.TextField))
-    ]
-    ordering = ["file_name"]
-    list_per_page = 20
-
-
 @admin.register(Beleg)
 class BelegAdmin(admin.ModelAdmin):
     list_display = [
@@ -229,7 +223,7 @@ class BelegAdmin(admin.ModelAdmin):
     ]
     list_filter = ["import_issue", "pos"]
     ordering = ["dboe_id"]
-    autocomplete_fields = ["ort", "facsimile"]
+    autocomplete_fields = ["ort"]
     list_per_page = 20
 
 

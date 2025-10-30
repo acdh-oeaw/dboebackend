@@ -1,7 +1,7 @@
-from tqdm import tqdm
 from django.core.management.base import BaseCommand
+from tqdm import tqdm
 
-from belege.models import Beleg, Facsimile
+from belege.models import Beleg, BelegFacs, Facsimile
 
 
 class Command(BaseCommand):
@@ -17,5 +17,8 @@ class Command(BaseCommand):
                 continue
             for x in file_name.split():
                 facs, _ = Facsimile.objects.get_or_create(file_name=x)
-                item.facsimile.add(facs)
+                BelegFacs.objects.get_or_create(
+                    beleg=item,
+                    facsimile=facs,
+                )
         print("done")

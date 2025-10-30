@@ -39,16 +39,25 @@ class Facsimile(models.Model):
         max_length=250, unique=True, verbose_name="Dateiname", help_text="whatever"
     )
 
+    def sanitize_file_name(self):
+        return self.file_name.replace("%2F", "/")
+
     @classmethod
     def get_base_url(cls):
-        return "https://some-iiif-url/"
+        return "https://walk-want-grew-imgs.acdh-dev.oeaw.ac.at/iiif/images/"
 
     @property
     def facs_url(self):
-        return f"{self.get_base_url}{self.file_name}"
+        return f"{self.get_base_url()}{self.sanitize_file_name()}/info.json"
+
+    @property
+    def preview_url(self):
+        return (
+            f"{self.get_base_url()}{self.sanitize_file_name()}/full/600,/0/default.jpg"
+        )
 
     def __str__(self):
-        return self.file_name
+        return self.preview_url
 
     class Meta:
         verbose_name = "Faksimile"
@@ -906,12 +915,13 @@ class Beleg(models.Model):
         verbose_name="Anmerkung (diverse)",
         help_text="whatever",
     ).set_extra(xpath="./tei:note[@type='diverse']", node_type="list")
-    facsimile = models.ManyToManyField(
+    facs = models.ManyToManyField(
         "Facsimile",
         blank=True,
         verbose_name="Faksimiles",
         help_text="whatever",
         related_name="belege",
+        through="BelegFacs",
     )
     import_issue = models.BooleanField(
         default=False,
@@ -1310,6 +1320,35 @@ class Beleg(models.Model):
         raw = self.build_representation()
         processed = transform_record(raw)
         return processed
+
+
+class BelegFacs(models.Model):
+    beleg = models.ForeignKey(Beleg, on_delete=models.CASCADE)
+    facsimile = models.ForeignKey(Facsimile, on_delete=models.CASCADE)
+    resp = models.CharField(
+        default="system",
+        max_length=250,
+        verbose_name="Responsible for linking",
+        help_text="Name of user or script resposnible for linking Beleg to Facsimile",
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Created at",
+        help_text="Timestamp when the link was created",
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Updated at",
+        help_text="Timestamp when the link was last updated",
+    )
+
+    class Meta:
+        verbose_name = "Beleg-Facsimile Link"
+        verbose_name_plural = "Beleg-Facsimile Links"
+        ordering = ["beleg", "facsimile"]
+
+    def __str__(self):
+        return f"Link: {self.beleg} <-> {self.facsimile}"
 
 
 class GeoRelationBundesland(models.Model):
