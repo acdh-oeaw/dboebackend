@@ -1129,6 +1129,7 @@ class Beleg(models.Model):
         ret = dict(base)  # copy so we don't mutate caller provided dict
 
         # Collect simple references
+        ret["tustep"] = self.xeno_data
         verweise = []
         for x in [
             "ref_type_dbo",
