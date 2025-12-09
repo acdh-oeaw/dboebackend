@@ -41,7 +41,7 @@ class BelegFacsAdmin(admin.ModelAdmin):
 
 @admin.register(GeoRelationBundesland)
 class GeoRelationBundeslandAdmin(admin.ModelAdmin):
-    list_display = ["beleg", "ort"]
+    list_display = ["beleg", "ort", "corresp"]
     search_fields = ["beleg__dboe_id", "ort__name"]
     autocomplete_fields = ["beleg", "ort"]
     ordering = ["beleg", "ort"]
@@ -50,7 +50,7 @@ class GeoRelationBundeslandAdmin(admin.ModelAdmin):
 
 @admin.register(GeoRelationGregion)
 class GeoRelationGregionAdmin(admin.ModelAdmin):
-    list_display = ["beleg", "ort"]
+    list_display = ["beleg", "ort", "corresp"]
     search_fields = ["beleg__dboe_id", "ort__name"]
     autocomplete_fields = ["beleg", "ort"]
     ordering = ["beleg", "ort"]
@@ -59,7 +59,7 @@ class GeoRelationGregionAdmin(admin.ModelAdmin):
 
 @admin.register(GeoRelationKregion)
 class GeoRelationKregionAdmin(admin.ModelAdmin):
-    list_display = ["beleg", "ort"]
+    list_display = ["beleg", "ort", "corresp"]
     search_fields = ["beleg__dboe_id", "ort__name"]
     autocomplete_fields = ["beleg", "ort"]
     ordering = ["beleg", "ort"]
@@ -68,7 +68,7 @@ class GeoRelationKregionAdmin(admin.ModelAdmin):
 
 @admin.register(GeoRelationOrt)
 class GeoRelationOrtAdmin(admin.ModelAdmin):
-    list_display = ["beleg", "ort"]
+    list_display = ["beleg", "ort", "corresp"]
     search_fields = ["beleg__dboe_id", "ort__name"]
     autocomplete_fields = ["beleg", "ort"]
     ordering = ["beleg", "ort"]

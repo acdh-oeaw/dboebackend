@@ -1,0 +1,64 @@
+{% for x in object.georelationort_set.all %}
+    <usg type="geo" corresp="{{ x.corresp }}">
+        <listPlace>
+            <place type="Ort">
+                <placeName>{{ x.ort }}</placeName>{% if x.ort.kregion %}
+                <region type="Kleinregion">
+                    <placeName>{{ x.ort.kregion }}</placeName>
+                    <idno type="sigle">{{ x.ort.kregion.sigle }}</idno>
+                </region>{% endif %}{% if x.ort.gregion %}
+                <region type="Großregion">
+                    <placeName>{{ x.ort.gregion }}</placeName>
+                    <idno type="sigle">{{ x.ort.gregion.sigle }}</idno>
+                </region>{% endif %}{% if x.ort.bundesland %}
+                <region type="Bundesland">
+                    <placeName>{{ x.ort.bundesland }}</placeName>
+                    <idno type="sigle">{{ x.ort.bundesland.sigle }}</idno>
+                </region>{% endif %}
+                <idno type="sigle">{{ x.ort.sigle }}</idno>
+            </place>
+        </listPlace>
+    </usg>
+{% endfor %}
+{% for x in object.georelationkregion_set.all %}
+    <usg type="geo" corresp="{{ x.corresp }}">
+        <listPlace>
+            <place type="Kleinregion">
+                <placeName>{{ x.ort }}</placeName>{% if x.ort.gregion %}
+                <region type="Großregion">
+                    <placeName>{{ x.ort.gregion }}</placeName>
+                    <idno type="sigle">{{ x.ort.gregion.sigle }}</idno>
+                </region>{% endif %}{% if x.ort.bundesland %}
+                <region type="Bundesland">
+                    <placeName>{{ x.ort.bundesland }}</placeName>
+                    <idno type="sigle">{{ x.ort.bundesland.sigle }}</idno>
+                </region>{% endif %}
+                <idno type="sigle">{{ x.ort.sigle }}</idno>
+            </place>
+        </listPlace>
+    </usg>
+{% endfor %}
+{% for x in object.georelationgregion_set.all %}
+    <usg type="geo" corresp="{{ x.corresp }}">
+        <listPlace>
+            <place type="Großregion">
+                <placeName>{{ x.ort }}</placeName>{% if x.ort.bundesland %}
+                <region type="Bundesland">
+                    <placeName>{{ x.ort.bundesland }}</placeName>
+                    <idno type="sigle">{{ x.ort.bundesland.sigle }}</idno>
+                </region>{% endif %}
+                <idno type="sigle">{{ x.ort.sigle }}</idno>
+            </place>
+        </listPlace>
+    </usg>
+{% endfor %}
+{% for x in object.georelationbundesland_set.all %}
+    <usg type="geo" corresp="{{ x.corresp }}">
+        <listPlace>
+            <place type="Großregion">
+                <placeName>{{ x.ort }}</placeName>
+                <idno type="sigle">{{ x.ort.sigle }}</idno>
+            </place>
+        </listPlace>
+    </usg>
+{% endfor %}
