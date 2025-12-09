@@ -65,26 +65,7 @@
         <bibl>{{ x }}</bibl>
     </ref>{% endfor %}{% if object.ref_type_sni %}
     <ref type="sni">{{ object.ref_type_sni }}</ref>{% endif %}{% if object.ref_type_dbo %}
-    <ref type="dbo">{{ object.ref_type_dbo }}</ref>{% endif %}{% if object.ort %}
-    <usg type="geo" corresp="this:QDB">
-        <listPlace>
-            <place type="Ort">
-                <placeName>{{ object.ort.name }}</placeName>
-                <region type="Kleinregion">
-                    <placeName>{{ object.ort.kregion }}</placeName>
-                    <idno type="sigle">{{ object.ort.kregion.sigle }}</idno>
-                </region>
-                <region type="Großregion">
-                    <placeName>{{ object.ort.gregion }}</placeName>
-                    <idno type="sigle">{{ object.ort.gregion.sigle }}</idno>
-                </region>
-                <region type="Bundesland">
-                    <placeName>{{ object.ort.bundesland }}</placeName>
-                    <idno type="sigle">{{ object.ort.bundesland.sigle }}</idno>
-                </region>
-                <idno type="sigle">{{ object.ort.sigle }}</idno>
-            </place>
-        </listPlace>
-    </usg>{% endif %}
+    <ref type="dbo">{{ object.ref_type_dbo }}</ref>{% endif %}
+    {% include 'belege/partials/listplace.j2' %}
 </entry>
 {% endblock %}

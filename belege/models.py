@@ -1417,4 +1417,4 @@ class GeoRelationOrt(models.Model):
         ordering = ["ort"]
 
     def __str__(self):
-        return f"{self.ort} ({self.beleg})"
+        return f"{self.ort} ({self.beleg}) {self.corresp}"
