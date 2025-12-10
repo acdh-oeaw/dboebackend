@@ -3,6 +3,7 @@ from django.db import models
 
 from belege.models import (
     AnmerkungLautung,
+    Annotation,
     Beleg,
     BelegFacs,
     BundesLand,
@@ -20,6 +21,15 @@ from belege.models import (
     Sense,
     ZusatzLemma,
 )
+
+
+@admin.register(Annotation)
+class AnnotationAdmin(admin.ModelAdmin):
+    list_display = ["kontext", "tool", "created_at", "updated_at"]
+    search_fields = ["kontext__dboe_id", "tool"]
+    autocomplete_fields = ["kontext"]
+    ordering = ["kontext", "created_at"]
+    list_per_page = 20
 
 
 @admin.register(Facsimile)

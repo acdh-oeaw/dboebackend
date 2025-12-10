@@ -489,6 +489,40 @@ class Citation(models.Model):
         super().save(*args, **kwargs)
 
 
+class Annotation(models.Model):
+    kontext = models.ForeignKey(
+        "Citation",
+        verbose_name="Kontext",
+        on_delete=models.CASCADE,
+        related_name="annotation",
+    )
+    payload = models.JSONField(
+        blank=True,
+        null=True,
+        verbose_name="Annotated text",
+        help_text="stores result of NLP processing",
+    )
+    tool = models.CharField(
+        blank=True, null=True, verbose_name="Tool/Model used to process the data"
+    )
+    source_field = models.CharField(
+        default="quote_text",
+        max_length=250,
+        verbose_name="Source field",
+        help_text="name of the field, the annotated text was derived from",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Annotation"
+        verbose_name_plural = "Annotations"
+        ordering = ["kontext", "created_at"]
+
+    def __str__(self):
+        return f"Annotation for {self.kontext.dboe_id} using {self.tool}"
+
+
 class Lautung(models.Model):
     """
     Django model representing a tei:form[@type="lautung"] node.
