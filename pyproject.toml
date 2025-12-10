@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "acdh-tei-pyutils>=1.6",
     "crispy-bootstrap5>=2025.4",
+    "de-core-news-sm",
     "dj-database-url>=3.0.0",
     "django>=5.2.1",
     "django-autocomplete-light>=3.12.1",
@@ -23,6 +24,7 @@ dependencies = [
     "gunicorn>=23.0.0",
     "opensearch-py>=3.0.0",
     "psycopg2-binary>=2.9.10",
+    "spacy>=3.8.11",
 ]
 
 [dependency-groups]
@@ -34,3 +36,6 @@ dev = [
     "jupyterlab>=4.4.3",
     "ruff>=0.13.1",
 ]
+
+[tool.uv.sources]
+de-core-news-sm = { url = "https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-3.8.0/de_core_news_sm-3.8.0-py3-none-any.whl" }
