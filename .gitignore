@@ -45,3 +45,4 @@ schema.yaml
 #belege-json-dumps
 media/belege/*.json
 play.py
+foo.csv
