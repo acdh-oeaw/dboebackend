@@ -14,7 +14,6 @@ dependencies = [
     "django-crispy-forms>=2.4",
     "django-extensions>=4.1",
     "django-filter>=25.1",
-    "django-guardian>=3.0.0",
     "django-jsonform>=2.23.2",
     "django-spaghetti-and-meatballs>=0.4.2",
     "djangorestframework>=3.16.0",
