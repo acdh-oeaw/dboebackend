@@ -40,7 +40,7 @@ After this is done, run
 uv run manage.py update
 ```
 
-create typesenes index (and dump data as json) (default batch-size is 5000)
+populates OpenSearch index (and dump data as json) (default batch-size is 5000)
 ```shell
 uv run manage.py index
 uv run manage.py index --batch-size 200
