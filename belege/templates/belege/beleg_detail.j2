@@ -45,7 +45,9 @@
                 <gram>Z</gram>{% endif %}
             </gramGrp>
         </re>{% endfor %}{% if x.definition %}
-        <def corresp="this:WBD/KT{{ x.number }}" xml:lang="{{ x.definition_lang }}">{{ x.definition }}</def>{% endif %}{% if x.fragebogen_nummer %}
+        <def corresp="this:WBD/KT{{ x.number }}" xml:lang="{{ x.definition_lang }}">{{ x.definition }}</def>
+        {% include 'belege/partials/definitions_wtags.j2' %}
+        {% endif %}{% if x.fragebogen_nummer %}
         <ref type="fragebogenNummer">{{ x.fragebogen_nummer }}</ref>{% endif %}
     </cit>{% endfor %}{% if object.xr_type_verweise_o %}
     <xr type="verweise" resp="O">{{ object.xr_type_verweise_o }}</xr>{% endif %}{% if object.xr_type_verweise_b %}

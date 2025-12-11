@@ -1,0 +1,7 @@
+{% for y in x.annotation.all %}
+<def corresp="this:WBD/KT{{ x.number }}" xml:lang="{{ x.definition_lang }}" resp="{{ y.tool }}" change="{{ y.updated_at|date:'Y-m-d' }}">
+{% for w in y.payload %}
+<w xml:id="{{ x.dboe_id }}.{{ forloop.counter|stringformat:'03d' }}" pos="{{ w.pos }}" norm="{{ w.lemma }}">{{ w.text }}</w>
+{% endfor %}
+</def>
+{% endfor %}
