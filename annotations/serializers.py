@@ -1,9 +1,20 @@
 # -*- coding: utf-8 -*-
-from rest_framework import serializers
-from .models import Tag, Category, Es_document, Collection, Autor_Artikel, Edit_of_article, Lemma, Annotation
-from django.contrib.auth.models import User
 from xml.etree import ElementTree as ET
+
 from django.conf import settings
+from django.contrib.auth.models import User
+from rest_framework import serializers
+
+from .models import (
+    Annotation,
+    Autor_Artikel,
+    Category,
+    Collection,
+    Edit_of_article,
+    Es_document,
+    Lemma,
+    Tag,
+)
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -47,7 +58,6 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class TagListSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Tag
         fields = [
@@ -101,7 +111,6 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class Es_documentListSerializer(serializers.HyperlinkedModelSerializer):
-
     # in_collections = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='collection-detail')
 
     class Meta:
@@ -126,7 +135,6 @@ class Es_documentListSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class Es_documentSerializer(serializers.HyperlinkedModelSerializer):
-
     in_collections = serializers.HyperlinkedRelatedField(
         many=True, read_only=True, view_name="collection-detail"
     )
@@ -240,7 +248,6 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class AutorArtikelSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Autor_Artikel
         fields = ["id", "url", "lemma_id", "bearbeiter_id"]
@@ -348,14 +355,14 @@ class LemmaSerializer(serializers.HyperlinkedModelSerializer):
 class CollectionListSerializer(serializers.HyperlinkedModelSerializer):
     # created_by = serializers.HyperlinkedRelatedField(read_only=True, view_name='user-detail')
     # created_by = serializers.StringRelatedField()
-    document_count = serializers.SerializerMethodField("get_document_docs")
+    # document_count = serializers.SerializerMethodField("get_document_docs")
     # tags = serializers.HyperlinkedRelatedField( many=True, read_only=True, view_name='tag-detail')
-    category = serializers.CharField(
-        source="category.name", read_only=True, allow_null=True
-    )
+    # category = serializers.CharField(
+    #     source="category.name", read_only=True, allow_null=True
+    # )
 
-    def get_document_docs(self, document) -> int:
-        return document.es_document.all().count()
+    # def get_document_docs(self, document) -> int:
+    #     return document.es_document.all().count()
 
     class Meta:
         model = Collection
@@ -366,7 +373,7 @@ class CollectionListSerializer(serializers.HyperlinkedModelSerializer):
             "description",
             "category",
             # 'es_document',
-            "document_count",
+            # "document_count",
             # 'comment',
             # 'annotations',
             # 'created_by',

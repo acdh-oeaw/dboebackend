@@ -1,61 +1,60 @@
-from rest_framework import viewsets
-from rest_framework import pagination, filters
-from .serializers import (
-    UserListSerializer,
-    UserSerializer,
-    CategorySerializer,
-    CollectionListSerializer,
-    TagSerializer,
-    LemmaSerializer,
-    EditOfArticleSerializer,
-    AutorArtikelSerializer,
-    Es_documentSerializer,
-    CollectionSerializer,
-    AnnotationSerializer,
-    TagListSerializer,
-    EditOfArticleStSerializer,
-    EditOfArticleLemmaSerializer,
-    EditOfArticleUserSerializer,
-    Es_documentSerializerForScans,
-    Es_documentSerializerForCache,
-    Es_documentListSerializer,
-)
-from .models import (
-    Tag,
-    Category,
-    Es_document,
-    Collection,
-    Autor_Artikel,
-    Edit_of_article,
-    Lemma,
-    Annotation,
-)
-from django.contrib.auth.models import User
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search
-from django.conf import settings
-from django_filters.rest_framework import DjangoFilterBackend
-from elasticsearch_dsl import Q
-from .filters import (
-    CategoryFilter,
-    CollectionFilter,
-    TagFilter,
-    LemmaFilter,
-    UserFilter,
-    EditOfArticleFilter,
-    AnnotationFilter,
-)
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
-from rest_framework.permissions import DjangoObjectPermissions
-from dboeannotation.metadata import PROJECT_METADATA as PM
 from copy import deepcopy
-from rest_framework import status
-from drf_spectacular.utils import extend_schema
 from typing import Dict
 
+from django.conf import settings
+from django.contrib.auth.models import User
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
+from elasticsearch import Elasticsearch
+from elasticsearch_dsl import Q, Search
+from rest_framework import filters, pagination, status, viewsets
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.decorators import api_view
+from rest_framework.permissions import DjangoObjectPermissions
+from rest_framework.response import Response
+
+from dboeannotation.metadata import PROJECT_METADATA as PM
+
+from .filters import (
+    AnnotationFilter,
+    CategoryFilter,
+    CollectionFilter,
+    EditOfArticleFilter,
+    LemmaFilter,
+    TagFilter,
+    UserFilter,
+)
+from .models import (
+    Annotation,
+    Autor_Artikel,
+    Category,
+    Collection,
+    Edit_of_article,
+    Es_document,
+    Lemma,
+    Tag,
+)
+from .serializers import (
+    AnnotationSerializer,
+    AutorArtikelSerializer,
+    CategorySerializer,
+    CollectionListSerializer,
+    CollectionSerializer,
+    EditOfArticleLemmaSerializer,
+    EditOfArticleSerializer,
+    EditOfArticleStSerializer,
+    EditOfArticleUserSerializer,
+    Es_documentListSerializer,
+    Es_documentSerializer,
+    Es_documentSerializerForCache,
+    Es_documentSerializerForScans,
+    LemmaSerializer,
+    TagListSerializer,
+    TagSerializer,
+    UserListSerializer,
+    UserSerializer,
+)
 
 # AnonymousUser can view objects if granted 'view' permission
 
@@ -142,7 +141,6 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 class LemmaViewSet(viewsets.ModelViewSet):
-
     def get_queryset(self):
         queryset = Lemma.objects.all()
         parameter = self.request.query_params.get("has_collection", None)
@@ -252,7 +250,6 @@ class Es_documentViewSet(viewsets.ModelViewSet):
                 )
 
     def partial_update(self, request, *args, **kwargs):
-
         allowed_props = {"xml", "xml_error_message"}
         if request.data.keys() <= allowed_props:
             es_document = self.get_object()

@@ -1,12 +1,13 @@
+from enum import Enum
+
+from django.contrib.auth.models import Group, User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django.contrib.auth.models import User, Group
-from django.utils import timezone
-from django.db.models.signals import post_save, m2m_changed
-from guardian.shortcuts import assign_perm, remove_perm
-from django.dispatch import receiver
 from django.db.models import Q
-from enum import Enum
+from django.db.models.signals import m2m_changed, post_save
+from django.dispatch import receiver
+from django.utils import timezone
+from guardian.shortcuts import assign_perm, remove_perm
 
 
 class Category(models.Model):
@@ -298,7 +299,6 @@ class Annotation(models.Model):
 
 
 class Autor_Artikel(models.Model):
-
     lemma_id = models.ForeignKey(
         Lemma,
         on_delete=models.SET_NULL,
