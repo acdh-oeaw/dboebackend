@@ -60,7 +60,9 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
     belege_count = serializers.IntegerField(read_only=True)
-    belege_ids = serializers.ListField(read_only=True)
+    belege_ids = serializers.ListField(
+        read_only=False, required=False, allow_empty=True
+    )
 
     class Meta:
         model = Tag
