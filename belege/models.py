@@ -1056,9 +1056,9 @@ class Beleg(models.Model):
             except AttributeError:
                 pass
         ret["siglen"] = list(siglen)
-        ret["bundeslaender"] = [x.name for x in bundeslaender if x]
-        ret["gregion"] = [x.name for x in gregion if x]
-        ret["kregion"] = [x.name for x in kregion if x]
+        ret["bundeslaender"] = [f"{x.name} ({x.sigle})" for x in bundeslaender if x]
+        ret["gregion"] = [f"{x.name} ({x.sigle})" for x in gregion if x]
+        ret["kregion"] = [f"{x.name} ({x.sigle})" for x in kregion if x]
         ret["orte"] = list(orte)
         ret["orig_orte"] = orig_orte
 
