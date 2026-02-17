@@ -267,7 +267,7 @@ class Collection(models.Model):
             return f"{self.id}"
 
     class Meta:
-        ordering = ["id"]
+        ordering = ["-modified"]
 
 
 class Annotation(models.Model):
