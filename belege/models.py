@@ -1070,9 +1070,11 @@ class Beleg(models.Model):
         # Lautungen
         for x in self.lautungen.all():
             gram_key = f"gram_lt{x.number}"
-            ret[gram_key] = [x.pron_gram]
+            value = getattr(x, "pron_gram")
+            if value:
+                ret[gram_key] = value
             teut_key = f"lt{x.number}_teuthonista"
-            ret[teut_key] = [x.pron]
+            ret[teut_key] = x.pron
 
         # Lehnwörter
         for x in self.lehnwoerter.all():
