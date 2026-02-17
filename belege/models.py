@@ -1071,8 +1071,7 @@ class Beleg(models.Model):
         for x in self.lautungen.all():
             gram_key = f"gram_lt{x.number}"
             value = getattr(x, "pron_gram")
-            if value:
-                ret[gram_key] = value
+            ret[gram_key] = value
             teut_key = f"lt{x.number}_teuthonista"
             ret[teut_key] = x.pron
 
