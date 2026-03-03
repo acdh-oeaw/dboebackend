@@ -674,6 +674,13 @@ class Beleg(models.Model):
         verbose_name="Hauptlemma",
         help_text="Hauptlemma' beinhaltet sämtliche Einträge (inklusive Komposita und Wortbildungsvarianten), die einem bestimmten Lemma zugeordnet werden können",  # noqa: E501
     ).set_extra(xpath="./tei:form[@type='hauptlemma'][1]/tei:orth", node_type="text")
+    hauptlemma_norm = models.CharField(
+        blank=True,
+        null=True,
+        max_length=260,
+        verbose_name="Hauptlemma (normalisiert)",
+        help_text="Normalisiertes Hauptlemma",
+    )
     nebenlemma = models.CharField(
         blank=True,
         null=True,
@@ -992,6 +999,7 @@ class Beleg(models.Model):
             base = {
                 "id": self.dboe_id,
                 "hl": self.hauptlemma,
+                "hl_norm": self.hauptlemma_norm,
                 "nl": self.nebenlemma,
                 "qu": self.quelle,
                 "bibl": self.bibl,
