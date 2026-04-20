@@ -336,9 +336,14 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
         return docs
 
     def get_tags(self, obj) -> list:
-        docs = obj.es_document.all()
+        docs = obj.beleg.all()
         tags = {}
         for x in docs:
+            for y in x.tag.all():
+                tags[y.id] = {"id": y.id, "name": y.name, "color": y.color}
+        # ToDo:
+        # remove this after in the futer when we can rid of ES_document
+        for x in obj.es_document.all():
             for y in x.tag.all():
                 tags[y.id] = {"id": y.id, "name": y.name, "color": y.color}
 
