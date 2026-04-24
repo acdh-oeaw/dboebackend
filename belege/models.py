@@ -85,9 +85,6 @@ class ZusatzLemma(models.Model):
         related_name="zusatz_lemma",
     )
     number = models.PositiveIntegerField(default=1, verbose_name="Order number")
-    orig_xml = XMLField(
-        verbose_name="XML Node", help_text="tei:form[@type='lautung'] node"
-    )
     form_orth = models.CharField(
         blank=True, null=True, max_length=250, verbose_name="Lemma"
     ).set_extra(xpath="./tei:form/tei:orth", node_type="text")
@@ -117,12 +114,13 @@ class ZusatzLemma(models.Model):
         else:
             return f"{self.dboe_id}"
 
-    def save(self, *args, **kwargs):
-        if self.orig_xml is not None:
+    def save(self, orig_xml=None, *args, **kwargs):
+        xml_source = orig_xml
+        if xml_source is not None:
             try:
-                doc = TeiReader(self.orig_xml)
+                doc = TeiReader(xml_source)
             except AttributeError:
-                doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
+                doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
             for field in self._meta.fields:
                 if (
                     hasattr(field, "extra")
@@ -161,7 +159,6 @@ class Citation(models.Model):
         related_name="citations",
     )
     number = models.PositiveIntegerField(default=1, verbose_name="order number")
-    orig_xml = XMLField(verbose_name="original tei-cit node")
     quote_lang = models.CharField(
         max_length=3,
         choices=LANG_CHOICES,
@@ -257,12 +254,13 @@ class Citation(models.Model):
         verbose_name_plural = "Kontexte"
         ordering = ["beleg", "number"]
 
-    def save(self, add_zusatzlemma=False, *args, **kwargs):
-        if self.orig_xml is not None:
+    def save(self, add_zusatzlemma=False, orig_xml=None, *args, **kwargs):
+        xml_source = orig_xml
+        if xml_source is not None:
             try:
-                doc = TeiReader(self.orig_xml)
+                doc = TeiReader(xml_source)
             except AttributeError:
-                doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
+                doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
             for field in self._meta.fields:
                 if (
                     hasattr(field, "extra")
@@ -296,19 +294,21 @@ class Citation(models.Model):
                             value = value.strip()
                         values.append(value)
                     setattr(self, field.name, values)
-        if self.orig_xml is not None and add_zusatzlemma:
+        if xml_source is not None and add_zusatzlemma:
             items = doc.any_xpath("./tei:re")
             for number, item in enumerate(items, start=1):
                 xml_id = get_xmlid(item)
-                orig_xml = ET.tostring(item, encoding="unicode")
+                item_orig_xml = ET.tostring(item, encoding="unicode")
                 try:
                     item = ZusatzLemma.objects.get(dboe_id=xml_id)
                 except ZusatzLemma.DoesNotExist:
                     item = ZusatzLemma(
-                        dboe_id=xml_id, citation=self, number=number, orig_xml=orig_xml
+                        dboe_id=xml_id,
+                        citation=self,
+                        number=number,
                     )
                 try:
-                    item.save()
+                    item.save(orig_xml=item_orig_xml)
                 except Exception as e:
                     print(f"Error saving ZusatzLemma {xml_id}: {e}")
         super().save(*args, **kwargs)
@@ -366,9 +366,6 @@ class Lautung(models.Model):
         related_name="lautungen",
     )
     number = models.PositiveIntegerField(default=1, verbose_name="Order number")
-    orig_xml = XMLField(
-        verbose_name="XML Node", help_text="tei:form[@type='lautung'] node"
-    )
     pron = models.CharField(
         blank=True,
         null=True,
@@ -400,12 +397,13 @@ class Lautung(models.Model):
     def __str__(self):
         return f"{self.pron} ({self.beleg})"
 
-    def save(self, *args, **kwargs):
-        if self.orig_xml is not None:
+    def save(self, orig_xml=None, *args, **kwargs):
+        xml_source = orig_xml
+        if xml_source is not None:
             try:
-                doc = TeiReader(self.orig_xml)
+                doc = TeiReader(xml_source)
             except AttributeError:
-                doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
+                doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
             for field in self._meta.fields:
                 if (
                     hasattr(field, "extra")
@@ -444,9 +442,6 @@ class LehnWort(models.Model):
         related_name="lehnwoerter",
     )
     number = models.PositiveIntegerField(default=1, verbose_name="Order number")
-    orig_xml = XMLField(
-        verbose_name="XML Node", help_text="tei:form[@type='lehnwort'] node"
-    )
     pron = models.CharField(
         blank=True,
         null=True,
@@ -477,12 +472,13 @@ class LehnWort(models.Model):
     def __str__(self):
         return f"{self.pron} ({self.beleg})"
 
-    def save(self, *args, **kwargs):
-        if self.orig_xml is not None:
+    def save(self, orig_xml=None, *args, **kwargs):
+        xml_source = orig_xml
+        if xml_source is not None:
             try:
-                doc = TeiReader(self.orig_xml)
+                doc = TeiReader(xml_source)
             except AttributeError:
-                doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
+                doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
             for field in self._meta.fields:
                 if (
                     hasattr(field, "extra")
@@ -565,7 +561,6 @@ class Sense(models.Model):
         related_name="bedeutungen",
     )
     number = models.PositiveIntegerField(default=1, verbose_name="Order number")
-    orig_xml = XMLField(verbose_name="XML Node", help_text="tei:sense node")
     definition = models.TextField(
         blank=True,
         null=True,
@@ -603,12 +598,13 @@ class Sense(models.Model):
     def __str__(self):
         return f"{self.definition[:25]} ... ({self.beleg})"
 
-    def save(self, *args, **kwargs):
-        if self.orig_xml is not None:
+    def save(self, orig_xml=None, *args, **kwargs):
+        xml_source = orig_xml
+        if xml_source is not None:
             try:
-                doc = TeiReader(self.orig_xml)
+                doc = TeiReader(xml_source)
             except AttributeError:
-                doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
+                doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
             for field in self._meta.fields:
                 if (
                     hasattr(field, "extra")
@@ -841,12 +837,13 @@ class Beleg(models.Model):
         *args,
         **kwargs,
     ):
-        if self.orig_xml is not None:
+        xml_source = self.orig_xml
+        if xml_source is not None:
             self.import_issue = False
             try:
-                doc = TeiReader(self.orig_xml)
+                doc = TeiReader(xml_source)
             except AttributeError:
-                doc = TeiReader(ET.tostring(self.orig_xml).decode("utf-8"))
+                doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
             for field in self._meta.fields:
                 if (
                     hasattr(field, "extra")
@@ -854,7 +851,7 @@ class Beleg(models.Model):
                     and isinstance(field, (models.CharField, models.TextField))
                     and not getattr(self, field.name)
                 ):
-                    if self.orig_xml is not None:
+                    if xml_source is not None:
                         xpath_expr = field.extra["xpath"]
                         try:
                             nodes = doc.any_xpath(xpath_expr)[0]
@@ -887,7 +884,7 @@ class Beleg(models.Model):
                             value = value.strip()
                         values.append(value)
                     setattr(self, field.name, values)
-        if self.orig_xml is not None and add_anmkerung_laut:
+        if xml_source is not None and add_anmkerung_laut:
             items = doc.any_xpath(
                 "./tei:note[@type='anmerkung' and @resp and @corresp]"
             )
@@ -912,7 +909,7 @@ class Beleg(models.Model):
                     item_object.save()
                 except Exception as e:
                     print(f"Error saving AnmerkungLautung {dboe_id}: {e}")
-        if self.orig_xml is not None and add_citations:
+        if xml_source is not None and add_citations:
             items = doc.any_xpath("./tei:cit")
             for n, item in enumerate(items, start=1):
                 xml_id = get_xmlid(item)
@@ -920,18 +917,20 @@ class Beleg(models.Model):
                     number = item.attrib["n"]
                 except KeyError:
                     number = n
-                orig_xml = ET.tostring(item, encoding="unicode")
+                item_orig_xml = ET.tostring(item, encoding="unicode")
                 try:
                     item = Citation.objects.get(dboe_id=xml_id)
                 except Citation.DoesNotExist:
                     item = Citation(
-                        dboe_id=xml_id, beleg=self, number=number, orig_xml=orig_xml
+                        dboe_id=xml_id,
+                        beleg=self,
+                        number=number,
                     )
                 try:
-                    item.save()
+                    item.save(orig_xml=item_orig_xml)
                 except Exception as e:
                     print(f"Error saving citation {xml_id}: {e}")
-        if self.orig_xml is not None and add_lautungen:
+        if xml_source is not None and add_lautungen:
             items = doc.any_xpath("./tei:form[@type='lautung']")
             for item in items:
                 xml_id = get_xmlid(item)
@@ -939,18 +938,20 @@ class Beleg(models.Model):
                     number = item.attrib["n"]
                 except KeyError:
                     number = 1
-                orig_xml = ET.tostring(item, encoding="unicode")
+                item_orig_xml = ET.tostring(item, encoding="unicode")
                 try:
                     item = Lautung.objects.get(dboe_id=xml_id)
                 except Lautung.DoesNotExist:
                     item = Lautung(
-                        dboe_id=xml_id, beleg=self, number=number, orig_xml=orig_xml
+                        dboe_id=xml_id,
+                        beleg=self,
+                        number=number,
                     )
                 try:
-                    item.save()
+                    item.save(orig_xml=item_orig_xml)
                 except Exception as e:
                     print(f"Error saving lautung {xml_id}: {e}")
-        if self.orig_xml is not None and add_lehnwort:
+        if xml_source is not None and add_lehnwort:
             items = doc.any_xpath("./tei:form[@type='lehnwort']")
             for item in items:
                 xml_id = get_xmlid(item)
@@ -958,31 +959,35 @@ class Beleg(models.Model):
                     number = item.attrib["n"]
                 except KeyError:
                     number = 1
-                orig_xml = ET.tostring(item, encoding="unicode")
+                item_orig_xml = ET.tostring(item, encoding="unicode")
                 try:
                     item = LehnWort.objects.get(dboe_id=xml_id)
                 except LehnWort.DoesNotExist:
                     item = LehnWort(
-                        dboe_id=xml_id, beleg=self, number=number, orig_xml=orig_xml
+                        dboe_id=xml_id,
+                        beleg=self,
+                        number=number,
                     )
                 try:
-                    item.save()
+                    item.save(orig_xml=item_orig_xml)
                 except Exception as e:
                     print(f"Error saving LehnWort {xml_id}: {e}")
-        if self.orig_xml is not None and add_sense:
+        if xml_source is not None and add_sense:
             items = doc.any_xpath("./tei:sense")
             for i, item in enumerate(items, start=1):
                 xml_id = get_xmlid(item)
                 number = i
-                orig_xml = ET.tostring(item, encoding="unicode")
+                item_orig_xml = ET.tostring(item, encoding="unicode")
                 try:
                     item = Sense.objects.get(dboe_id=xml_id)
                 except Sense.DoesNotExist:
                     item = Sense(
-                        dboe_id=xml_id, beleg=self, number=number, orig_xml=orig_xml
+                        dboe_id=xml_id,
+                        beleg=self,
+                        number=number,
                     )
                 try:
-                    item.save()
+                    item.save(orig_xml=item_orig_xml)
                 except Exception as e:
                     print(f"Error saving sense {xml_id}: {e}")
         if OS_CONNECTION:

@@ -14,7 +14,7 @@ class Command(BaseCommand):
     help = "imports dboe xmls"
 
     def handle(self, *args, **options):
-        files = sorted(glob.glob("/home/csae8092/repos/dboe/dboe_orig_xml/d*.xml"))
+        files = sorted(glob.glob("/home/csae8092/repos/dboe/dboe_orig_xml/e*.xml"))
         print("importing data from {len(files)} files")
         for f, x in enumerate(files, start=1):
             print(f"{f}/{len(files)} files")
@@ -33,4 +33,10 @@ class Command(BaseCommand):
                 except IndexError:
                     beleg.xeno_data = "NO MATCHING ENTRY FOUND: HANSI4EVER"
                     beleg.import_issue = True
-                beleg.save()
+                beleg.save(
+                    add_citations=True,
+                    add_lautungen=True,
+                    add_sense=True,
+                    add_anmkerung_laut=True,
+                    add_lehnwort=True,
+                )
