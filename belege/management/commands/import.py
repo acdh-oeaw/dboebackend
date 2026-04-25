@@ -14,7 +14,12 @@ class Command(BaseCommand):
     help = "imports dboe xmls"
 
     def handle(self, *args, **options):
-        files = sorted(glob.glob("/home/csae8092/repos/dboe/dboe_orig_xml/e*.xml"))
+        failed_path = os.path.join(os.getcwd(), "failed.txt")
+        # Start with a fresh failure log for each import run.
+        with open(failed_path, "w", encoding="utf-8"):
+            pass
+
+        files = sorted(glob.glob("/home/csae8092/repos/dboe/dboe_orig_xml/f267*.xml"))
         print("importing data from {len(files)} files")
         for f, x in enumerate(files, start=1):
             print(f"{f}/{len(files)} files")
@@ -40,3 +45,16 @@ class Command(BaseCommand):
                     add_anmkerung_laut=True,
                     add_lehnwort=True,
                 )
+                try:
+                    beleg.save(
+                        add_citations=True,
+                        add_lautungen=True,
+                        add_sense=True,
+                        add_anmkerung_laut=True,
+                        add_lehnwort=True,
+                    )
+                except Exception as e:
+                    with open(failed_path, "a", encoding="utf-8") as failed_file:
+                        failed_file.write(
+                            f"{x}\t{xml_id}\t{str(e).replace(chr(10), ' ')}\n"
+                        )

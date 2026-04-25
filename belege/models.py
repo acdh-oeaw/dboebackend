@@ -912,7 +912,10 @@ class Beleg(models.Model):
         if xml_source is not None and add_citations:
             items = doc.any_xpath("./tei:cit")
             for n, item in enumerate(items, start=1):
-                xml_id = get_xmlid(item)
+                try:
+                    xml_id = get_xmlid(item)
+                except KeyError:
+                    xml_id = f"tu-cit-{self.dboe_id}_{n:0>2}"
                 try:
                     number = item.attrib["n"]
                 except KeyError:
@@ -932,8 +935,11 @@ class Beleg(models.Model):
                     print(f"Error saving citation {xml_id}: {e}")
         if xml_source is not None and add_lautungen:
             items = doc.any_xpath("./tei:form[@type='lautung']")
-            for item in items:
-                xml_id = get_xmlid(item)
+            for n, item in enumerate(items, start=1):
+                try:
+                    xml_id = get_xmlid(item)
+                except KeyError:
+                    xml_id = f"tu-lt-{self.dboe_id}_{n:0>2}"
                 try:
                     number = item.attrib["n"]
                 except KeyError:
@@ -953,8 +959,11 @@ class Beleg(models.Model):
                     print(f"Error saving lautung {xml_id}: {e}")
         if xml_source is not None and add_lehnwort:
             items = doc.any_xpath("./tei:form[@type='lehnwort']")
-            for item in items:
-                xml_id = get_xmlid(item)
+            for n, item in enumerate(items, start=1):
+                try:
+                    xml_id = get_xmlid(item)
+                except KeyError:
+                    xml_id = f"tu-lw-{self.dboe_id}_{n:0>2}"
                 try:
                     number = item.attrib["n"]
                 except KeyError:
@@ -974,9 +983,12 @@ class Beleg(models.Model):
                     print(f"Error saving LehnWort {xml_id}: {e}")
         if xml_source is not None and add_sense:
             items = doc.any_xpath("./tei:sense")
-            for i, item in enumerate(items, start=1):
-                xml_id = get_xmlid(item)
-                number = i
+            for n, item in enumerate(items, start=1):
+                try:
+                    xml_id = get_xmlid(item)
+                except KeyError:
+                    xml_id = f"tu-lw-{self.dboe_id}_{n:0>2}"
+                number = n
                 item_orig_xml = ET.tostring(item, encoding="unicode")
                 try:
                     item = Sense.objects.get(dboe_id=xml_id)
