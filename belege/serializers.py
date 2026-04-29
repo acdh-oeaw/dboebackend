@@ -28,10 +28,16 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
         view_name="belege-elastic-search-detail", read_only=True
     )
     hl = serializers.CharField(source="hauptlemma", required=False)
-    hl_norm = serializers.CharField(source="hauptlemma_norm", required=False)
-    nl = serializers.CharField(source="nebenlemma", required=False, allow_null=True)
+    hl_norm = serializers.CharField(
+        source="hauptlemma_norm", required=False, allow_blank=True, allow_null=True
+    )
+    nl = serializers.CharField(
+        source="nebenlemma", required=False, allow_blank=True, allow_null=True
+    )
     id = serializers.CharField(source="dboe_id", read_only=True)
-    qu = serializers.CharField(source="quelle", required=False, allow_null=True)
+    qu = serializers.CharField(
+        source="quelle", required=False, allow_blank=True, allow_null=True
+    )
     modify_tag = serializers.PrimaryKeyRelatedField(
         source="tag",
         many=True,
