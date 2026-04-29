@@ -17,6 +17,11 @@ POS_CHOICES = (
     ("Interj", "Interj"),
     ("Verb", "Verb"),
     ("Adj", "Adj"),
+    ("Pron", "Pron"),
+    ("Adv", "Adv"),
+    ("Prep", "Prep"),
+    ("Conj", "Conj"),
+    ("Num", "Num"),
 )
 
 LANG_CHOICES = (("bar", "bar"), ("de", "de"))
