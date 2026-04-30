@@ -13,15 +13,15 @@ from belege.utils import transform_record
 from siglen.models import BelegSigle
 
 POS_CHOICES = (
-    ("Subst", "Subst"),
-    ("Interj", "Interj"),
+    ("Subst", "Substantiv"),
+    ("Interj", "Interjektion"),
     ("Verb", "Verb"),
-    ("Adj", "Adj"),
-    ("Pron", "Pron"),
-    ("Adv", "Adv"),
-    ("Prep", "Prep"),
-    ("Conj", "Conj"),
-    ("Num", "Num"),
+    ("Adj", "Adjektiv"),
+    ("Pron", "Pronomen"),
+    ("Adv", "Adverb"),
+    ("Prep", "Präposition"),
+    ("Conj", "Konjunktion"),
+    ("Num", "Numeral"),
 )
 
 LANG_CHOICES = (("bar", "bar"), ("de", "de"))

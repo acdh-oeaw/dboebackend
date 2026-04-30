@@ -1,13 +1,15 @@
 from django.conf import settings
 from django.db import reset_queries
-from drf_spectacular.utils import OpenApiExample, extend_schema
-from rest_framework import mixins, viewsets
-from rest_framework.decorators import action
+from django.http import JsonResponse
+from drf_spectacular.utils import OpenApiExample, extend_schema, inline_serializer
+from rest_framework import mixins, serializers, viewsets
+from rest_framework.decorators import action, api_view
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from belege.api_utils import get_filterset_for_model
 from belege.models import (
+    POS_CHOICES,
     AnmerkungLautung,
     Beleg,
     BelegFacs,
@@ -28,6 +30,24 @@ from belege.serializers import (
     LehnWortSerializer,
     SenseSerializer,
 )
+
+
+@extend_schema(
+    responses={
+        200: inline_serializer(
+            name="PosTag",
+            fields={
+                "label": serializers.CharField(),
+                "value": serializers.CharField(),
+            },
+            many=True,
+        )
+    }
+)
+@api_view(["get"])
+def get_pos_tags(request):
+    data = [{"label": x[1], "value": x[0]} for x in POS_CHOICES]
+    return JsonResponse(data, safe=False)
 
 
 class CustomPagination(PageNumberPagination):
