@@ -1043,6 +1043,7 @@ class Beleg(models.Model):
                 "bibl": self.bibl,
                 "pos": self.pos,
                 "archivzeile": self.archivzeile,
+                "internal_comment": self.internal_comment,
             }
 
         ret = dict(base)  # copy so we don't mutate caller provided dict

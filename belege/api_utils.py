@@ -66,9 +66,7 @@ def get_filterset_for_model(model_class, fields=None):
                 if fields and field_name not in fields:
                     continue
 
-                if isinstance(
-                    field, (models.CharField, models.TextField, models.BooleanField)
-                ):
+                if isinstance(field, (models.CharField, models.TextField)):
                     filters_dict[f"{field_name}"] = filters.CharFilter(
                         field_name=field_name,
                         lookup_expr="icontains",

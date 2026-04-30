@@ -38,6 +38,9 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
     qu = serializers.CharField(
         source="quelle", required=False, allow_blank=True, allow_null=True
     )
+    internal_comment = serializers.CharField(
+        required=False, allow_blank=True, allow_null=True
+    )
     modify_tag = serializers.PrimaryKeyRelatedField(
         source="tag",
         many=True,
@@ -59,6 +62,7 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
             "pos",
             "archivzeile",
             "modify_tag",
+            "internal_comment",
         ]
 
     def get_fields(self):
