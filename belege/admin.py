@@ -179,6 +179,7 @@ class BelegAdmin(admin.ModelAdmin):
                 models.TextField,
                 models.ForeignKey,
                 models.PositiveIntegerField,
+                models.BooleanField,
             ),
         )
     ]
@@ -187,7 +188,11 @@ class BelegAdmin(admin.ModelAdmin):
         for field in Beleg._meta.fields
         if isinstance(field, (models.CharField, models.TextField))
     ]
-    list_filter = ["import_issue", "pos"]
+    list_filter = [
+        "import_issue",
+        "pos",
+        "has_internal_comment",
+    ]
     ordering = ["dboe_id"]
     autocomplete_fields = ["tag", "collection"]
     list_per_page = 20
