@@ -98,7 +98,9 @@ class BelegViewSetElasticSearch(
 ):
     pagination_class = BelegePagination
     queryset = Beleg.objects.with_related()
-    filterset_class = get_filterset_for_model(Beleg, fields=["dboe_id", "collection"])
+    filterset_class = get_filterset_for_model(
+        Beleg, fields=["dboe_id", "collection", "has_internal_comment"]
+    )
     serializer_class = BelegSerializer
 
     def list(self, request, *args, **kwargs):
