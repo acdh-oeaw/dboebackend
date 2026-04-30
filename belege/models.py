@@ -4,6 +4,7 @@ from acdh_tei_pyutils.tei import TeiReader
 from acdh_tei_pyutils.utils import extract_fulltext, get_xmlid
 from acdh_xml_pyutils.xml import NSMAP
 from django.db import models
+from django.db.models import Index, Q
 from django_jsonform.models.fields import ArrayField
 
 from annotations.models import Collection, Tag
@@ -819,6 +820,13 @@ class Beleg(models.Model):
     sigle = models.ManyToManyField(
         "siglen.Sigle", blank=True, verbose_name="Sigle", through="siglen.BelegSigle"
     )
+    internal_comment = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="interne Kommentare",
+        help_text="Feld für interne Anmerkungen",
+    )
+    has_internal_comment = models.BooleanField(default=False)
 
     objects = BelegManager()
 
@@ -826,6 +834,13 @@ class Beleg(models.Model):
         verbose_name = "Beleg"
         verbose_name_plural = "Belege"
         ordering = ["dboe_id"]
+        indexes = [
+            Index(
+                name="beleg_has_comment_true_idx",
+                fields=["dboe_id"],
+                condition=Q(has_internal_comment=True),
+            )
+        ]
 
     def __str__(self):
         if self.hauptlemma:
@@ -1011,6 +1026,7 @@ class Beleg(models.Model):
             document = self.sanitize_representation()
             id = document["id"]
             client.index(index=OS_INDEX_NAME, body=document, id=id, refresh=True)
+        self.has_internal_comment = bool(self.internal_comment)
         super().save(*args, **kwargs)
 
     def build_representation(self, base: dict | None = None) -> dict:
