@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "webpage",
     "stats",
+    "mylogs",
 ]
 
 MIDDLEWARE = [
