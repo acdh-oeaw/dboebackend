@@ -45,3 +45,13 @@ class LogEntryApiTests(APITestCase):
         self.assertEqual(created.beleg_id, self.beleg.pk)
         self.assertEqual(created.username, "bob")
         self.assertNotEqual(created.payload, "client-payload")
+
+    def test_list_can_be_filtered_by_beleg(self):
+        other_beleg = Beleg.objects.create(dboe_id="test-2")
+        LogEntry.objects.create(beleg=other_beleg, username="charlie")
+
+        response = self.client.get(reverse("logs-list"), {"beleg": self.beleg.pk})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["beleg"], self.beleg.pk)
