@@ -13,6 +13,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         with open(os.path.join("data", "places.json"), "r", encoding="utf-8") as fp:
             data = json.load(fp)
+        print("creating sigle objects")
         for value in tqdm(data.values()):
             try:
                 Sigle.objects.get_or_create(
@@ -20,8 +21,8 @@ class Command(BaseCommand):
                     name=value["Bundesland"]["label"],
                     kind="bl",
                 )
-            except Exception as e:
-                print(f"Error creating Sigle {value} due to: {e}")
+            except Exception:
+                pass
             try:
                 if value["Großregion"]["idno"]:
                     Sigle.objects.get_or_create(
@@ -29,8 +30,8 @@ class Command(BaseCommand):
                         name=value["Großregion"]["label"],
                         kind="gr",
                     )
-            except Exception as e:
-                print(f"Error creating Sigle {value} due to: {e}")
+            except Exception:
+                pass
             try:
                 if value["Kleinregion"]["idno"]:
                     Sigle.objects.get_or_create(
@@ -38,8 +39,8 @@ class Command(BaseCommand):
                         name=value["Kleinregion"]["label"],
                         kind="kr",
                     )
-            except Exception as e:
-                print(f"Error creating Sigle {value} due to: {e}")
+            except Exception:
+                pass
             try:
                 if value["Ort"]["idno"]:
                     Sigle.objects.get_or_create(
@@ -47,8 +48,9 @@ class Command(BaseCommand):
                         name=value["Ort"]["label"],
                         kind="ort",
                     )
-            except Exception as e:
-                print(f"Error creating Sigle {value} due to: {e}")
+            except Exception:
+                pass
+        print("starting interlinking siglen")
         for value in tqdm(data.values()):
             if value["Ort"]["idno"]:
                 try:
@@ -87,4 +89,8 @@ class Command(BaseCommand):
                 except Sigle.DoesNotExist:
                     item.bl = None
                 item.save()
-        print("done")
+        print("done, now adding 'bl' to Bundesländer")
+        items = Sigle.objects.exclude(sigle__icontains=".")
+        for x in tqdm(items):
+            x.kind = "bl"
+            x.save()
