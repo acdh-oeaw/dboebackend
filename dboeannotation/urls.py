@@ -11,6 +11,7 @@ from rest_framework.authtoken import views
 
 from annotations import api_views
 from belege import api_views as belege_api_views
+from bibls import api_views as bibls_apis_views
 from mylogs import api_views as mylogs_api_views
 from siglen import api_views as siglen_api_views
 
@@ -20,6 +21,10 @@ router.register(
     belege_api_views.BelegViewSetElasticSearch,
     basename="belege-elastic-search",
 )
+router.register(
+    r"bibls", bibls_apis_views.BibliographicItemViewSet, basename="bibliographicitem"
+)
+router.register(r"bile-types", bibls_apis_views.BibliographicTypeViewSet)
 router.register(r"collections", api_views.CollectionViewSet)
 router.register(r"anmerkunglautung", belege_api_views.AnmerkungLautungViewSet)
 router.register(r"bedeutungen", belege_api_views.SenseViewSet)

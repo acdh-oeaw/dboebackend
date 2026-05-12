@@ -65,7 +65,6 @@ class BibliographicType(models.Model):
 
 class BibliographicItem(models.Model):
     sigle = models.CharField(
-        primary_key=True,
         max_length=50,
         verbose_name="Sigle",
         help_text="Sigle (ID). Darf nur einmal verwendet werden",
