@@ -63,6 +63,7 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
             "archivzeile",
             "modify_tag",
             "internal_comment",
+            "quelle_type",
         ]
 
     def get_fields(self):

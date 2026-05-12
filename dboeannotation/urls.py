@@ -24,7 +24,7 @@ router.register(
 router.register(
     r"bibls", bibls_apis_views.BibliographicItemViewSet, basename="bibliographicitem"
 )
-router.register(r"bile-types", bibls_apis_views.BibliographicTypeViewSet)
+router.register(r"bible-types", bibls_apis_views.BibliographicTypeViewSet)
 router.register(r"collections", api_views.CollectionViewSet)
 router.register(r"anmerkunglautung", belege_api_views.AnmerkungLautungViewSet)
 router.register(r"bedeutungen", belege_api_views.SenseViewSet)
