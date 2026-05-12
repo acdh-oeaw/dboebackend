@@ -635,7 +635,7 @@ class BelegManager(models.Manager):
     def with_related(self):
         """Return queryset with all related objects prefetched for optimal performance."""
 
-        return self.prefetch_related(
+        return self.select_related("quelle_type").prefetch_related(
             "facs",
             models.Prefetch(
                 "citations", queryset=Citation.objects.prefetch_related("zusatz_lemma")
@@ -819,6 +819,12 @@ class Beleg(models.Model):
     )
     sigle = models.ManyToManyField(
         "siglen.Sigle", blank=True, verbose_name="Sigle", through="siglen.BelegSigle"
+    )
+    quelle_type = models.ForeignKey(
+        "bibls.BibliographicType",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
     )
     internal_comment = models.TextField(
         blank=True,
@@ -1047,6 +1053,10 @@ class Beleg(models.Model):
             }
 
         ret = dict(base)  # copy so we don't mutate caller provided dict
+        if self.quelle_type:
+            ret["quelle_type"] = str(self.quelle_type).split(" >> ")
+        else:
+            ret["quelle_type"] = []
 
         # Collect simple references
         ret["tustep"] = self.xeno_data
