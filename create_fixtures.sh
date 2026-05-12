@@ -12,6 +12,9 @@
 # echo "create fixtures_belege"
 # uv run manage.py dump_object belege.beleg f243_qdb-d1e29146 e224_qdb-d1e65954 d198_qdbn-d16e17226 > fixtures_belege.json
 
+# echo "create fixtures_bibls"
+# uv run manage.py dump_object bibls.bibliographicitem 2 55 7 > fixtures_bibls.json
+
 # echo "merging fixturs"
 # uv run manage.py merge_fixtures fixtures_collection.json fixtures_belege.json > belege/fixtures/dump.json
 
