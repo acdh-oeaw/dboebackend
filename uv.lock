@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12"
 
 [[package]]
@@ -491,6 +491,7 @@ dependencies = [
     { name = "elasticsearch-dsl" },
     { name = "gunicorn" },
     { name = "opensearch-py" },
+    { name = "pandas" },
     { name = "psycopg2-binary" },
     { name = "spacy" },
 ]
@@ -525,6 +526,7 @@ requires-dist = [
     { name = "elasticsearch-dsl", specifier = ">=0.0.9" },
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "opensearch-py", specifier = ">=3.0.0" },
+    { name = "pandas", specifier = ">=2.3.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "spacy", specifier = ">=3.8.11" },
 ]
