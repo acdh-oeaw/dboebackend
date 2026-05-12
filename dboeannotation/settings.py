@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "webpage",
     "stats",
     "mylogs",
+    "bibls",
 ]
 
 MIDDLEWARE = [
