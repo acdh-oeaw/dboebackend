@@ -73,6 +73,12 @@ class BibliographicItem(models.Model):
     short_title = models.CharField(
         max_length=100, verbose_name="Kürzel", help_text="Kurztitel"
     )
+    full_title = models.CharField(
+        max_length=500, verbose_name="Titel", help_text="Volltitel"
+    )
+    bibl_type = models.ForeignKey(
+        "BibliographicType", verbose_name="Art der Quelle", on_delete=models.CASCADE
+    )
     year = models.CharField(max_length=50, verbose_name="Jahr", blank=True, null=True)
     volume = models.CharField(
         max_length=100,
@@ -81,11 +87,8 @@ class BibliographicItem(models.Model):
         blank=True,
         null=True,
     )
-    full_title = models.CharField(
-        max_length=250, verbose_name="Titel", help_text="Volltitel"
-    )
     author_last_name = models.CharField(
-        max_length=100,
+        max_length=150,
         verbose_name="Autor (Nachname)",
         help_text="Bei mehreren Autor*Innen: 'Benecke/Müller/Zarncke'",
         blank=True,
@@ -95,19 +98,22 @@ class BibliographicItem(models.Model):
         max_length=100,
         verbose_name="Autor (Vorname)",
         help_text="Bei mehreren Autor*Innen 'Georg Friedrich/Wilhelm/Friedrich'",
+        blank=True,
+        null=True,
     )
     place = models.CharField(
         max_length=100,
         verbose_name="Ort",
         help_text="Bei mehreren Orten: 'Innsbruck / München'",
+        blank=True,
+        null=True,
     )
     publisher = models.CharField(
         max_length=200,
         verbose_name="Verlag",
         help_text="Verlag, z.B: 'De Gruyter' oder 'Dissertationen der Universität Wien'",
-    )
-    bibl_type = models.ForeignKey(
-        "BibliographicType", verbose_name="Art der Quelle", on_delete=models.CASCADE
+        blank=True,
+        null=True,
     )
     comment = models.TextField(verbose_name="Kommentar", blank=True, null=True)
     in_zotero = models.BooleanField(

@@ -126,6 +126,7 @@ SPAGHETTI_SAUCE = {
         "annotations",
         "belege",
         "siglen",
+        "bibls",
     ],
     "show_fields": False,
     "exclude": {"auth": ["user"]},
