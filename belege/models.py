@@ -1055,7 +1055,7 @@ class Beleg(models.Model):
         ret = dict(base)  # copy so we don't mutate caller provided dict
         if self.quelle_type:
             ret["quelle_type_main"] = self.quelle_type.main_type
-            ret["quelle_type_sub"] = self.quelle_type.main_type
+            ret["quelle_type_sub"] = self.quelle_type.sub_type
             ret["quelle_type_specific"] = self.quelle_type.specification
         else:
             ret["quelle_type_main"] = ""
