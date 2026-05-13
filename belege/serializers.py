@@ -12,6 +12,7 @@ from belege.models import (
     Sense,
 )
 from belege.serializer_utils import PopulateLabelMixin
+from bibls.models import BibliographicType
 
 
 class FacsimilieSerializer(serializers.HyperlinkedModelSerializer):
@@ -48,6 +49,13 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
         read_only=False,
         allow_null=True,
     )
+    quelle_type_id = serializers.PrimaryKeyRelatedField(
+        source="quelle_type",
+        many=False,
+        queryset=BibliographicType.objects.all(),
+        read_only=False,
+        allow_null=True,
+    )
 
     class Meta:
         model = Beleg
@@ -63,7 +71,7 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
             "archivzeile",
             "modify_tag",
             "internal_comment",
-            "quelle_type",
+            "quelle_type_id",
         ]
 
     def get_fields(self):
