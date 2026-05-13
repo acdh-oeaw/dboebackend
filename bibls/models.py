@@ -49,18 +49,22 @@ class BibliographicType(models.Model):
         verbose_name="Quelle Spezifikation",
     )
 
-    class Meta:
-        verbose_name = "Art der Quelle"
-        verbose_name_plural = "Arten der Quellen"
-        ordering = ["main_type", "sub_type", "specification"]
-
-    def __str__(self):
+    @property
+    def view_label(self):
         if self.sub_type and self.specification:
             return " >> ".join([self.main_type, self.sub_type, self.specification])
         elif self.sub_type:
             return " >> ".join([self.main_type, self.sub_type])
         else:
             return self.main_type
+
+    class Meta:
+        verbose_name = "Art der Quelle"
+        verbose_name_plural = "Arten der Quellen"
+        ordering = ["main_type", "sub_type", "specification"]
+
+    def __str__(self):
+        return self.view_label
 
 
 class BibliographicItem(models.Model):
@@ -140,6 +144,6 @@ class BibliographicItem(models.Model):
         return self.short_title
 
     def save(self, *args, **kwargs):
-        if self.zotero_key is not None:
+        if self.zotero_key:
             self.in_zotero = True
         super().save(*args, **kwargs)
