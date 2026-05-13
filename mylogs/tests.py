@@ -18,10 +18,10 @@ class LogEntryApiTests(APITestCase):
     def test_list_and_detail_include_all_fields(self):
         list_response = self.client.get(reverse("logs-list"))
         self.assertEqual(list_response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(list_response.data), 1)
+        self.assertEqual(len(list_response.data["results"]), 1)
 
         expected_fields = {"id", "beleg", "created_at", "username", "payload"}
-        self.assertEqual(set(list_response.data[0].keys()), expected_fields)
+        self.assertEqual(set(list_response.data["results"][0].keys()), expected_fields)
 
         detail_response = self.client.get(reverse("logs-detail", args=[self.log.pk]))
         self.assertEqual(detail_response.status_code, status.HTTP_200_OK)
@@ -53,5 +53,5 @@ class LogEntryApiTests(APITestCase):
         response = self.client.get(reverse("logs-list"), {"beleg": self.beleg.pk})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["beleg"], self.beleg.pk)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertEqual(response.data["results"][0]["beleg"], self.beleg.pk)

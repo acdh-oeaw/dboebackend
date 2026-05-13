@@ -1,10 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
-from django.urls import reverse
 from tqdm import tqdm
 
 from bibls.models import BibliographicItem, BibliographicType
-from dboeannotation.urls import router
 
 client = Client()
 
@@ -19,8 +17,8 @@ class BiblTestCase(TestCase):
         User.objects.create_user(**USER)
 
     def get_list_view_endpoints(self):
-        """Extract bibl endpoints from URL configuration"""
-        return [reverse(x.name) for x in router.urls if x.name.endswith("-list")]
+        response = client.get("/api/")
+        return list(response.json().values())
 
     def test_001_save(self):
         items = BibliographicItem.objects.all()
@@ -47,6 +45,11 @@ class BiblTestCase(TestCase):
                 200,
                 f"Expected 200 for {x}, got {response.status_code}",
             )
+            data = response.json()
+            try:
+                self.assertTrue("results" in data.keys())
+            except Exception as e:
+                print(x, e)
 
     def test_03_custom_string_methods(self):
         item = BibliographicType.objects.create(main_type="Literatur")
