@@ -1054,9 +1054,13 @@ class Beleg(models.Model):
 
         ret = dict(base)  # copy so we don't mutate caller provided dict
         if self.quelle_type:
-            ret["quelle_type"] = str(self.quelle_type).split(" >> ")
+            ret["quelle_type_main"] = self.quelle_type.main_type
+            ret["quelle_type_sub"] = self.quelle_type.main_type
+            ret["quelle_type_specific"] = self.quelle_type.specification
         else:
-            ret["quelle_type"] = []
+            ret["quelle_type_main"] = ""
+            ret["quelle_type_sub"] = ""
+            ret["quelle_type_specific"] = ""
 
         # Collect simple references
         ret["tustep"] = self.xeno_data
