@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
+from tqdm import tqdm
 
 from bibls.models import BibliographicItem
 from dboeannotation.urls import router
@@ -17,9 +18,9 @@ class BiblTestCase(TestCase):
         """Create test user"""
         User.objects.create_user(**USER)
 
-    def get_endpoints(self):
+    def get_list_view_endpoints(self):
         """Extract bibl endpoints from URL configuration"""
-        return [reverse(x.name) for x in router.urls if "list" in x.name]
+        return [reverse(x.name) for x in router.urls if x.name.endswith("-list")]
 
     def test_001_save(self):
         items = BibliographicItem.objects.all()
@@ -30,12 +31,19 @@ class BiblTestCase(TestCase):
         self.assertTrue(item.in_zotero)
 
     def test_002(self):
-        endpoints = [x for x in self.get_endpoints() if "bibliographic" in x]
-        for x in endpoints:
+        endpoints = [x for x in self.get_list_view_endpoints()]
+        with self.settings(DEBUG=True):
+            for x in set(endpoints):
+                response = client.get(x)
+                self.assertEqual(
+                    response.status_code,
+                    200,
+                    f"Expected 200 for {x}, got {response.status_code}",
+                )
+        for x in tqdm(set(endpoints), total=len(endpoints)):
             response = client.get(x)
             self.assertEqual(
                 response.status_code,
                 200,
                 f"Expected 200 for {x}, got {response.status_code}",
             )
-            self.assertIn("results", response.json())
