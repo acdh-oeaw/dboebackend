@@ -3,7 +3,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 from tqdm import tqdm
 
-from bibls.models import BibliographicItem
+from bibls.models import BibliographicItem, BibliographicType
 from dboeannotation.urls import router
 
 client = Client()
@@ -30,7 +30,7 @@ class BiblTestCase(TestCase):
         item.save()
         self.assertTrue(item.in_zotero)
 
-    def test_002(self):
+    def test_002_list_views(self):
         endpoints = [x for x in self.get_list_view_endpoints()]
         with self.settings(DEBUG=True):
             for x in set(endpoints):
@@ -47,3 +47,24 @@ class BiblTestCase(TestCase):
                 200,
                 f"Expected 200 for {x}, got {response.status_code}",
             )
+
+    def test_03_custom_string_methods(self):
+        item = BibliographicType.objects.create(main_type="Literatur")
+        self.assertEqual(str(item), "Literatur")
+
+        item = BibliographicType.objects.create(
+            main_type="Literatur", sub_type="Fachliteratur"
+        )
+        self.assertEqual(str(item), "Literatur >> Fachliteratur")
+
+        item = BibliographicType.objects.create(
+            main_type="Literatur",
+            sub_type="Fachliteratur",
+            specification="Dissertation",
+        )
+        self.assertEqual(str(item), "Literatur >> Fachliteratur >> Dissertation")
+
+        bibl = BibliographicItem.objects.create(
+            sigle="foo", short_title="bar", full_title="roo", bibl_type=item
+        )
+        self.assertEqual(str(bibl), "bar")
