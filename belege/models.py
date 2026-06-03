@@ -732,6 +732,15 @@ class Beleg(models.Model):
         verbose_name="Zitierweise",
         help_text="No helptext provided",
     ).set_extra(xpath="./tei:ref[@type='zitiereweise']/tei:bibl", node_type="list")
+    year = models.CharField(
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name="Jahr",
+        help_text="No helptext provided",
+    ).set_extra(
+        xpath="tei:ref[@type='quelle']/tei:ref[@type='date']/tei:date", node_type="text"
+    )
     pos = models.CharField(
         blank=True,
         null=True,
@@ -1048,6 +1057,7 @@ class Beleg(models.Model):
                 "qu": self.quelle,
                 "qdb": self.quelle_bearbeitet,
                 "bibl": self.bibl,
+                "year": self.year,
                 "pos": self.pos,
                 "archivzeile": self.archivzeile,
                 "internal_comment": self.internal_comment,
