@@ -39,6 +39,9 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
     qu = serializers.CharField(
         source="quelle", required=False, allow_blank=True, allow_null=True
     )
+    qdb = serializers.CharField(
+        source="quelle_bearbeitet", required=False, allow_blank=True, allow_null=True
+    )
     internal_comment = serializers.CharField(
         required=False, allow_blank=True, allow_null=True
     )
@@ -66,6 +69,7 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
             "hl_norm",
             "nl",
             "qu",
+            "qdb",
             "bibl",
             "pos",
             "archivzeile",
