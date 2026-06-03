@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "acdh-tei-pyutils>=1.6",
+    "acdh-tei-pyutils>=2.3.1",
     "crispy-bootstrap5>=2025.4",
     "de-core-news-sm",
     "dj-database-url>=3.0.0",
