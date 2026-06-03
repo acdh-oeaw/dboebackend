@@ -1046,6 +1046,7 @@ class Beleg(models.Model):
                 "hl_norm": self.hauptlemma_norm,
                 "nl": self.nebenlemma,
                 "qu": self.quelle,
+                "qdb": self.quelle_bearbeitet,
                 "bibl": self.bibl,
                 "pos": self.pos,
                 "archivzeile": self.archivzeile,
