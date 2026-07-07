@@ -38,41 +38,6 @@ def set_extra(self, **kwargs):
 models.Field.set_extra = set_extra
 
 
-class Facsimile(models.Model):
-    """
-    A facsimile
-    """
-
-    file_name = models.CharField(
-        max_length=250, unique=True, verbose_name="Dateiname", help_text="whatever"
-    )
-
-    def sanitize_file_name(self):
-        return self.file_name.replace("%2F", "/")
-
-    @classmethod
-    def get_base_url(cls):
-        return "https://walk-want-grew-imgs.acdh-dev.oeaw.ac.at/iiif/images/"
-
-    @property
-    def facs_url(self):
-        return f"{self.get_base_url()}{self.sanitize_file_name()}/info.json"
-
-    @property
-    def preview_url(self):
-        return (
-            f"{self.get_base_url()}{self.sanitize_file_name()}/full/600,/0/default.jpg"
-        )
-
-    def __str__(self):
-        return self.preview_url
-
-    class Meta:
-        verbose_name = "Faksimile"
-        verbose_name_plural = "Faksimiles"
-        ordering = ["file_name"]
-
-
 class ZusatzLemma(models.Model):
     """
     Django model representing a tei:re node extracted from a tei:cit node.
@@ -636,7 +601,6 @@ class BelegManager(models.Manager):
         """Return queryset with all related objects prefetched for optimal performance."""
 
         return self.select_related("quelle_type").prefetch_related(
-            "facs",
             models.Prefetch(
                 "citations", queryset=Citation.objects.prefetch_related("zusatz_lemma")
             ),
@@ -732,6 +696,13 @@ class Beleg(models.Model):
         verbose_name="Zitierweise",
         help_text="No helptext provided",
     ).set_extra(xpath="./tei:ref[@type='zitiereweise']/tei:bibl", node_type="list")
+    scan = ArrayField(
+        models.CharField(blank=True, max_length=350, null=True),
+        blank=True,
+        default=list,
+        verbose_name="Scans",
+        help_text="Scans",
+    ).set_extra(xpath="./@facs", node_type="list")
     year = models.CharField(
         blank=True,
         null=True,
@@ -800,14 +771,7 @@ class Beleg(models.Model):
         verbose_name="Anmerkung (diverse)",
         help_text="whatever",
     ).set_extra(xpath="./tei:note[@type='diverse']", node_type="list")
-    facs = models.ManyToManyField(
-        "Facsimile",
-        blank=True,
-        verbose_name="Faksimiles",
-        help_text="whatever",
-        related_name="belege",
-        through="BelegFacs",
-    )
+
     import_issue = models.BooleanField(
         default=False,
         verbose_name="Import issue",
@@ -1075,7 +1039,7 @@ class Beleg(models.Model):
 
         # Collect simple references
         ret["tustep"] = self.xeno_data
-        ret["facs"] = [f.file_name for f in self.facs.all()]
+        ret["scans"] = self.scan
         verweise = []
         for x in [
             "ref_type_dbo",
@@ -1258,32 +1222,3 @@ class Beleg(models.Model):
         raw = self.build_representation()
         processed = transform_record(raw)
         return processed
-
-
-class BelegFacs(models.Model):
-    beleg = models.ForeignKey(Beleg, on_delete=models.CASCADE)
-    facsimile = models.ForeignKey(Facsimile, on_delete=models.CASCADE)
-    resp = models.CharField(
-        default="system",
-        max_length=250,
-        verbose_name="Responsible for linking",
-        help_text="Name of user or script resposnible for linking Beleg to Facsimile",
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Created at",
-        help_text="Timestamp when the link was created",
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name="Updated at",
-        help_text="Timestamp when the link was last updated",
-    )
-
-    class Meta:
-        verbose_name = "Beleg-Facsimile Link"
-        verbose_name_plural = "Beleg-Facsimile Links"
-        ordering = ["beleg", "facsimile"]
-
-    def __str__(self):
-        return f"Link: {self.beleg} <-> {self.facsimile}"

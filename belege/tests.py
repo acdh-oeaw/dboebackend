@@ -24,7 +24,6 @@ class BelegTestCase(TestCase):
             belege_api_views.CitationViewSet,
             belege_api_views.LautungViewSet,
             belege_api_views.LehnwortViewSet,
-            belege_api_views.FacsimileViewSet,
         ]
         endpoints = []
         for prefix, viewset, basename in router.registry:

@@ -5,9 +5,7 @@ from belege.models import (
     AnmerkungLautung,
     Annotation,
     Beleg,
-    BelegFacs,
     Citation,
-    Facsimile,
     Lautung,
     LehnWort,
     Sense,
@@ -21,23 +19,6 @@ class AnnotationAdmin(admin.ModelAdmin):
     search_fields = ["kontext__dboe_id", "tool"]
     autocomplete_fields = ["kontext"]
     ordering = ["kontext", "created_at"]
-    list_per_page = 20
-
-
-@admin.register(Facsimile)
-class FacsimileAdmin(admin.ModelAdmin):
-    list_display = ["file_name"]
-    search_fields = ["file_name"]
-    ordering = ["file_name"]
-    list_per_page = 20
-
-
-@admin.register(BelegFacs)
-class BelegFacsAdmin(admin.ModelAdmin):
-    list_display = ["beleg", "facsimile", "created_at", "updated_at"]
-    search_fields = ["beleg__dboe_id", "facsimile__identifier"]
-    autocomplete_fields = ["beleg", "facsimile"]
-    ordering = ["beleg", "facsimile"]
     list_per_page = 20
 
 
