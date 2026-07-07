@@ -3,6 +3,7 @@ from django.test import Client, TestCase
 from django.urls import get_resolver
 
 from belege import api_views as belege_api_views
+from belege.models import Beleg
 from dboeannotation.urls import router
 
 client = Client()
@@ -122,3 +123,33 @@ class BelegTestCase(TestCase):
                     200,
                     f"Expected 200 for {endpoint}, got {response.status_code}",
                 )
+
+    def test_005_save_sets_has_internal_comment(self):
+        beleg = Beleg.objects.create(
+            dboe_id="test-has-internal-comment",
+            internal_comment="Some internal note",
+            has_internal_comment=False,
+        )
+        beleg.refresh_from_db()
+        self.assertTrue(beleg.has_internal_comment)
+
+        beleg.internal_comment = ""
+        beleg.has_internal_comment = True
+        beleg.save()
+        beleg.refresh_from_db()
+        self.assertFalse(beleg.has_internal_comment)
+
+    def test_006_save_sets_has_scan(self):
+        beleg = Beleg.objects.create(
+            dboe_id="test-has-scan",
+            scan=["scan-1.jpg"],
+            has_scan=False,
+        )
+        beleg.refresh_from_db()
+        self.assertTrue(beleg.has_scan)
+
+        beleg.scan = []
+        beleg.has_scan = True
+        beleg.save()
+        beleg.refresh_from_db()
+        self.assertFalse(beleg.has_scan)
