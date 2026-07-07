@@ -805,6 +805,7 @@ class Beleg(models.Model):
         verbose_name="interne Kommentare",
         help_text="Feld für interne Anmerkungen",
     )
+    has_scan = models.BooleanField(default=False)
     has_internal_comment = models.BooleanField(default=False)
 
     objects = BelegManager()
@@ -815,10 +816,15 @@ class Beleg(models.Model):
         ordering = ["dboe_id"]
         indexes = [
             Index(
+                name="beleg_has_scan_true_idx",
+                fields=["dboe_id"],
+                condition=Q(has_scan=True),
+            ),
+            Index(
                 name="beleg_has_comment_true_idx",
                 fields=["dboe_id"],
                 condition=Q(has_internal_comment=True),
-            )
+            ),
         ]
 
     def __str__(self):
@@ -1005,6 +1011,7 @@ class Beleg(models.Model):
             document = self.sanitize_representation()
             id = document["id"]
             client.index(index=OS_INDEX_NAME, body=document, id=id, refresh=True)
+        self.has_scan = bool(self.scan)
         self.has_internal_comment = bool(self.internal_comment)
         super().save(*args, **kwargs)
 
