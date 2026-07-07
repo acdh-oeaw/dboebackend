@@ -4,24 +4,13 @@ from annotations.models import Tag
 from belege.models import (
     AnmerkungLautung,
     Beleg,
-    BelegFacs,
     Citation,
-    Facsimile,
     Lautung,
     LehnWort,
     Sense,
 )
 from belege.serializer_utils import PopulateLabelMixin
 from bibls.models import BibliographicType
-
-
-class FacsimilieSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Facsimile
-        fields = [
-            "url",
-            "file_name",
-        ]
 
 
 class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer):
@@ -72,6 +61,7 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
             "qu",
             "qdb",
             "bibl",
+            "scan",
             "year",
             "pos",
             "archivzeile",
@@ -139,16 +129,6 @@ class LehnWortSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSeriali
 
     class Meta:
         model = LehnWort
-        fields = "__all__"
-
-
-class BelegFacsSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer):
-    id = serializers.CharField(read_only=True)
-    beleg = serializers.PrimaryKeyRelatedField(queryset=Beleg.objects.all())
-    facsimile = serializers.PrimaryKeyRelatedField(queryset=Facsimile.objects.all())
-
-    class Meta:
-        model = BelegFacs
         fields = "__all__"
 
 

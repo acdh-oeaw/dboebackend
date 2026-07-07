@@ -12,9 +12,7 @@ from belege.models import (
     POS_CHOICES,
     AnmerkungLautung,
     Beleg,
-    BelegFacs,
     Citation,
-    Facsimile,
     Lautung,
     LehnWort,
     Sense,
@@ -22,10 +20,8 @@ from belege.models import (
 from belege.query_utils import log_query_count
 from belege.serializers import (
     AnmerkungLautungSerializer,
-    BelegFacsSerializer,
     BelegSerializer,
     CitationSerializer,
-    FacsimilieSerializer,
     LautungSerializer,
     LehnWortSerializer,
     SenseSerializer,
@@ -60,34 +56,6 @@ class BelegePagination(PageNumberPagination):
     page_size = 50
     max_page_size = 1000
     page_size_query_param = "page_size"
-
-
-class BelegFacsViewset(viewsets.ModelViewSet):
-    pagination_class = CustomPagination
-    queryset = BelegFacs.objects.all()
-    serializer_class = BelegFacsSerializer
-    filterset_class = get_filterset_for_model(BelegFacs)
-
-    def list(self, request, *args, **kwargs):
-        reset_queries()
-        response = super().list(request, *args, **kwargs)
-        if settings.DEBUG:
-            log_query_count(full_log=False)
-        return response
-
-
-class FacsimileViewSet(viewsets.ModelViewSet):
-    pagination_class = CustomPagination
-    queryset = Facsimile.objects.all()
-    serializer_class = FacsimilieSerializer
-    filterset_class = get_filterset_for_model(Facsimile)
-
-    def list(self, request, *args, **kwargs):
-        reset_queries()
-        response = super().list(request, *args, **kwargs)
-        if settings.DEBUG:
-            log_query_count(full_log=False)
-        return response
 
 
 class BelegViewSetElasticSearch(

@@ -9,18 +9,6 @@ from belege.models import Beleg
 
 @extend_schema(responses=dict)
 @api_view(["get"])
-def beleg_by_facs_count(request):
-    payload = list(
-        Beleg.objects.annotate(item_count=Count("facs"))
-        .filter(item_count__gt=0)
-        .order_by("-item_count")[:25]
-        .values(id=F("dboe_id"), value=F("hauptlemma"), item_count=F("item_count"))
-    )
-    return Response({"title": "Belege nach Faksimiles)", "payload": payload})
-
-
-@extend_schema(responses=dict)
-@api_view(["get"])
 def beleg_by_note_lautung_count(request):
     payload = list(
         Beleg.objects.annotate(item_count=Count("note_lautung"))
