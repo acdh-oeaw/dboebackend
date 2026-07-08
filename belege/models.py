@@ -839,6 +839,7 @@ class Beleg(models.Model):
         add_sense=False,
         add_anmkerung_laut=False,
         add_lehnwort=False,
+        trigger_index=True,
         *args,
         **kwargs,
     ):
@@ -1007,12 +1008,13 @@ class Beleg(models.Model):
                     item.save(orig_xml=item_orig_xml)
                 except Exception as e:
                     print(f"Error saving sense {xml_id}: {e}")
-        if OS_CONNECTION:
+        self.has_scan = bool(self.scan)
+        self.has_internal_comment = bool(self.internal_comment)
+        if OS_CONNECTION and trigger_index:
             document = self.sanitize_representation()
             id = document["id"]
             client.index(index=OS_INDEX_NAME, body=document, id=id, refresh=True)
-        self.has_scan = bool(self.scan)
-        self.has_internal_comment = bool(self.internal_comment)
+
         super().save(*args, **kwargs)
 
     def build_representation(self, base: dict | None = None) -> dict:
