@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
@@ -55,3 +57,31 @@ class LogEntryApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data["results"]), 1)
         self.assertEqual(response.data["results"][0]["beleg"], self.beleg.pk)
+
+    def test_payload_is_serialized_as_json(self):
+        LogEntry.objects.filter(pk=self.log.pk).update(
+            payload=json.dumps({"lemma": "gehen", "hits": [1, 2]})
+        )
+
+        detail_response = self.client.get(reverse("logs-detail", args=[self.log.pk]))
+
+        self.assertEqual(detail_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            detail_response.data["payload"], {"lemma": "gehen", "hits": [1, 2]}
+        )
+
+    def test_empty_payload_is_serialized_as_null(self):
+        LogEntry.objects.filter(pk=self.log.pk).update(payload="")
+
+        detail_response = self.client.get(reverse("logs-detail", args=[self.log.pk]))
+
+        self.assertEqual(detail_response.status_code, status.HTTP_200_OK)
+        self.assertIsNone(detail_response.data["payload"])
+
+    def test_invalid_json_payload_is_returned_as_raw_text(self):
+        LogEntry.objects.filter(pk=self.log.pk).update(payload="not-json")
+
+        detail_response = self.client.get(reverse("logs-detail", args=[self.log.pk]))
+
+        self.assertEqual(detail_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(detail_response.data["payload"], "not-json")
