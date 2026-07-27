@@ -17,7 +17,7 @@ class LogEntry(models.Model):
     class Meta:
         verbose_name = "Log"
         verbose_name_plural = "Logs"
-        ordering = ["created_at", "beleg"]
+        ordering = ["-created_at", "beleg"]
 
     def __str__(self):
         return f"{self.beleg} ({self.created_at})"
