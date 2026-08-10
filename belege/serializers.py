@@ -3,6 +3,7 @@ from rest_framework import serializers
 from annotations.models import Tag
 from belege.models import (
     AnmerkungLautung,
+    Annotation,
     Beleg,
     Citation,
     Lautung,
@@ -93,6 +94,22 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
         return instance.build_representation(base=base)
 
 
+class AnnotationNestedSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="annotation-pos-detail")
+
+    class Meta:
+        model = Annotation
+        fields = [
+            "url",
+            "id",
+            "payload",
+            "tool",
+            "source_field",
+            "created_at",
+            "updated_at",
+        ]
+
+
 class CitationSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name="citation-detail", lookup_field="dboe_id"
@@ -100,6 +117,9 @@ class CitationSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSeriali
     id = serializers.CharField(source="dboe_id", read_only=True)
     beleg = serializers.PrimaryKeyRelatedField(read_only=True)
     orig_xml = serializers.CharField(read_only=True)
+    annotations = AnnotationNestedSerializer(
+        source="annotation", many=True, read_only=True
+    )
 
     class Meta:
         model = Citation
@@ -158,3 +178,17 @@ class AnmerkungLautungSerializer(
     class Meta:
         model = AnmerkungLautung
         fields = "__all__"
+
+
+class AnnotationSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="annotation-pos-detail")
+
+    class Meta:
+        model = Annotation
+        fields = "__all__"
+        extra_kwargs = {
+            "kontext": {
+                "view_name": "citation-detail",
+                "lookup_field": "dboe_id",
+            }
+        }
