@@ -237,12 +237,7 @@ class AnmerkungLautungViewSet(
         return response
 
 
-class AnnotationViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
+class AnnotationViewSet(viewsets.ModelViewSet):
     pagination_class = CustomPagination
     page_size_query_param = "page_size"
     queryset = Annotation.objects.select_related("kontext").all()

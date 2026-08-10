@@ -180,3 +180,50 @@ class BelegTestCase(TestCase):
         self.assertEqual(
             annotation["payload"]["tokens"][0], {"text": "Haus", "pos": "Subst"}
         )
+
+    def test_008_annotation_pos_post_endpoint(self):
+        client.login(username=USER["username"], password=USER["password"])
+
+        beleg = Beleg.objects.create(dboe_id="test-annotation-pos-post")
+        citation = Citation.objects.create(
+            dboe_id="test-cit-annotation-pos-post", beleg=beleg
+        )
+
+        response = client.post(
+            "/api/annotation-pos/",
+            {
+                "kontext": citation.dboe_id,
+                "payload": {"tokens": [{"text": "gehen", "pos": "Verb"}]},
+                "tool": "post-test-tool",
+                "source_field": "quote_text",
+            },
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(
+            Annotation.objects.filter(
+                kontext=citation,
+                tool="post-test-tool",
+                source_field="quote_text",
+            ).exists()
+        )
+
+    def test_009_annotation_pos_delete_endpoint(self):
+        client.login(username=USER["username"], password=USER["password"])
+
+        beleg = Beleg.objects.create(dboe_id="test-annotation-pos-delete")
+        citation = Citation.objects.create(
+            dboe_id="test-cit-annotation-pos-delete", beleg=beleg
+        )
+        annotation = Annotation.objects.create(
+            kontext=citation,
+            payload={"tokens": [{"text": "Haus", "pos": "Subst"}]},
+            tool="delete-test-tool",
+            source_field="quote_text",
+        )
+
+        response = client.delete(f"/api/annotation-pos/{annotation.id}/")
+
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(Annotation.objects.filter(id=annotation.id).exists())

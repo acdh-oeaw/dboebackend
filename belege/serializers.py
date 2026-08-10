@@ -182,6 +182,10 @@ class AnmerkungLautungSerializer(
 
 class AnnotationSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="annotation-pos-detail")
+    kontext = serializers.PrimaryKeyRelatedField(
+        queryset=Citation.objects.all(),
+        style={"base_template": "input.html"},
+    )
 
     class Meta:
         model = Annotation
