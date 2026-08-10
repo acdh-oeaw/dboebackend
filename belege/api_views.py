@@ -11,6 +11,7 @@ from belege.api_utils import get_filterset_for_model
 from belege.models import (
     POS_CHOICES,
     AnmerkungLautung,
+    Annotation,
     Beleg,
     Citation,
     Lautung,
@@ -20,6 +21,7 @@ from belege.models import (
 from belege.query_utils import log_query_count
 from belege.serializers import (
     AnmerkungLautungSerializer,
+    AnnotationSerializer,
     BelegSerializer,
     CitationSerializer,
     LautungSerializer,
@@ -131,7 +133,7 @@ class CitationViewSet(
 ):
     pagination_class = CustomPagination
     page_size_query_param = "page_size"
-    queryset = Citation.objects.all()
+    queryset = Citation.objects.prefetch_related("annotation").all()
     filterset_class = get_filterset_for_model(Citation, fields=["dboe_id", "beleg"])
     serializer_class = CitationSerializer
     lookup_field = "dboe_id"
@@ -226,6 +228,28 @@ class AnmerkungLautungViewSet(
     serializer_class = AnmerkungLautungSerializer
     lookup_field = "dboe_id"
     lookup_value_regex = r"[^/]+"
+
+    def list(self, request, *args, **kwargs):
+        reset_queries()
+        response = super().list(request, *args, **kwargs)
+        if settings.DEBUG:
+            log_query_count(full_log=False)
+        return response
+
+
+class AnnotationViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+    pagination_class = CustomPagination
+    page_size_query_param = "page_size"
+    queryset = Annotation.objects.select_related("kontext").all()
+    filterset_class = get_filterset_for_model(
+        Annotation, fields=["id", "kontext", "tool", "source_field"]
+    )
+    serializer_class = AnnotationSerializer
 
     def list(self, request, *args, **kwargs):
         reset_queries()

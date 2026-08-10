@@ -3,7 +3,7 @@ from django.test import Client, TestCase
 from django.urls import get_resolver
 
 from belege import api_views as belege_api_views
-from belege.models import Beleg
+from belege.models import Annotation, Beleg, Citation
 from dboeannotation.urls import router
 
 client = Client()
@@ -153,3 +153,30 @@ class BelegTestCase(TestCase):
         beleg.save()
         beleg.refresh_from_db()
         self.assertFalse(beleg.has_scan)
+
+    def test_007_annotation_pos_list_endpoint(self):
+        beleg = Beleg.objects.create(dboe_id="test-annotation-pos")
+        citation = Citation.objects.create(
+            dboe_id="test-cit-annotation-pos", beleg=beleg
+        )
+        Annotation.objects.create(
+            kontext=citation,
+            payload={"tokens": [{"text": "Haus", "pos": "Subst"}]},
+            tool="test-tool",
+            source_field="quote_text",
+        )
+
+        response = client.get("/api/annotation-pos/")
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertIn("results", data)
+        self.assertGreaterEqual(len(data["results"]), 1)
+
+        annotation = next(
+            item for item in data["results"] if item["tool"] == "test-tool"
+        )
+        self.assertEqual(annotation["source_field"], "quote_text")
+        self.assertEqual(
+            annotation["payload"]["tokens"][0], {"text": "Haus", "pos": "Subst"}
+        )
