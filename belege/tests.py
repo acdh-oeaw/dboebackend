@@ -235,3 +235,11 @@ class BelegTestCase(TestCase):
             self.assertEqual(response.status_code, 200)
         response = client.get("/api/show-original-xml/whatever")
         self.assertEqual(response.status_code, 404)
+
+    def test_010_show_tustep(self):
+        for x in Beleg.objects.all():
+            url = f"/api/show-tustep/{x.dboe_id}"
+            response = client.get(url)
+            self.assertEqual(response.status_code, 200)
+        response = client.get("/api/show-tustep/whatever")
+        self.assertEqual(response.status_code, 404)

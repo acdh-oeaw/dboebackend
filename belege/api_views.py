@@ -58,6 +58,14 @@ def show_original_xml(request, dboe_id):
     return HttpResponse(payload, content_type="application/xml")
 
 
+@api_view(["get"])
+def show_tustep(request, dboe_id):
+    """Return the original Tustep data"""
+    beleg = get_object_or_404(Beleg, pk=dboe_id)
+    payload = beleg.xeno_data
+    return HttpResponse(payload, content_type="text/plain")
+
+
 class CustomPagination(PageNumberPagination):
     page_size = 50
     max_page_size = 50
