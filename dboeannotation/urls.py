@@ -63,6 +63,7 @@ urlpatterns = [
     path("api/dboe-query/", api_views.dboe_query),
     path("api/get-pos-tags/", belege_api_views.get_pos_tags),
     path("api/show-original-xml/<str:dboe_id>", belege_api_views.show_original_xml),
+    path("api/show-tustep/<str:dboe_id>", belege_api_views.show_tustep),
     path(
         "api/dboe-query-by-id/<str:dboe_id>",
         api_views.dboe_query_by_id,
