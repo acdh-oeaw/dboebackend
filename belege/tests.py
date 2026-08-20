@@ -227,3 +227,11 @@ class BelegTestCase(TestCase):
 
         self.assertEqual(response.status_code, 204)
         self.assertFalse(Annotation.objects.filter(id=annotation.id).exists())
+
+    def test_010_show_orig_xml(self):
+        for x in Beleg.objects.all():
+            url = f"/api/show-original-xml/{x.dboe_id}"
+            response = client.get(url)
+            self.assertEqual(response.status_code, 200)
+        response = client.get("/api/show-original-xml/whatever")
+        self.assertEqual(response.status_code, 404)

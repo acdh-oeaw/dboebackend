@@ -1,6 +1,8 @@
+import lxml.etree as ET
 from django.conf import settings
 from django.db import reset_queries
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import OpenApiExample, extend_schema, inline_serializer
 from rest_framework import mixins, serializers, viewsets
 from rest_framework.decorators import action, api_view
@@ -46,6 +48,14 @@ from belege.serializers import (
 def get_pos_tags(request):
     data = [{"label": x[1], "value": x[0]} for x in POS_CHOICES]
     return JsonResponse(data, safe=False)
+
+
+@api_view(["get"])
+def show_original_xml(request, dboe_id):
+    """Return the original TEI/XML entry"""
+    beleg = get_object_or_404(Beleg, pk=dboe_id)
+    payload = ET.tostring(beleg.orig_xml).decode("utf-8")
+    return HttpResponse(payload, content_type="application/xml")
 
 
 class CustomPagination(PageNumberPagination):
