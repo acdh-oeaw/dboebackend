@@ -5,12 +5,12 @@ from acdh_tei_pyutils.utils import extract_fulltext, get_xmlid
 from acdh_xml_pyutils.xml import NSMAP
 from django.db import models
 from django.db.models import Index, Q
-from django_jsonform.models.fields import ArrayField
+from django_jsonform.models.fields import ArrayField, JSONField
 
 from annotations.models import Collection, Tag
 from belege.fields import XMLField
 from belege.opensearch_client import OS_CONNECTION, OS_INDEX_NAME, client
-from belege.utils import transform_record
+from belege.utils import node_to_json, transform_record
 from siglen.models import BelegSigle
 
 POS_CHOICES = (
@@ -28,6 +28,25 @@ POS_CHOICES = (
 LANG_CHOICES = (("bar", "bar"), ("de", "de"))
 
 RESP_OPTIONS = (("O", "O"), ("B", "B"))
+
+NOTES_SCHEMA = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {"type": "string"},
+            "n": {"type": "string"},
+            "ref": {"type": "string"},
+            "corresp": {"type": "string"},
+            "type": {"type": "string"},
+            "subtype": {"type": "string"},
+            "resp": {"type": "string"},
+            "text": {"type": "string"},
+            "pRef": {"type": "array", "items": {"type": "string"}},
+        },
+        "additionalProperties": True,
+    },
+}
 
 
 def set_extra(self, **kwargs):
@@ -807,6 +826,13 @@ class Beleg(models.Model):
     )
     has_scan = models.BooleanField(default=False)
     has_internal_comment = models.BooleanField(default=False)
+    note = JSONField(
+        blank=True,
+        null=True,
+        verbose_name="tei:note",
+        help_text="stores any kind of ./tei:note",
+        schema=NOTES_SCHEMA,
+    ).set_extra(xml_element="./tei:note")
 
     objects = BelegManager()
 
@@ -890,6 +916,17 @@ class Beleg(models.Model):
                             value = value.strip()
                         values.append(value)
                     setattr(self, field.name, values)
+                if (
+                    hasattr(field, "extra")
+                    and "xml_element" in field.extra
+                    and not getattr(self, field.name)
+                ):
+                    xpath_expr = field.extra["xml_element"]
+                    items = []
+                    for node in doc.any_xpath(xpath_expr):
+                        items.append(node_to_json(node))
+                    if items:
+                        self.note = items
         if xml_source is not None and add_anmkerung_laut:
             items = doc.any_xpath(
                 "./tei:note[@type='anmerkung' and @resp and @corresp]"

@@ -10,6 +10,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         total = Beleg.objects.count()
         for x in tqdm(Beleg.objects.iterator(), total=total):
+            x.save(trigger_index=False)
             try:
                 x.save(trigger_index=False)
             except Exception as e:
