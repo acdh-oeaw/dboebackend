@@ -1,6 +1,18 @@
 from typing import Iterable
 
+import lxml.etree as ET
+from acdh_tei_pyutils.utils import extract_fulltext_with_spacing
 from django.db.models.query import QuerySet
+
+
+def node_to_json(node: ET.Element) -> dict:
+    item = {"text": extract_fulltext_with_spacing(node)}
+    for attr_name, attr_value in node.attrib.items():
+        item[attr_name.split("}")[-1]] = attr_value
+    for child in node:
+        tag_name = child.tag.split("}")[-1]
+        item.setdefault(tag_name, []).append(extract_fulltext_with_spacing(child))
+    return item
 
 
 def transform_record(raw: dict) -> dict:
