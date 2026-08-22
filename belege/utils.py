@@ -1,8 +1,65 @@
 from typing import Iterable
 
 import lxml.etree as ET
-from acdh_tei_pyutils.utils import extract_fulltext_with_spacing
+from acdh_tei_pyutils.utils import extract_fulltext, extract_fulltext_with_spacing
+from django.db import models
 from django.db.models.query import QuerySet
+from django_jsonform.models.fields import ArrayField
+
+
+def populate_fields_from_xml(doc, current_class):
+    """Populate `current_class`'s fields from `doc` based on each field's `extra` metadata."""
+    for field in current_class._meta.fields:
+        if (
+            hasattr(field, "extra")
+            and "xpath" in field.extra
+            and isinstance(field, (models.CharField, models.TextField))
+            and not getattr(current_class, field.name)
+        ):
+            xpath_expr = field.extra["xpath"]
+            try:
+                nodes = doc.any_xpath(xpath_expr)[0]
+            except IndexError:
+                continue
+            try:
+                value = extract_fulltext(nodes)
+            except AttributeError:
+                value = nodes
+            if isinstance(field, models.CharField):
+                if field.max_length and len(value) > field.max_length:
+                    value = value[: field.max_length]
+                    if hasattr(current_class, "import_issue"):
+                        current_class.import_issue = True
+            if isinstance(field, (models.CharField, models.TextField)):
+                value = value.strip()
+            setattr(current_class, field.name, value)
+        if isinstance(field, ArrayField) and not getattr(current_class, field.name):
+            xpath_expr = field.extra["xpath"]
+            try:
+                nodes = doc.any_xpath(xpath_expr)
+            except IndexError:
+                continue
+            values = []
+            for node in nodes:
+                try:
+                    value = extract_fulltext(node)
+                except AttributeError:
+                    value = node
+                if isinstance(value, str):
+                    value = value.strip()
+                values.append(value)
+            setattr(current_class, field.name, values)
+        if (
+            hasattr(field, "extra")
+            and "xml_element" in field.extra
+            and not getattr(current_class, field.name)
+        ):
+            xpath_expr = field.extra["xml_element"]
+            items = []
+            for node in doc.any_xpath(xpath_expr):
+                items.append(node_to_json(node))
+            if items:
+                setattr(current_class, field.name, items)
 
 
 def node_to_json(node: ET.Element) -> dict:

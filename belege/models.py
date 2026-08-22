@@ -10,7 +10,7 @@ from django_jsonform.models.fields import ArrayField, JSONField
 from annotations.models import Collection, Tag
 from belege.fields import XMLField
 from belege.opensearch_client import OS_CONNECTION, OS_INDEX_NAME, client
-from belege.utils import node_to_json, transform_record
+from belege.utils import populate_fields_from_xml, transform_record
 from siglen.models import BelegSigle
 
 POS_CHOICES = (
@@ -127,23 +127,7 @@ class ZusatzLemma(models.Model):
                 doc = TeiReader(xml_source)
             except AttributeError:
                 doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
-            for field in self._meta.fields:
-                if (
-                    hasattr(field, "extra")
-                    and "xpath" in field.extra
-                    and isinstance(field, (models.CharField, models.TextField))
-                    and not getattr(self, field.name)
-                ):
-                    xpath_expr = field.extra["xpath"]
-                    try:
-                        nodes = doc.any_xpath(xpath_expr)[0]
-                    except IndexError:
-                        continue
-                    try:
-                        value = extract_fulltext(nodes)
-                    except AttributeError:
-                        value = nodes
-                    setattr(self, field.name, value)
+            populate_fields_from_xml(doc, self)
         super().save(*args, **kwargs)
 
 
@@ -267,39 +251,7 @@ class Citation(models.Model):
                 doc = TeiReader(xml_source)
             except AttributeError:
                 doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
-            for field in self._meta.fields:
-                if (
-                    hasattr(field, "extra")
-                    and "xpath" in field.extra
-                    and isinstance(field, (models.CharField, models.TextField))
-                    and not getattr(self, field.name)
-                ):
-                    xpath_expr = field.extra["xpath"]
-                    try:
-                        nodes = doc.any_xpath(xpath_expr)[0]
-                    except IndexError:
-                        continue
-                    try:
-                        value = extract_fulltext(nodes)
-                    except AttributeError:
-                        value = nodes
-                    setattr(self, field.name, value)
-                if isinstance(field, ArrayField) and not getattr(self, field.name):
-                    xpath_expr = field.extra["xpath"]
-                    try:
-                        nodes = doc.any_xpath(xpath_expr)
-                    except IndexError:
-                        continue
-                    values = []
-                    for node in nodes:
-                        try:
-                            value = extract_fulltext(node)
-                        except AttributeError:
-                            value = node
-                        if isinstance(value, str):
-                            value = value.strip()
-                        values.append(value)
-                    setattr(self, field.name, values)
+            populate_fields_from_xml(doc, self)
         if xml_source is not None and add_zusatzlemma:
             items = doc.any_xpath("./tei:re")
             for number, item in enumerate(items, start=1):
@@ -410,23 +362,7 @@ class Lautung(models.Model):
                 doc = TeiReader(xml_source)
             except AttributeError:
                 doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
-            for field in self._meta.fields:
-                if (
-                    hasattr(field, "extra")
-                    and "xpath" in field.extra
-                    and isinstance(field, (models.CharField, models.TextField))
-                    and not getattr(self, field.name)
-                ):
-                    xpath_expr = field.extra["xpath"]
-                    try:
-                        nodes = doc.any_xpath(xpath_expr)[0]
-                    except IndexError:
-                        continue
-                    try:
-                        value = extract_fulltext(nodes)
-                    except AttributeError:
-                        value = nodes
-                    setattr(self, field.name, value)
+            populate_fields_from_xml(doc, self)
         super().save(*args, **kwargs)
 
 
@@ -485,23 +421,7 @@ class LehnWort(models.Model):
                 doc = TeiReader(xml_source)
             except AttributeError:
                 doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
-            for field in self._meta.fields:
-                if (
-                    hasattr(field, "extra")
-                    and "xpath" in field.extra
-                    and isinstance(field, (models.CharField, models.TextField))
-                    and not getattr(self, field.name)
-                ):
-                    xpath_expr = field.extra["xpath"]
-                    try:
-                        nodes = doc.any_xpath(xpath_expr)[0]
-                    except IndexError:
-                        continue
-                    try:
-                        value = extract_fulltext(nodes)
-                    except AttributeError:
-                        value = nodes
-                    setattr(self, field.name, value)
+            populate_fields_from_xml(doc, self)
         super().save(*args, **kwargs)
 
 
@@ -611,23 +531,7 @@ class Sense(models.Model):
                 doc = TeiReader(xml_source)
             except AttributeError:
                 doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
-            for field in self._meta.fields:
-                if (
-                    hasattr(field, "extra")
-                    and "xpath" in field.extra
-                    and isinstance(field, (models.CharField, models.TextField))
-                    and not getattr(self, field.name)
-                ):
-                    xpath_expr = field.extra["xpath"]
-                    try:
-                        nodes = doc.any_xpath(xpath_expr)[0]
-                    except IndexError:
-                        continue
-                    try:
-                        value = extract_fulltext(nodes)
-                    except AttributeError:
-                        value = nodes
-                    setattr(self, field.name, value)
+            populate_fields_from_xml(doc, self)
         super().save(*args, **kwargs)
 
 
@@ -899,56 +803,7 @@ class Beleg(models.Model):
                 doc = TeiReader(xml_source)
             except AttributeError:
                 doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
-            for field in self._meta.fields:
-                if (
-                    hasattr(field, "extra")
-                    and "xpath" in field.extra
-                    and isinstance(field, (models.CharField, models.TextField))
-                    and not getattr(self, field.name)
-                ):
-                    if xml_source is not None:
-                        xpath_expr = field.extra["xpath"]
-                        try:
-                            nodes = doc.any_xpath(xpath_expr)[0]
-                        except IndexError:
-                            continue
-                        try:
-                            value = extract_fulltext(nodes)
-                        except AttributeError:
-                            value = nodes
-                        if isinstance(field, models.CharField):
-                            if field.max_length and len(value) > field.max_length:
-                                value = value[: field.max_length]
-                                self.import_issue = True
-                        if isinstance(field, (models.CharField, models.TextField)):
-                            value = value.strip()
-                        setattr(self, field.name, value)
-                if isinstance(field, ArrayField) and not getattr(self, field.name):
-                    xpath_expr = field.extra["xpath"]
-                    try:
-                        nodes = doc.any_xpath(xpath_expr)
-                    except IndexError:
-                        continue
-                    values = []
-                    for node in nodes:
-                        try:
-                            value = extract_fulltext(node)
-                        except AttributeError:
-                            value = node
-                        if isinstance(value, str):
-                            value = value.strip()
-                        values.append(value)
-                    setattr(self, field.name, values)
-                if (
-                    hasattr(field, "extra") and "xml_element" in field.extra
-                    # and not getattr(self, field.name)
-                ):
-                    xpath_expr = field.extra["xml_element"]
-                    items = []
-                    for node in doc.any_xpath(xpath_expr):
-                        items.append(node_to_json(node))
-                    if items:
-                        setattr(self, field.name, items)
+            populate_fields_from_xml(doc, self)
         if xml_source is not None and add_anmkerung_laut:
             items = doc.any_xpath(
                 "./tei:note[@type='anmerkung' and @resp and @corresp]"
