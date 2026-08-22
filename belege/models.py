@@ -1,8 +1,7 @@
 import xml.etree.ElementTree as ET
 
 from acdh_tei_pyutils.tei import TeiReader
-from acdh_tei_pyutils.utils import extract_fulltext, get_xmlid
-from acdh_xml_pyutils.xml import NSMAP
+from acdh_tei_pyutils.utils import get_xmlid
 from django.db import models
 from django.db.models import Index, Q
 from django_jsonform.models.fields import ArrayField, JSONField
@@ -425,50 +424,6 @@ class LehnWort(models.Model):
         super().save(*args, **kwargs)
 
 
-class AnmerkungLautung(models.Model):
-    """Django model representing a tei:note related to a Lautung object"""
-
-    dboe_id = models.CharField(
-        primary_key=True,
-        max_length=250,
-        verbose_name="DBÖ ID",
-        help_text="Kombination of the Beleg-ID and the @n",
-    )
-    beleg = models.ForeignKey(
-        "Beleg",
-        verbose_name="Beleg",
-        on_delete=models.CASCADE,
-        related_name="note_lautung",
-    )
-    number = models.PositiveIntegerField(default=1, verbose_name="Order number")
-    resp = models.CharField(
-        choices=RESP_OPTIONS,
-        max_length=1,
-        default="O",
-        verbose_name="Responsible (O/B)",
-        help_text="whatever",
-    )
-    corresp_to = models.CharField(
-        blank=True, null=True, max_length=20, verbose_name="Korrespondiert zu"
-    )
-    content = models.TextField(blank=True, null=True, verbose_name="Anmerkung")
-    p_ref = ArrayField(
-        models.TextField(blank=True, null=True),
-        blank=True,
-        default=list,
-        verbose_name="Pronunciation reference",
-        help_text="Iindicates a reference to the pronunciation(s) of the headword",
-    )
-
-    class Meta:
-        verbose_name = "Anmerkung (Lautung)"
-        verbose_name_plural = "Anmerkungen (Lautung)"
-        ordering = ["beleg", "number"]
-
-    def __str__(self):
-        return f"{self.dboe_id}"
-
-
 class Sense(models.Model):
     """
     Django model representing a tei:sense node.
@@ -545,7 +500,6 @@ class BelegManager(models.Manager):
             ),
             "lautungen",
             "lehnwoerter",
-            "note_lautung",
             "bedeutungen",
             "tag",
             models.Prefetch(
@@ -804,31 +758,6 @@ class Beleg(models.Model):
             except AttributeError:
                 doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
             populate_fields_from_xml(doc, self)
-        if xml_source is not None and add_anmkerung_laut:
-            items = doc.any_xpath(
-                "./tei:note[@type='anmerkung' and @resp and @corresp]"
-            )
-            for i, item in enumerate(items, start=1):
-                try:
-                    number = item.attrib["number"]
-                except KeyError:
-                    number = i
-                dboe_id = f"{self.dboe_id}_{number:0>2}"
-                item_object, _ = AnmerkungLautung.objects.get_or_create(
-                    dboe_id=dboe_id, beleg=self
-                )
-                item_object.number = number
-                item_object.corresp_to = item.attrib["corresp"]
-                item_object.resp = item.attrib["resp"]
-                item_object.content = extract_fulltext(item)
-                p_refs = []
-                for x in item.xpath(".//tei:pRef", namespaces=NSMAP):
-                    p_refs.append(extract_fulltext(x))
-                item_object.p_ref = p_refs
-                try:
-                    item_object.save()
-                except Exception as e:
-                    print(f"Error saving AnmerkungLautung {dboe_id}: {e}")
         if xml_source is not None and add_citations:
             items = doc.any_xpath("./tei:cit")
             for n, item in enumerate(items, start=1):
@@ -1039,9 +968,6 @@ class Beleg(models.Model):
             number = x.number
             ret[f"lw{number}"] = x.pron
 
-        # Notes Lautung - use prefetched data
-        ret["anm_lt_star"] = [x.content for x in self.note_lautung.all()]
-
         # Use prefetched citations
         citations_list = list(self.citations.all())
         try:
@@ -1117,14 +1043,6 @@ class Beleg(models.Model):
                         f"{y.form_orth}||{getattr(y, 'pos', None) or ''}||{getattr(y, 'gram', None) or ''}"
                     )
                     n += 1
-
-        # Filter note_lautung in Python
-        ret["anm_lw_star"] = []
-        for x in self.note_lautung.all():
-            if x.corresp_to and "this:LW1" in x.corresp_to.lower():
-                ret["anm_lw_star"].append(
-                    f"{x.resp}: {x.content} ›{x.corresp_to.replace('this:', '')}"
-                )
 
         # Filter bedeutungen in Python
         ret["bd_lt_star"] = []
