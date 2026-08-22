@@ -63,6 +63,24 @@ XR_SCHEMA = {
     },
 }
 
+ETYMOLOGY_SCHEMA = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {"type": "string"},
+            "n": {"type": "string"},
+            "corresp": {"type": "string"},
+            "text": {"type": "string"},
+            "pRef": {"type": "string"},
+            "ref__type_paragraph": {"type": "string"},
+            "note__resp_B__type_anmerkung": {"type": "string"},
+            "resp": {"type": "string"},
+        },
+        "additionalProperties": True,
+    },
+}
+
 
 def set_extra(self, **kwargs):
     self.extra = kwargs
@@ -367,7 +385,7 @@ class Lautung(models.Model):
 
 class LehnWort(models.Model):
     """
-    Django model representing a tei:form[@type="lautung"] node.
+    Django model representing a tei:form[@type="lehnwort"] node.
     """
 
     dboe_id = models.CharField(
@@ -632,45 +650,19 @@ class Beleg(models.Model):
         help_text="stores any kind of ./tei:xr",
         schema=XR_SCHEMA,
     ).set_extra(xml_element="./tei:xr")
-    xr_type_verweise_o = models.CharField(
-        blank=True,
-        null=True,
-        max_length=250,
-        verbose_name="Verweis (xr/@type='verweise' and @resp='O')",
-    ).set_extra(xpath="./tei:xr[@type='verweise' and @resp='O']", node_type="text")
-    xr_type_verweise_b = models.CharField(
-        blank=True,
-        null=True,
-        max_length=250,
-        verbose_name="Verweis (xr/@type='verweise' and @resp='B')",
-    ).set_extra(xpath="./tei:xr[@type='verweise' and @resp='B']", node_type="text")
     fragebogen_nummer = models.TextField(
         blank=True,
         null=True,
         verbose_name="Fragebogen Nummer",
         help_text="Whatever",
     ).set_extra(xpath="./tei:ref[@type='fragebogenNummer']", node_type="text")
-    etym = ArrayField(
-        models.TextField(blank=True, null=True),
+    etymology = JSONField(
         blank=True,
-        default=list,
+        null=True,
         verbose_name="Etymologie",
         help_text="whatever",
-    ).set_extra(xpath="./tei:etym", node_type="list")
-    note_notabene = ArrayField(
-        models.TextField(blank=True, null=True),
-        blank=True,
-        default=list,
-        verbose_name="Notabene",
-        help_text="whatever",
-    ).set_extra(xpath="./tei:note[@type='notabene']", node_type="list")
-    note_diverse = ArrayField(
-        models.TextField(blank=True, null=True),
-        blank=True,
-        default=list,
-        verbose_name="Anmerkung (diverse)",
-        help_text="whatever",
-    ).set_extra(xpath="./tei:note[@type='diverse']", node_type="list")
+        schema=ETYMOLOGY_SCHEMA,
+    ).set_extra(xml_element="./tei:etym")
 
     import_issue = models.BooleanField(
         default=False,
@@ -916,7 +908,7 @@ class Beleg(models.Model):
         ret["nr"] = f"{fragebogen_nr}{cit_fragebogen_nr}"
         ret["verweis"] = verweise
         ret["page"] = self.quelle_page
-        ret["etym"] = self.etym
+        ret["etym"] = self.etymology
         ret["a"] = self.archivzeile
         ret["tags"] = [x.name for x in self.tag.all()]
 
@@ -949,11 +941,6 @@ class Beleg(models.Model):
         ret["kregion"] = [f"{x.name} ({x.sigle})" for x in kregion if x]
         ret["orte"] = list(orte)
         ret["orig_orte"] = orig_orte
-
-        # DV/LW*
-        ret["dv_lw_star"] = []
-        for x in self.note_diverse:
-            ret["dv_lw_star"].append(x)
 
         # Lautungen
         for x in self.lautungen.all():
