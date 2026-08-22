@@ -30,7 +30,6 @@ router.register(
     basename="bibliographictype",
 )
 router.register(r"collections", api_views.CollectionViewSet)
-router.register(r"anmerkunglautung", belege_api_views.AnmerkungLautungViewSet)
 router.register(r"bedeutungen", belege_api_views.SenseViewSet)
 router.register(r"kontexte", belege_api_views.CitationViewSet)
 router.register(r"lautungen", belege_api_views.LautungViewSet)

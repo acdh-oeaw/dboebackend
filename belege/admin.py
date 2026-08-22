@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.db import models
 
 from belege.models import (
-    AnmerkungLautung,
     Annotation,
     Beleg,
     Citation,
@@ -42,32 +41,6 @@ class LehnWortAdmin(admin.ModelAdmin):
         for field in ZusatzLemma._meta.fields
         if isinstance(field, (models.CharField, models.TextField))
     ]
-    autocomplete_fields = ["beleg"]
-    ordering = ["beleg", "number"]
-    list_per_page = 20
-
-
-@admin.register(AnmerkungLautung)
-class AnmerkungLautungAdmin(admin.ModelAdmin):
-    list_display = [
-        field.name
-        for field in AnmerkungLautung._meta.fields
-        if isinstance(
-            field,
-            (
-                models.CharField,
-                models.TextField,
-                models.ForeignKey,
-                models.PositiveIntegerField,
-            ),
-        )
-    ]
-    # Include foreign key fields and their related object's string representation in search_fields
-    search_fields = [
-        field.name
-        for field in AnmerkungLautung._meta.fields
-        if isinstance(field, (models.CharField, models.TextField))
-    ] + ["beleg__dboe_id"]
     autocomplete_fields = ["beleg"]
     ordering = ["beleg", "number"]
     list_per_page = 20
