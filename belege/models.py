@@ -48,6 +48,22 @@ NOTES_SCHEMA = {
     },
 }
 
+XR_SCHEMA = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {"type": "string"},
+            "corresp": {"type": "string"},
+            "type": {"type": "string"},
+            "resp": {"type": "string"},
+            "text": {"type": "string"},
+            "pRef": {"type": "array", "items": {"type": "string"}},
+        },
+        "additionalProperties": True,
+    },
+}
+
 
 def set_extra(self, **kwargs):
     self.extra = kwargs
@@ -751,6 +767,13 @@ class Beleg(models.Model):
         max_length=250,
         verbose_name="Verweis (ref/@type='sni')",
     ).set_extra(xpath="./tei:ref[@type='sni']", node_type="text")
+    xr = note = JSONField(
+        blank=True,
+        null=True,
+        verbose_name="tei:xr",
+        help_text="stores any kind of ./tei:xr",
+        schema=XR_SCHEMA,
+    ).set_extra(xml_element="./tei:xr")
     xr_type_verweise_o = models.CharField(
         blank=True,
         null=True,
@@ -917,16 +940,15 @@ class Beleg(models.Model):
                         values.append(value)
                     setattr(self, field.name, values)
                 if (
-                    hasattr(field, "extra")
-                    and "xml_element" in field.extra
-                    and not getattr(self, field.name)
+                    hasattr(field, "extra") and "xml_element" in field.extra
+                    # and not getattr(self, field.name)
                 ):
                     xpath_expr = field.extra["xml_element"]
                     items = []
                     for node in doc.any_xpath(xpath_expr):
                         items.append(node_to_json(node))
                     if items:
-                        self.note = items
+                        setattr(self, field.name, items)
         if xml_source is not None and add_anmkerung_laut:
             items = doc.any_xpath(
                 "./tei:note[@type='anmerkung' and @resp and @corresp]"
