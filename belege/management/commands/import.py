@@ -43,7 +43,6 @@ class Command(BaseCommand):
                         add_citations=True,
                         add_lautungen=True,
                         add_sense=True,
-                        add_anmkerung_laut=True,
                         add_lehnwort=True,
                     )
                 except Exception as e:
