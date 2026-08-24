@@ -912,6 +912,8 @@ class Beleg(models.Model):
                 for y in x.definition_node:
                     if y.get("corresp") and y.get("text"):
                         ret["wbd_kt_star"].append(f"{y['text']} ›{y.get('corresp')}")
+                    if not y.get("corresp") and y.get("text"):
+                        ret["bd_kt_star"].append(f"{y.get('text')} ›KT{x.number}")
             ret[f"kt{x.number}"] = [x.quote_text]
             if x.note:
                 for y in x.note:
