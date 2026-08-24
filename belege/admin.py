@@ -8,7 +8,6 @@ from belege.models import (
     Lautung,
     LehnWort,
     Sense,
-    ZusatzLemma,
 )
 
 
@@ -38,31 +37,6 @@ class LehnWortAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ["beleg"]
     ordering = ["beleg", "number"]
-    list_per_page = 20
-
-
-@admin.register(ZusatzLemma)
-class ZusatzLemmaAdmin(admin.ModelAdmin):
-    list_display = [
-        field.name
-        for field in ZusatzLemma._meta.fields
-        if isinstance(
-            field,
-            (
-                models.CharField,
-                models.TextField,
-                models.ForeignKey,
-                models.PositiveIntegerField,
-            ),
-        )
-    ]
-    search_fields = [
-        field.name
-        for field in ZusatzLemma._meta.fields
-        if isinstance(field, (models.CharField, models.TextField))
-    ]
-    autocomplete_fields = ["citation"]
-    ordering = ["citation", "number"]
     list_per_page = 20
 
 

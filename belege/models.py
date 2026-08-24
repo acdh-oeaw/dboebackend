@@ -122,64 +122,6 @@ def set_extra(self, **kwargs):
 models.Field.set_extra = set_extra
 
 
-class ZusatzLemma(models.Model):
-    """
-    Django model representing a tei:re node extracted from a tei:cit node.
-    """
-
-    dboe_id = models.CharField(
-        primary_key=True,
-        max_length=250,
-        verbose_name="DBÖ ID",
-        help_text="e.g. tu-10130.56",
-    )
-    citation = models.ForeignKey(
-        "Citation",
-        verbose_name="Citation",
-        on_delete=models.CASCADE,
-        related_name="zusatz_lemma",
-    )
-    number = models.PositiveIntegerField(default=1, verbose_name="Order number")
-    form_orth = models.CharField(
-        blank=True, null=True, max_length=250, verbose_name="Lemma"
-    ).set_extra(xpath="./tei:form/tei:orth", node_type="text")
-    pos = models.CharField(
-        blank=True,
-        null=True,
-        max_length=20,
-        verbose_name="POS",
-        choices=POS_CHOICES,
-    ).set_extra(xpath="./tei:gramGrp/tei:pos", node_type="text")
-    gram = models.CharField(
-        blank=True,
-        null=True,
-        max_length=250,
-        verbose_name="Grammatik",
-        choices=POS_CHOICES,
-    ).set_extra(xpath="./tei:gramGrp/tei:gram", node_type="text")
-
-    class Meta:
-        verbose_name = "Zusatzlemma"
-        verbose_name_plural = "Zusatzlemmata"
-        ordering = ["citation", "number"]
-
-    def __str__(self):
-        if self.form_orth:
-            return f"{self.form_orth}"
-        else:
-            return f"{self.dboe_id}"
-
-    def save(self, orig_xml=None, *args, **kwargs):
-        xml_source = orig_xml
-        if xml_source is not None:
-            try:
-                doc = TeiReader(xml_source)
-            except AttributeError:
-                doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
-            populate_fields_from_xml(doc, self)
-        super().save(*args, **kwargs)
-
-
 class Citation(models.Model):
     """
     Django model representing a citation (Kontext) extracted from TEI XML documents.
@@ -276,7 +218,7 @@ class Citation(models.Model):
         verbose_name_plural = "Kontexte"
         ordering = ["beleg", "number"]
 
-    def save(self, add_zusatzlemma=False, orig_xml=None, *args, **kwargs):
+    def save(self, orig_xml=None, *args, **kwargs):
         xml_source = orig_xml
         if xml_source is not None:
             try:
@@ -284,23 +226,6 @@ class Citation(models.Model):
             except AttributeError:
                 doc = TeiReader(ET.tostring(xml_source).decode("utf-8"))
             populate_fields_from_xml(doc, self)
-        if xml_source is not None and add_zusatzlemma:
-            items = doc.any_xpath("./tei:re")
-            for number, item in enumerate(items, start=1):
-                xml_id = get_xmlid(item)
-                item_orig_xml = ET.tostring(item, encoding="unicode")
-                try:
-                    item = ZusatzLemma.objects.get(dboe_id=xml_id)
-                except ZusatzLemma.DoesNotExist:
-                    item = ZusatzLemma(
-                        dboe_id=xml_id,
-                        citation=self,
-                        number=number,
-                    )
-                try:
-                    item.save(orig_xml=item_orig_xml)
-                except Exception as e:
-                    print(f"Error saving ZusatzLemma {xml_id}: {e}")
         super().save(*args, **kwargs)
 
 
@@ -523,9 +448,7 @@ class BelegManager(models.Manager):
         """Return queryset with all related objects prefetched for optimal performance."""
 
         return self.select_related("quelle_type").prefetch_related(
-            models.Prefetch(
-                "citations", queryset=Citation.objects.prefetch_related("zusatz_lemma")
-            ),
+            "citations",
             "lautungen",
             "lehnwoerter",
             "bedeutungen",
@@ -993,10 +916,7 @@ class Beleg(models.Model):
                     f"{x.definition} ›WBD/KT{x.number}/KT{x.number}"
                 )
             ret[f"kt{x.number}"] = [x.quote_text]
-            for y in x.zusatz_lemma.all():
-                ret[f"zl{y.number}_kt{x.number}"] = [
-                    f"{y.form_orth}||{y.pos}||{getattr(y, 'gram', None) or ''}"
-                ]
+
             for y in x.note_diverse:
                 ret["dv_kt_star"].append(f"{y} ›KT {x.number}")
             if x.xr:
