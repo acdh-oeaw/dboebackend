@@ -669,7 +669,6 @@ class Beleg(models.Model):
         add_citations=False,
         add_lautungen=False,
         add_sense=False,
-        add_anmkerung_laut=False,
         add_lehnwort=False,
         trigger_index=True,
         *args,
