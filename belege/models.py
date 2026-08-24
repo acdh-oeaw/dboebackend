@@ -972,10 +972,11 @@ class Beleg(models.Model):
         ret["bd_lt_star"] = []
         for x in bedeutungen_list:
             if x.corresp_to and "LT" in x.corresp_to:
-                if x.note_anmerkung_o:
-                    ret["bd_lt_star"].append(
-                        f"{x.definition}ANMO: {x.note_anmerkung_o} ›LT{x.number}"
-                    )
+                if x.note:
+                    for y in x.note:
+                        ret["bd_lt_star"].append(
+                            f"{x.definition} ANMO {y.get('resp')}: {y.get('text')}  ›LT{x.number}"
+                        )
                 else:
                     ret["bd_lt_star"].append(f"{x.definition} ›LT{x.number}")
 
