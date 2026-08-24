@@ -908,22 +908,30 @@ class Beleg(models.Model):
                 key = f"kt_{cur_lt.lower()}"
                 value = x.quote_text
                 ret[key] = value
-            if x.definition_corresp is None and x.definition:
-                ret["bd_kt_star"].append(f"{x.definition} ›KT {x.number}")
-            elif x.definition:
-                ret["wbd_kt_star"].append(
-                    f"{x.definition} ›WBD/KT{x.number}/KT{x.number}"
-                )
+            if x.definition_node:
+                for y in x.definition_node:
+                    if y.get("corresp") and y.get("text"):
+                        ret["wbd_kt_star"].append(f"{y['text']} ›{y.get('corresp')}")
             ret[f"kt{x.number}"] = [x.quote_text]
-
-            for y in x.note_diverse:
-                ret["dv_kt_star"].append(f"{y} ›KT {x.number}")
-            if x.xr:
-                ret["vrw_kt_star"].append(f"O: {x.xr} ›KT{x.number}")
-            if x.note_anmerkung_o:
-                ret["anm_kt_star"].append(f"O: {x.note_anmerkung_o} ›KT{x.number}")
-            if x.note_anmerkung_b:
-                ret["anm_kt_star"].append(f"B: {x.note_anmerkung_b} ›KT{x.number}")
+            if x.note:
+                for y in x.note:
+                    if y.get("text") and y.get("type") == "anmerkung":
+                        ret["anm_kt_star"].append(
+                            f"{y.get('resp')}: {y['text']} ›{y.get('type')} {y.get('corresp')} ›KT {x.number}".strip()
+                        )
+                    if y.get("text") and y.get("type") == "diverse":
+                        ret["dv_kt_star"].append(
+                            f"{y.get('resp')}: {y['text']} ›{y.get('type')} {y.get('corresp')} ›KT {x.number}".strip()
+                        )
+            if x.xr_node:
+                for y in x.xr_node:
+                    ret["vrw_kt_star"].append(f"{y.get('resp')}: {y['text']}")
+            # if x.xr:
+            #     ret["vrw_kt_star"].append(f"O: {x.xr} ›KT{x.number}")
+            # if x.note_anmerkung_o:
+            #     ret["anm_kt_star"].append(f"O: {x.note_anmerkung_o} ›KT{x.number}")
+            # if x.note_anmerkung_b:
+            #     ret["anm_kt_star"].append(f"B: {x.note_anmerkung_b} ›KT{x.number}")
 
         # Use prefetched bedeutungen - filter in Python
         bedeutungen_list = list(self.bedeutungen.all())
