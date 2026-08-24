@@ -98,6 +98,21 @@ DEF_SCHEMA = {
     },
 }
 
+RE_SCHEMA = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {"type": "string"},
+            "text": {"type": "string"},
+            "type": {"type": "string"},
+            "form": {"type": "array", "items": {"type": "string"}},
+            "gramGrp": {"type": "array", "items": {"type": "string"}},
+        },
+        "additionalProperties": True,
+    },
+}
+
 
 def set_extra(self, **kwargs):
     self.extra = kwargs
@@ -248,6 +263,13 @@ class Citation(models.Model):
         help_text="stores any kind of ./tei:xr",
         schema=XR_SCHEMA,
     ).set_extra(xml_element="./tei:xr")
+    re_node = JSONField(
+        blank=True,
+        null=True,
+        verbose_name="tei:re",
+        help_text="Zusatzlemma",
+        schema=RE_SCHEMA,
+    ).set_extra(xml_element="./tei:re")
 
     class Meta:
         verbose_name = "Kontext"
