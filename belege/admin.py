@@ -59,7 +59,7 @@ class SenseAdmin(admin.ModelAdmin):
         field.name
         for field in Sense._meta.fields
         if isinstance(field, (models.CharField, models.TextField))
-    ]
+    ] + ["beleg__dboe_id"]
     autocomplete_fields = ["beleg"]
     ordering = ["beleg", "number"]
     list_per_page = 20
