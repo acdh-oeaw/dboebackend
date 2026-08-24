@@ -81,6 +81,23 @@ ETYMOLOGY_SCHEMA = {
     },
 }
 
+DEF_SCHEMA = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {"type": "string"},
+            "n": {"type": "string"},
+            "corresp": {"type": "string"},
+            "lang": {"type": "string"},
+            "text": {"type": "string"},
+            "pRef": {"type": "string"},
+            "resp": {"type": "string"},
+        },
+        "additionalProperties": True,
+    },
+}
+
 
 def set_extra(self, **kwargs):
     self.extra = kwargs
@@ -192,69 +209,45 @@ class Citation(models.Model):
         verbose_name="Pronunciation reference",
         help_text="whatever",
     ).set_extra(xpath="./tei:quote/tei:pRef", node_type="text")
-    definition = models.TextField(
+    definition_node = JSONField(
         blank=True,
         null=True,
-        verbose_name="Bedeutung des Kontexts",
+        verbose_name="Bedeutung des Kontexts (tei:def)",
         help_text='Diese Information beschreibt die Bedeutung des in Spalte "Belegsatz 1", "Belegsatz 2" etc. angegebenen Belegsatze',  # noqa: E501
-    ).set_extra(xpath="./tei:def", node_type="text")
-    definition_lang = models.CharField(
-        max_length=3,
-        choices=LANG_CHOICES,
-        blank=True,
-        null=True,
-        verbose_name="Sprache (Definition)",
-    ).set_extra(xpath="./tei:def/@xml:lang", node_type="attribute")
+        schema=DEF_SCHEMA,
+    ).set_extra(xml_element="./tei:def")
     corresp = models.CharField(
         max_length=250,
         blank=True,
         null=True,
         verbose_name="Korrespondiert zu",
     ).set_extra(xpath="./@corresp", node_type="attribute")
-    definition_corresp = models.CharField(
-        max_length=250,
-        blank=True,
-        null=True,
-        verbose_name="Definition korrespondiert zu Kontext",
-    ).set_extra(xpath="./tei:def/@corresp", node_type="attribute")
     interpration = models.TextField(
         blank=True,
         null=True,
         verbose_name="interpretation",
         help_text="Summarizes a specific interpretative annotation which can be linked to a span of text",
     ).set_extra(xpath="./tei:interp", node_type="text")
-    note_anmerkung_o = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name="Anmerkung: O",
-        help_text="Whatever",
-    ).set_extra(xpath="./tei:note[@type='anmerkung' and @resp='O']", node_type="text")
-    note_anmerkung_b = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name="Anmerkung: B",
-        help_text="Whatever",
-    ).set_extra(xpath="./tei:note[@type='anmerkung' and @resp='B']", node_type="text")
     fragebogen_nummer = models.TextField(
         blank=True,
         null=True,
         verbose_name="Fragebogen Nummer",
         help_text="Whatever",
     ).set_extra(xpath="./tei:ref[@type='fragebogenNummer']", node_type="text")
-    xr = models.CharField(
-        max_length=300,
+    note = JSONField(
         blank=True,
         null=True,
-        verbose_name="Cross-reference phrase",
-        help_text="Contains a phrase, sentence, or icon referring the reader to some other location in this or another text",  # noqa: E501
-    ).set_extra(xpath="./tei:xr[@type='verweise']", node_type="text")
-    note_diverse = ArrayField(
-        models.TextField(blank=True, null=True),
+        verbose_name="tei:note",
+        help_text="stores any kind of ./tei:note",
+        schema=NOTES_SCHEMA,
+    ).set_extra(xml_element="./tei:note")
+    xr_node = JSONField(
         blank=True,
-        default=list,
-        verbose_name="Anmerkung (diverse)",
-        help_text="whatever",
-    ).set_extra(xpath="./tei:note[@type='diverse']", node_type="list")
+        null=True,
+        verbose_name="tei:xr",
+        help_text="stores any kind of ./tei:xr",
+        schema=XR_SCHEMA,
+    ).set_extra(xml_element="./tei:xr")
 
     class Meta:
         verbose_name = "Kontext"
@@ -643,13 +636,6 @@ class Beleg(models.Model):
         max_length=250,
         verbose_name="Verweis (ref/@type='sni')",
     ).set_extra(xpath="./tei:ref[@type='sni']", node_type="text")
-    xr = note = JSONField(
-        blank=True,
-        null=True,
-        verbose_name="tei:xr",
-        help_text="stores any kind of ./tei:xr",
-        schema=XR_SCHEMA,
-    ).set_extra(xml_element="./tei:xr")
     fragebogen_nummer = models.TextField(
         blank=True,
         null=True,
@@ -706,6 +692,13 @@ class Beleg(models.Model):
         help_text="stores any kind of ./tei:note",
         schema=NOTES_SCHEMA,
     ).set_extra(xml_element="./tei:note")
+    xr = JSONField(
+        blank=True,
+        null=True,
+        verbose_name="tei:xr",
+        help_text="stores any kind of ./tei:xr",
+        schema=XR_SCHEMA,
+    ).set_extra(xml_element="./tei:xr")
 
     objects = BelegManager()
 
