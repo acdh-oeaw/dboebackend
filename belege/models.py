@@ -469,18 +469,13 @@ class Sense(models.Model):
         null=True,
         verbose_name="Sprache (Definition)",
     ).set_extra(xpath="./tei:def/@xml:lang", node_type="attribute")
-    note_anmerkung_o = models.TextField(
+    note = JSONField(
         blank=True,
         null=True,
-        verbose_name="Anmerkung: O",
-        help_text="Whatever",
-    ).set_extra(xpath="./tei:note[@type='anmerkung' and @resp='O']", node_type="text")
-    note_anmerkung_b = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name="Anmerkung: B",
-        help_text="Whatever",
-    ).set_extra(xpath="./tei:note[@type='anmerkung' and @resp='B']", node_type="text")
+        verbose_name="tei:note",
+        help_text="stores any kind of ./tei:note",
+        schema=NOTES_SCHEMA,
+    ).set_extra(xml_element="./tei:note")
 
     class Meta:
         verbose_name = "Bedeutung"
