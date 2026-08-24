@@ -36,11 +36,6 @@ class LehnWortAdmin(admin.ModelAdmin):
             ),
         )
     ]
-    search_fields = [
-        field.name
-        for field in ZusatzLemma._meta.fields
-        if isinstance(field, (models.CharField, models.TextField))
-    ]
     autocomplete_fields = ["beleg"]
     ordering = ["beleg", "number"]
     list_per_page = 20
