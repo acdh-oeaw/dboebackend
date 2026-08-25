@@ -1033,10 +1033,10 @@ class Beleg(models.Model):
                 if x.note:
                     for y in x.note:
                         ret["bd_lt_star"].append(
-                            f"{x.definition} ANMO {y.get('resp')}: {y.get('text')}  ›LT{x.number}"
+                            f"{x.definition} ANMO {y.get('resp')}: {y.get('text')}  ›{x.corresp_to}"
                         )
                 else:
-                    ret["bd_lt_star"].append(f"{x.definition} ›LT{x.number}")
+                    ret["bd_lt_star"].append(f"{x.definition} ›{x.corresp_to}")
 
         for i, x in enumerate(self.zitierweise, start=1):
             ret[f"zw{i}"] = [x]
