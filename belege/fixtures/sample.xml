@@ -97,7 +97,6 @@
             </etym>
             <sense corresp="this:LT1" xml:id="aaa-test-001-tu-114679.14">
                <def xml:lang="de">hinüber [h408_qdb-d1e47522]</def>
-               <note type="anmerkung" resp="O">übtr. [see entry: d167_qdb-d1e2546]</note>
             </sense>
             
             <sense corresp="this:LW1" xml:id="aaa-test-001-tu-5503.40">
@@ -105,6 +104,11 @@
             </sense>
             <sense corresp="this:LW2" xml:id="aaa-test-001-tu-5503.42">
                <def xml:lang="de">träg [see entry: d168_qdb-d1e18557]</def>
+            </sense>
+            
+            <sense n="2" corresp="this:LT1" xml:id="aaa-test-001-tu-4715.12">
+               <def xml:lang="de">nachtschwärmen</def>
+               <note type="anmerkung" resp="O">übtr.</note>
             </sense>
             
             <xr type="verweise" resp="B" xml:id="aaa-test-001-tu-4710.3">Entstellt, unter -dr&lt;äel [see entry: d167_qdb-d1e17186]</xr>
