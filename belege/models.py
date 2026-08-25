@@ -844,16 +844,18 @@ class Beleg(models.Model):
                     and "this:L" not in corresp
                 ):
                     ret["anm"].append(x.get("text"))
+
+        # verweise "Verweis": $e/(tei:ref,tei:xr)[@type=("verweise", "sni", "dbo")]
         verweise = []
-        for x in [
-            "ref_type_dbo",
-            "ref_type_sni",
-            "xr_type_verweise_o",
-            "xr_type_verweise_b",
-        ]:
-            value = getattr(self, x, None)
-            if value:
-                verweise.append(value)
+        verweis_types = ["verweise", "sni", "dbo"]
+        if self.xr:
+            for x in self.xr:
+                node_type = x.get("type") or ""
+                if node_type in verweis_types:
+                    verweise.append(x.get("text"))
+        for x in ["ref_type_dbo", "ref_type_sni"]:
+            if getattr(self, x):
+                verweise.append(getattr(self, x))
 
         try:
             cit_fragebogen_nr = " ".join(
