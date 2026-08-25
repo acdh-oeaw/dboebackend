@@ -818,14 +818,23 @@ class Beleg(models.Model):
         ret["scans"] = self.scan
 
         # process notes
-        ret["div"] = []
-        ret["anm_lt_star"] = []
-        ret["anm_lw_star"] = []
-        ret["dv_lw_star"] = []
-        ret["anm"] = []
+        ret["div"] = []  # "DIV" : $e/tei:note[@type="diverse"and @n="1"]
+        ret[
+            "anm_lt_star"
+        ] = []  # "ANM/LT*": $e/tei:note[@type="anmerkung" and @corresp=("this:LT1",...", "this:LT10")],
+        ret[
+            "anm_lw_star"
+        ] = []  # "ANM/LW*": $e/tei:note[@type="anmerkung" and @corresp=("this:LW1",... "this:LW8")],
+        ret[
+            "dv_lw_star"
+        ] = []  # "DV/LW*": $e/tei:note[@type="diverse" and @corresp=("this:LW1", ..., "this:LW8")],
+        ret[
+            "anm"
+        ] = []  # $e/tei:note[@type=("anmerkung", "notabene") and not(starts-with(@corresp, "this:L"))],
         if self.note:
             for x in self.note:
                 corresp = x.get("corresp") or ""
+                resp = x.get("resp") or ""
                 if x.get("type") == "diverse" and x.get("n") == "1" and x.get("text"):
                     ret["div"].append(x.get("text"))
                 if x.get("type") == "anmerkung" and "this:LT" in corresp:
@@ -843,7 +852,7 @@ class Beleg(models.Model):
                     ]
                     and "this:L" not in corresp
                 ):
-                    ret["anm"].append(x.get("text"))
+                    ret["anm"].append(f"{resp}: {x.get('text')}")
 
         # verweise "Verweis": $e/(tei:ref,tei:xr)[@type=("verweise", "sni", "dbo")]
         verweise = []
@@ -856,6 +865,13 @@ class Beleg(models.Model):
         for x in ["ref_type_dbo", "ref_type_sni"]:
             if getattr(self, x):
                 verweise.append(getattr(self, x))
+
+        ret["etym"] = []  # $e/tei:etym
+        if self.etymology:
+            for x in self.etymology:
+                corresp = x.get("corresp") or ""
+                resp = x.get("resp") or ""
+                ret["etym"].append(f"{resp}: {x.get('text')}")
 
         try:
             cit_fragebogen_nr = " ".join(
@@ -870,7 +886,7 @@ class Beleg(models.Model):
         ret["nr"] = f"{fragebogen_nr}{cit_fragebogen_nr}"
         ret["verweis"] = verweise
         ret["page"] = self.quelle_page
-        ret["etym"] = self.etymology
+
         ret["a"] = self.archivzeile
         ret["tags"] = [x.name for x in self.tag.all()]
 
@@ -966,9 +982,11 @@ class Beleg(models.Model):
             #     ret["anm_kt_star"].append(f"B: {x.note_anmerkung_b} ›KT{x.number}")
 
         # Use prefetched bedeutungen - filter in Python
+
+        # BD/LW* $e/tei:sense[@corresp=("this:LW1", "this:LW2", "this:LW3", "this:LW4", "this:LW5", "this:LW6", "this:LW7", "this:LW8")],
         bedeutungen_list = list(self.bedeutungen.all())
         ret["bd_lw_star"] = [
-            b.definition
+            f"{b.definition} ›{b.corresp_to}"
             for b in bedeutungen_list
             if b.corresp_to and "LW" in b.corresp_to
         ]
