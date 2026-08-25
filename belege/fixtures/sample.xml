@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml"
+	schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+   <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title>Test data for DBOE-Backend</title>
+         </titleStmt>
+         <publicationStmt>
+            <p>Publication Information</p>
+         </publicationStmt>
+         <sourceDesc>
+            <p>Born digital</p>
+         </sourceDesc>
+      </fileDesc>
+   </teiHeader>
+   <standOff>
+      <xenoData corresp="this:d167_qdb-d1e21348" xml:id="aaa-test-001-orig-d167_qdb-d1e21348"> *A*
+         HK 167, d167#812.1 = T1670706.pla#5, korr. W.B. *HL* dr&lt;^aen:6 *QU* Wien und die Wiener,
+         M^arz (1951) *S* 29 *N* 25 *QDB* {6.5} W. *O* Wien === *LT1* Drahn [I] *ANMO* der Inbegriff
+         aller wienerischen Seligkeit. L^a^st sich nicht ins Hochdeutsche ^ubersetzen *ETO* Der
+         Ausdruck bezog sich urspr^unglich nur auf das #Werkeldrahn#, war also ganz w^ortlich
+         verstanden. Da schrieb Ernst Polkammer im Jahre 1879 ein Lied mit dem Abgesang: #Weil i a
+         alter Drahrer bin# ******************** </xenoData>
+   </standOff>
+   <text>
+      <body>
+         <entry xml:id="aaa-test-001-d167_qdb-d1e21348" n="31768" source="#orig-d167_qdb-d1e21348">
+            <form type="hauptlemma" xml:id="aaa-test-001-tu-4826.28">
+               <orth>drä̂en</orth>
+            </form>
+            <gramGrp>
+               <pos>Verb</pos>
+            </gramGrp>
+            <form type="lautung" n="1" xml:id="aaa-test-001-tu-4826.32">
+               <pron xml:lang="bar" notation="teuthonista">Drahn</pron>
+               <gramGrp>
+                  <gram> [I]</gram>
+               </gramGrp>
+            </form>
+            <cit type="kontext" n="1" xml:id="aaa-test-001-tu-104944.14">
+               <quote xml:lang="bar"> und jez Weibaleit steckts abi enkan Löffi in enkan <pRef>
+                     Voraufi</pRef>
+                  <seg type="gram"> [sg4]</seg>
+               </quote>
+               <def xml:lang="de">--</def>
+               <note type="anmerkung" resp="O" corresp="this:BD"> sagte unser Schaffer in Miesbühl
+                  immer zu den Mägden anach dem Tischgebet, das nach jeder Mahlzeit gesprochen wurde </note>
+               <def xml:lang="de" corresp="this:WBD/KT1" xml:id="aaa-test-001-tu-104944.16">
+                  Busen</def>
+            </cit>
+            <note type="anmerkung" resp="O" xml:id="aaa-test-001-tu-4826.33">der Inbegriff aller
+               wienerischen Seligkeit. Läßt sich nicht ins Hochdeutsche übersetzen</note>
+            <etym resp="O" xml:id="aaa-test-001-tu-4826.34">Der Ausdruck bezog sich ursprünglich nur
+               auf das <pRef> Werkeldrahn</pRef> , war also ganz wörtlich verstanden. Da schrieb
+               Ernst Polkammer im Jahre 1879 ein Lied mit dem Abgesang: <pRef>Weil i a alter Drahrer
+                  bin</pRef>
+            </etym>
+            <sense corresp="this:LT1" xml:id="aaa-test-001-tu-114679.14">
+               <def xml:lang="de">hinüber</def>
+            </sense>
+            <note type="diverse" n="1" xml:id="aaa-test-001-tu-114679.15">KF.</note>
+            <ref type="archiv" xml:id="aaa-test-001-tu-4826.27">HK 167, d167#812.1 = T1670706.pla#5,
+               korr. W.B.</ref>
+            <ref type="quelle" xml:id="aaa-test-001-tu-4826.29">Wien und die Wiener, März (1951)<ref
+                  type="seite">29</ref>
+               <num>25</num>
+            </ref>
+            <ref type="quelleBearbeitet" xml:id="aaa-test-001-tu-4826.30">{6.5} W.</ref>
+            <usg type="geo" corresp="this:QDB">
+               <placeName type="orig">Wien</placeName>
+               <listPlace corresp="sigle:6.5">
+                  <place type="Bundesland">
+                     <placeName>Wien</placeName>
+                     <idno>6.5</idno>
+                     <listPlace>
+                        <place type="Großregion">
+                           <placeName>Wien</placeName>
+                           <idno>6.5</idno>
+                        </place>
+                     </listPlace>
+                  </place>
+               </listPlace>
+            </usg>
+         </entry>
+      </body>
+   </text>
+</TEI>
