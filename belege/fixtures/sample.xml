@@ -40,6 +40,21 @@
                   <gram> [I]</gram>
                </gramGrp>
             </form>
+            <form type="lehnwort" n="1" xml:id="aaa-test-001-tu-7240.60">
+               <pron xml:lang="bar" notation="teuthonista">tračanje [see entry: d171_qdb-d1e90647]</pron>
+               <gramGrp>
+                  <gram> [n]</gram>
+               </gramGrp>
+            </form>
+            <form type="lehnwort" n="2" xml:id="aaa-test-001-tu-7241.2">
+               <pron xml:lang="bar" notation="teuthonista">tračkanje [see entry: d171_qdb-d1e90647]</pron>
+               <gramGrp>
+                  <gram> [n]</gram>
+               </gramGrp>
+            </form>
+            <form type="lehnwort" n="7" xml:id="aaa-test-001-tu-6160.12">
+               <pron xml:lang="bar" notation="teuthonista">kroat. pukarance nosit [see entry: d169_qdb-d1e55526]</pron> 
+            </form>
             <cit type="kontext" n="1" xml:id="aaa-test-001-tu-104944.14">
                <quote xml:lang="bar"> und jez Weibaleit steckts abi enkan Löffi in enkan <pRef>
                      Voraufi</pRef>
@@ -47,21 +62,29 @@
                </quote>
                <def xml:lang="de">--</def>
                <note type="anmerkung" resp="O" corresp="this:BD"> sagte unser Schaffer in Miesbühl
-                  immer zu den Mägden anach dem Tischgebet, das nach jeder Mahlzeit gesprochen wurde </note>
+                  immer zu den Mägden anach dem Tischgebet, das nach jeder Mahlzeit gesprochen wurde [see entry: h407_qdbn-d16e46765]</note>
                <def xml:lang="de" corresp="this:WBD/KT1" xml:id="aaa-test-001-tu-104944.16">
-                  Busen</def>
+                  Busen [see entry: h407_qdbn-d16e46765]</def>
             </cit>
             <note type="anmerkung" resp="O" xml:id="aaa-test-001-tu-4826.33">der Inbegriff aller
-               wienerischen Seligkeit. Läßt sich nicht ins Hochdeutsche übersetzen</note>
+               wienerischen Seligkeit. Läßt sich nicht ins Hochdeutsche übersetzen [see entry: d167_qdb-d1e21323]</note>
             <etym resp="O" xml:id="aaa-test-001-tu-4826.34">Der Ausdruck bezog sich ursprünglich nur
                auf das <pRef> Werkeldrahn</pRef> , war also ganz wörtlich verstanden. Da schrieb
                Ernst Polkammer im Jahre 1879 ein Lied mit dem Abgesang: <pRef>Weil i a alter Drahrer
-                  bin</pRef>
+                  bin</pRef> [see entry: d167_qdb-d1e21323]
             </etym>
             <sense corresp="this:LT1" xml:id="aaa-test-001-tu-114679.14">
-               <def xml:lang="de">hinüber</def>
+               <def xml:lang="de">hinüber [h408_qdb-d1e47522]</def>
             </sense>
+            <note type="diverse" corresp="this:LW7" xml:id="aaa-test-001-tu-6160.16">
+               <pRef>pukarantsl trǫgn</pRef> [see entry: d169_qdb-d1e55526]
+            </note>
+            <note type="anmerkung" resp="O" corresp="this:LW2">Plauscherl [see entry: d171_qdb-d1e90647]</note>
+            <note type="anmerkung" n="1" corresp="this:LT1" resp="O">Demin.u.Iterativform von
+               <pRef>dräen</pRef> [see entry: d167_qdb-d1e1943]</note>
             <note type="diverse" n="1" xml:id="aaa-test-001-tu-114679.15">KF.</note>
+            <note type="diverse" n="2" xml:id="aaa-test-001-tu-4718.10">Die Eier werden wie ein
+               Kreisel am Boden gedreht</note>
             <ref type="archiv" xml:id="aaa-test-001-tu-4826.27">HK 167, d167#812.1 = T1670706.pla#5,
                korr. W.B.</ref>
             <ref type="quelle" xml:id="aaa-test-001-tu-4826.29">Wien und die Wiener, März (1951)<ref
