@@ -1,7 +1,13 @@
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from annotations.models import Tag
 from belege.models import (
+    DEF_SCHEMA,
+    ETYMOLOGY_SCHEMA,
+    NOTES_SCHEMA,
+    RE_SCHEMA,
+    XR_SCHEMA,
     Annotation,
     Beleg,
     Citation,
@@ -11,6 +17,31 @@ from belege.models import (
 )
 from belege.serializer_utils import PopulateLabelMixin
 from bibls.models import BibliographicType
+
+
+@extend_schema_field(ETYMOLOGY_SCHEMA)
+class EtymologyField(serializers.JSONField):
+    """JSONField whose OpenAPI schema mirrors the model's ETYMOLOGY_SCHEMA."""
+
+
+@extend_schema_field(DEF_SCHEMA)
+class DefinitionNodeField(serializers.JSONField):
+    """JSONField whose OpenAPI schema mirrors the model's DEF_SCHEMA."""
+
+
+@extend_schema_field(NOTES_SCHEMA)
+class NoteField(serializers.JSONField):
+    """JSONField whose OpenAPI schema mirrors the model's NOTES_SCHEMA."""
+
+
+@extend_schema_field(XR_SCHEMA)
+class XrNodeField(serializers.JSONField):
+    """JSONField whose OpenAPI schema mirrors the model's XR_SCHEMA."""
+
+
+@extend_schema_field(RE_SCHEMA)
+class ReNodeField(serializers.JSONField):
+    """JSONField whose OpenAPI schema mirrors the model's RE_SCHEMA."""
 
 
 class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer):
@@ -49,6 +80,9 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
         read_only=False,
         allow_null=True,
     )
+    etymology = EtymologyField(required=False, allow_null=True)
+    note = NoteField(required=False, allow_null=True)
+    xr = XrNodeField(required=False, allow_null=True)
 
     class Meta:
         model = Beleg
@@ -68,6 +102,9 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
             "modify_tag",
             "internal_comment",
             "quelle_type_id",
+            "etymology",
+            "note",
+            "xr",
         ]
 
     def get_fields(self):
@@ -119,6 +156,10 @@ class CitationSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSeriali
     annotations = AnnotationNestedSerializer(
         source="annotation", many=True, read_only=True
     )
+    definition_node = DefinitionNodeField(required=False, allow_null=True)
+    note = NoteField(required=False, allow_null=True)
+    xr_node = XrNodeField(required=False, allow_null=True)
+    re_node = ReNodeField(required=False, allow_null=True)
 
     class Meta:
         model = Citation
@@ -158,6 +199,7 @@ class SenseSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
     id = serializers.CharField(source="dboe_id", read_only=True)
     beleg = serializers.PrimaryKeyRelatedField(read_only=True)
     orig_xml = serializers.CharField(read_only=True)
+    note = NoteField(required=False, allow_null=True)
 
     class Meta:
         model = Sense
