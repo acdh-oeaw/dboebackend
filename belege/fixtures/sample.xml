@@ -27,7 +27,7 @@
    </standOff>
    <text>
       <body>
-         <entry xml:id="aaa-test-001-d167_qdb-d1e21348" n="31768" source="#orig-d167_qdb-d1e21348">
+         <entry xml:id="aaa-test-001-d167_qdb-d1e21348" n="31768" source="#orig-d167_qdb-d1e21348" facs="F_228%2FF_0725.pla%2FF_0725.pla_00058_00047_a.jp2">
             <form type="hauptlemma" xml:id="aaa-test-001-tu-4826.28">
                <orth>drä̂en</orth>
             </form>
@@ -92,6 +92,9 @@
             <ref type="quelle" xml:id="aaa-test-001-tu-4826.29">Wien und die Wiener, März (1951)<ref
                   type="seite">29</ref>
                <num>25</num>
+            </ref>
+            <ref type="bibl" corresp="this:QDB">
+               <bibl>FbB.JUFFINGER· (19xx) [SFb./EFb.] [see entry: h407_qdb-d1e33545]</bibl>
             </ref>
             <ref type="quelleBearbeitet" xml:id="aaa-test-001-tu-4826.30">{6.5} W.</ref>
             <usg type="geo" corresp="this:QDB">
