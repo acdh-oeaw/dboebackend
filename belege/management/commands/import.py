@@ -19,8 +19,8 @@ class Command(BaseCommand):
         with open(failed_path, "w", encoding="utf-8"):
             pass
 
-        files = sorted(glob.glob("/home/csae8092/repos/dboe/dboe2arche/data/h407*.xml"))
-        print("importing data from {len(files)} files")
+        files = sorted(glob.glob("/home/csae8092/repos/dboe/dboe2arche/data/n*.xml"))
+        print(f"importing data from {len(files)} files")
         for f, x in enumerate(files, start=1):
             print(f"{f}/{len(files)} files")
             fname = os.path.split(x)[-1]
