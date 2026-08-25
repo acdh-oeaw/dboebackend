@@ -78,6 +78,9 @@
             <sense corresp="this:LT1" xml:id="aaa-test-001-tu-114679.14">
                <def xml:lang="de">hinüber [h408_qdb-d1e47522]</def>
             </sense>
+            
+            <xr type="verweise" resp="B" xml:id="aaa-test-001-tu-4710.3">Entstellt, unter -dr&lt;äel [see entry: d167_qdb-d1e17186]</xr>
+            <ref type="sni" xml:id="aaa-test-001-tu-4802.16">HA-411+scn.txt: wrwb [see entry: d167_qdb-d1e1679]</ref>
             <note type="diverse" corresp="this:LW7" xml:id="aaa-test-001-tu-6160.16">
                <pRef>pukarantsl trǫgn</pRef> [see entry: d169_qdb-d1e55526]
             </note>
