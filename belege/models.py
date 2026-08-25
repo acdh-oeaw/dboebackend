@@ -843,6 +843,11 @@ class Beleg(models.Model):
         ret["etym"] = self.etymology
         ret["a"] = self.archivzeile
         ret["tags"] = [x.name for x in self.tag.all()]
+        ret["div"] = []
+        if self.note:
+            for x in self.note:
+                if x.get("type") == "diverse" and x.get("n") == "1" and x.get("text"):
+                    ret["div"] = x.get("text")
 
         siglen = set()
         bundeslaender = set()
