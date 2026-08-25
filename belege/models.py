@@ -816,6 +816,34 @@ class Beleg(models.Model):
         # Collect simple references
         ret["tustep"] = self.xeno_data
         ret["scans"] = self.scan
+
+        # process notes
+        ret["div"] = []
+        ret["anm_lt_star"] = []
+        ret["anm_lw_star"] = []
+        ret["dv_lw_star"] = []
+        ret["anm"] = []
+        if self.note:
+            for x in self.note:
+                corresp = x.get("corresp") or ""
+                if x.get("type") == "diverse" and x.get("n") == "1" and x.get("text"):
+                    ret["div"].append(x.get("text"))
+                if x.get("type") == "anmerkung" and "this:LT" in corresp:
+                    ret["anm_lt_star"].append(x.get("text"))
+                if x.get("type") == "anmerkung" and "this:LW" in corresp:
+                    ret["anm_lw_star"].append(x.get("text"))
+                if x.get("type") == "diverse" and "this:LW" in corresp:
+                    ret["dv_lw_star"].append(x.get("text"))
+                if (
+                    x.get("type")
+                    == "anmerkung"
+                    in [
+                        "anmerkung",
+                        "notabene",
+                    ]
+                    and "this:L" not in corresp
+                ):
+                    ret["anm"].append(x.get("text"))
         verweise = []
         for x in [
             "ref_type_dbo",
@@ -843,11 +871,6 @@ class Beleg(models.Model):
         ret["etym"] = self.etymology
         ret["a"] = self.archivzeile
         ret["tags"] = [x.name for x in self.tag.all()]
-        ret["div"] = []
-        if self.note:
-            for x in self.note:
-                if x.get("type") == "diverse" and x.get("n") == "1" and x.get("text"):
-                    ret["div"] = x.get("text")
 
         siglen = set()
         bundeslaender = set()
