@@ -981,13 +981,10 @@ class Beleg(models.Model):
                         )
             if x.xr_node:
                 for y in x.xr_node:
-                    ret["vrw_kt_star"].append(f"{y.get('resp')}: {y['text']}")
-            # if x.xr:
-            #     ret["vrw_kt_star"].append(f"O: {x.xr} ›KT{x.number}")
-            # if x.note_anmerkung_o:
-            #     ret["anm_kt_star"].append(f"O: {x.note_anmerkung_o} ›KT{x.number}")
-            # if x.note_anmerkung_b:
-            #     ret["anm_kt_star"].append(f"B: {x.note_anmerkung_b} ›KT{x.number}")
+                    resp = y.get("resp") or ""
+                    if resp:
+                        resp = f"{resp} :"
+                    ret["vrw_kt_star"].append(f"{resp}{y.get('text')} ›KT{x.number}")
 
         # Use prefetched bedeutungen - filter in Python
 
