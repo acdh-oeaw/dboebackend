@@ -73,7 +73,21 @@
                   Busen [see entry: h407_qdbn-d16e46765]</def>
                <xr type="verweise" resp="O" xml:id="aaa-test-001-tu-1924.21">gleichbedeutend: <pRef>deaʳ måchts nimma lång</pRef>[see entry: d160_qdb-d1e4306]</xr>
                <ref type="fragebogenNummer" xml:id="aaa-test-001-tu-1924.18">55/2: Vorzeichen des Todes[see entry: d160_qdb-d1e4306]</ref>
+               <interp>Fg:21 [see entry: d167_qdb-d1e1610]</interp>
             </cit>
+            <cit type="kontext" n="2" xml:id="aaa-test-001-tu-4702.27">
+               <quote xml:lang="bar">tsę̄dɒhausɒ ũmdrā</quote>
+               <interp>Fg:11</interp>
+               <def xml:lang="de">Zederhauser Umkehr</def>
+               <note type="diverse" xml:id="aaa-test-001-tu-4702.29">Eine markante Straßenkurve auf der Pongauer Seite der Tauernpaßstraße in einer tiefen Schlucht mit senkrecht aufsteigenden Wänden; wenn man sich der Stelle nähert, hat man fast den Eindruck, daß die Straße dort endet; zugrunde liegt eine Art Schildbürgergeschichte, daß Zederhauser die bei ihnen verbreitete Meinung, daß die Welt am Taleingang zu Ende sei, widerlegen wollten und sich auf den Weg machten; bei der "Zederhauser Umdra" gelangten sie dann zur Gewißheit, daß dort das Ende der Welt sei, worauf sie wieder umkehrten. [see entry: d167_qdb-d1e472]</note>
+            </cit>
+            <cit type="kontext" corresp="this:LT1" xml:id="aaa-test-001-tu-44830.58">
+               <quote xml:lang="bar">an dö Boaner ischt [sg3] fiel Fleisch drun [0][see entry: f265_qdb-d1e57263]</quote>
+            </cit>
+            <cit type="kontext" corresp="this:LT2" xml:id="aaa-test-001-tu-448300.58">
+               <quote xml:lang="bar">here some fake "KT/LT2"</quote>
+            </cit>
+            
             <note type="anmerkung" resp="O" xml:id="aaa-test-001-tu-4826.33">der Inbegriff aller
                wienerischen Seligkeit. Läßt sich nicht ins Hochdeutsche übersetzen [see entry: d167_qdb-d1e21348]</note>
             <etym resp="O" xml:id="aaa-test-001-tu-4826.34">Der Ausdruck bezog sich ursprünglich nur
