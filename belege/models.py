@@ -835,14 +835,16 @@ class Beleg(models.Model):
             for x in self.note:
                 corresp = x.get("corresp") or ""
                 resp = x.get("resp") or ""
+                if resp:
+                    resp = f"{resp}: "
                 if x.get("type") == "diverse" and x.get("n") == "1" and x.get("text"):
                     ret["div"].append(x.get("text"))
                 if x.get("type") == "anmerkung" and "this:LT" in corresp:
-                    ret["anm_lt_star"].append(x.get("text"))
+                    ret["anm_lt_star"].append(f"{resp}{x.get('text')} ›{corresp}")
                 if x.get("type") == "anmerkung" and "this:LW" in corresp:
-                    ret["anm_lw_star"].append(x.get("text"))
+                    ret["anm_lw_star"].append(f"{resp}{x.get('text')} ›{corresp}")
                 if x.get("type") == "diverse" and "this:LW" in corresp:
-                    ret["dv_lw_star"].append(x.get("text"))
+                    ret["dv_lw_star"].append(f"{resp}{x.get('text')} ›{corresp}")
                 if (
                     x.get("type")
                     == "anmerkung"
@@ -970,7 +972,7 @@ class Beleg(models.Model):
                 for y in x.note:
                     resp = y.get("resp") or ""
                     if resp:
-                        resp = f"{resp} :"
+                        resp = f"{resp}: "
                     if y.get("text") and y.get("type") == "anmerkung":
                         ret["anm_kt_star"].append(
                             f"{resp}{y['text']} ›KT {x.number}".strip()
@@ -983,7 +985,7 @@ class Beleg(models.Model):
                 for y in x.xr_node:
                     resp = y.get("resp") or ""
                     if resp:
-                        resp = f"{resp} :"
+                        resp = f"{resp}: "
                     ret["vrw_kt_star"].append(f"{resp}{y.get('text')} ›KT{x.number}")
 
         # Use prefetched bedeutungen - filter in Python
