@@ -1,0 +1,80 @@
+[
+{
+    "model": "bibls.bibliographictype",
+    "pk": 8,
+    "fields": {
+        "main_type": "Literatur",
+        "sub_type": "Fachliteratur",
+        "specification": "Wörterbuch"
+    }
+},
+{
+    "model": "bibls.bibliographictype",
+    "pk": 7,
+    "fields": {
+        "main_type": "Literatur",
+        "sub_type": "Literar.Text",
+        "specification": "Gedichte"
+    }
+},
+{
+    "model": "bibls.bibliographicitem",
+    "pk": 55,
+    "fields": {
+        "sigle": "ESSČ_online",
+        "short_title": "ESSČ online",
+        "full_title": "Elektronický slovník staré češtiny. Online",
+        "bibl_type": 8,
+        "year": "2006–",
+        "volume": "",
+        "author_last_name": "",
+        "author_first_name": "",
+        "place": "Praha",
+        "publisher": "Ústav pro jazyk český Akademie věd České republiky",
+        "comment": "http://vokabular.ujc.cas.cz",
+        "in_zotero": false,
+        "zotero_key": null,
+        "internal_node": ""
+    }
+},
+{
+    "model": "bibls.bibliographicitem",
+    "pk": 7,
+    "fields": {
+        "sigle": "AWB_online",
+        "short_title": "AWB online",
+        "full_title": "Althochdeutsches Wörterbuch. Auf Grund der von Elias v. Steinmeyer hinterlassenen Sammlungen im Auftrag der Sächsischen Akademie der Wissenschaften zu Leipzig. Online verfügbar unter http://awb.saw-leipzig.de/",
+        "bibl_type": 8,
+        "year": "",
+        "volume": "",
+        "author_last_name": "",
+        "author_first_name": "",
+        "place": "Leipzig",
+        "publisher": "Akademie-Verlag",
+        "comment": "https://www.saw-leipzig.de/de",
+        "in_zotero": false,
+        "zotero_key": null,
+        "internal_node": ""
+    }
+},
+{
+    "model": "bibls.bibliographicitem",
+    "pk": 2,
+    "fields": {
+        "sigle": "Achleitner1889",
+        "short_title": "Achleitner 1889",
+        "full_title": "Weil ma’ in d’Welt taug’n Gedichte in oberösterreichischer Mundart.",
+        "bibl_type": 7,
+        "year": "1889",
+        "volume": "",
+        "author_last_name": "",
+        "author_first_name": "",
+        "place": "Hamburg",
+        "publisher": "",
+        "comment": "",
+        "in_zotero": false,
+        "zotero_key": null,
+        "internal_node": "erg. MHF"
+    }
+}
+]

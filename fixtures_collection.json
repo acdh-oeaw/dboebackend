@@ -1,0 +1,154 @@
+[
+{
+    "model": "annotations.tag",
+    "pk": 2769,
+    "fields": {
+        "name": "verdorben",
+        "color": "#0A2D5D",
+        "meta": null
+    }
+},
+{
+    "model": "annotations.tag",
+    "pk": 248,
+    "fields": {
+        "name": "#simp_ja",
+        "color": "#cab2d6",
+        "meta": null
+    }
+},
+{
+    "model": "annotations.tag",
+    "pk": 246,
+    "fields": {
+        "name": "#rel_zeit",
+        "color": "#a6cee3",
+        "meta": null
+    }
+},
+{
+    "model": "annotations.tag",
+    "pk": 147,
+    "fields": {
+        "name": "#rel_reg",
+        "color": "#b2df8a",
+        "meta": null
+    }
+},
+{
+    "model": "annotations.tag",
+    "pk": 2770,
+    "fields": {
+        "name": "krank",
+        "color": "#F6777F",
+        "meta": null
+    }
+},
+{
+    "model": "annotations.tag",
+    "pk": 260,
+    "fields": {
+        "name": "#Fehler_Sigle",
+        "color": "#ff7f00",
+        "meta": null
+    }
+},
+{
+    "model": "annotations.es_document",
+    "pk": 47,
+    "fields": {
+        "es_id": "f243_qdb-d1e73063",
+        "index": "",
+        "version": null,
+        "scans": null,
+        "xml": "",
+        "xml_modified_by": null,
+        "xml_error_message": "",
+        "tag": [
+            2770,
+            147,
+            246,
+            248
+        ]
+    }
+},
+{
+    "model": "annotations.es_document",
+    "pk": 45,
+    "fields": {
+        "es_id": "f243_qdb-d1e72630",
+        "index": "",
+        "version": null,
+        "scans": null,
+        "xml": "",
+        "xml_modified_by": null,
+        "xml_error_message": "",
+        "tag": [
+            147,
+            246,
+            248,
+            2769
+        ]
+    }
+},
+{
+    "model": "annotations.es_document",
+    "pk": 46,
+    "fields": {
+        "es_id": "f243_qdb-d1e29146",
+        "index": "",
+        "version": null,
+        "scans": null,
+        "xml": "",
+        "xml_modified_by": null,
+        "xml_error_message": "",
+        "tag": [
+            260,
+            2770,
+            147,
+            246,
+            248
+        ]
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$120000$psTQG2hkmB2n$WH7YCWZ24Wx5qBi/5z6uUn6sLyuTQ0eOG+SNJvTYTBM=",
+        "last_login": "2019-05-14T13:24:54.297Z",
+        "is_superuser": true,
+        "username": "kzaytseva",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2018-09-13T08:24:26.567Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "annotations.collection",
+    "pk": 36,
+    "fields": {
+        "title": "TestCollection01",
+        "description": "",
+        "created_by": 1,
+        "category": null,
+        "lemma_id": null,
+        "comment": "test",
+        "public": false,
+        "deleted": false,
+        "created": "2018-11-22T15:13:41.557Z",
+        "modified": "2020-10-16T17:53:47.525Z",
+        "es_document": [
+            46,
+            45,
+            47
+        ],
+        "curator": []
+    }
+}
+]

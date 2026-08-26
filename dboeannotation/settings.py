@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "stats",
     "mylogs",
     "bibls",
+    # "fixture_magic",
 ]
 
 MIDDLEWARE = [

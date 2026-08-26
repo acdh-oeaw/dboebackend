@@ -6,16 +6,16 @@
 # after creating the fixtures, remove all  contenttypes.contenttype and auth.permission objects
 
 
-# echo "create fixtures_collection"
-# uv run manage.py dump_object annotations.collection 36 > fixtures_collection.json
+echo "create fixtures_collection"
+uv run manage.py dump_object annotations.collection 36 > fixtures_collection.json
 
-# echo "create fixtures_belege"
-# uv run manage.py dump_object belege.beleg f243_qdb-d1e29146 e224_qdb-d1e65954 d198_qdbn-d16e17226 > fixtures_belege.json
+echo "create fixtures_belege"
+uv run manage.py dump_object belege.beleg aaa-test-001-d167_qdb-d1e21348 f243_qdb-d1e29146 e224_qdb-d1e65954 d198_qdbn-d16e17226 > fixtures_belege.json
 
-# echo "create fixtures_bibls"
-# uv run manage.py dump_object bibls.bibliographicitem 2 55 7 > fixtures_bibls.json
+echo "create fixtures_bibls"
+uv run manage.py dump_object bibls.bibliographicitem 2 55 7 > fixtures_bibls.json
 
-# echo "merging fixturs"
-# uv run manage.py merge_fixtures fixtures_collection.json fixtures_belege.json > belege/fixtures/dump.json
+echo "merging fixturs"
+uv run manage.py merge_fixtures fixtures_collection.json fixtures_belege.json > belege/fixtures/dump.json
 
 
