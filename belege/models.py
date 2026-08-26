@@ -993,9 +993,16 @@ class Beleg(models.Model):
                     if resp:
                         resp = f"{resp}: "
                     ret["vrw_kt_star"].append(f"{resp}{y.get('text')} ›KT{x.number}")
+            # ZL{nr}/KT{nr}: ZL1/KT1" : $e/tei:cit[@type="kontext" and @n="1"]/tei:re[@type="zusatzlemma"][1]
+            if x.re_node:
+                cur_nr = x.number
+                for i, y in enumerate(x.re_node, start=1):
+                    node_type = y.get("type") or ""
+                    if node_type == "zusatzlemma":
+                        cur_key = f"zl{i}_kt{cur_nr}"
+                        ret[cur_key] = y.get("text")
 
         # Use prefetched bedeutungen - filter in Python
-
         # BD/LW* $e/tei:sense[@corresp=("this:LW1", "this:LW2", ..., "this:LW8")],
         bedeutungen_list = list(self.bedeutungen.all())
         ret["bd_lw_star"] = [
@@ -1003,34 +1010,6 @@ class Beleg(models.Model):
             for b in bedeutungen_list
             if b.corresp_to and "LW" in b.corresp_to
         ]
-        #  "BD/KT/LT1" : $e/tei:cit[@type="kontext" and @corresp = "this:LT1"]/tei:def[not(@corresp)][1],
-        for i in ["1", "2"]:
-            pass
-            # Filter citations in Python instead of using QuerySet.filter()
-            # ret[f"bd_kt_lt{i}"] = [
-            #     c.definition
-            #     for c in citations_list
-            #     if c.corresp == f"this:LT{i}"
-            #     and c.definition_corresp is None
-            #     and c.definition
-            # ]
-            # ret[f"kt_lt{i}"] = [
-            #     c.quote_text
-            #     for c in citations_list
-            #     if c.corresp == f"this:LT{i}" and c.quote_text
-            # ]
-
-            # Get matching citations and their zusatz_lemma from prefetched data
-            # kontext = [c for c in citations_list if c.corresp == f"this:LT{i}"]
-            # ret[f"zl1_kt_lt{i}"] = ""
-            # ret[f"zl2_kt_lt{i}"] = ""
-            # n = 1
-            # for citation in kontext:
-            #     for y in citation.zusatz_lemma.all():
-            #         ret[f"zl{n}_kt_lt{i}"] = (
-            #             f"{y.form_orth}||{getattr(y, 'pos', None) or ''}||{getattr(y, 'gram', None) or ''}"
-            #         )
-            #         n += 1
 
         # Filter bedeutungen in Python
         ret["bd_lt_star"] = []
