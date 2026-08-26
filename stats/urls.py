@@ -5,7 +5,6 @@ from stats import views
 app_name = "belege"
 
 urlpatterns = [
-    path("belege-by-anmerkung-lautung/", views.beleg_by_note_lautung_count),
     path("belege-by-bedeutung/", views.beleg_by_sense_count),
     path("belege-by-collection/", views.beleg_by_collection_count),
     path("belege-by-context/", views.beleg_by_context_count),
