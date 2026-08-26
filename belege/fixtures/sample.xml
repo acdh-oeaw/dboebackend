@@ -27,7 +27,8 @@
    </standOff>
    <text>
       <body>
-         <entry xml:id="aaa-test-001-d167_qdb-d1e21348" n="31768" source="#orig-d167_qdb-d1e21348" facs="F_228%2FF_0725.pla%2FF_0725.pla_00058_00047_a.jp2">
+         <entry xml:id="aaa-test-001-d167_qdb-d1e21348" n="31768" source="#orig-d167_qdb-d1e21348"
+            facs="F_228%2FF_0725.pla%2FF_0725.pla_00058_00047_a.jp2">
             <form type="hauptlemma" xml:id="aaa-test-001-tu-4826.28">
                <orth>drä̂en</orth>
             </form>
@@ -47,19 +48,22 @@
                </gramGrp>
             </form>
             <form type="lehnwort" n="1" xml:id="aaa-test-001-tu-7240.60">
-               <pron xml:lang="bar" notation="teuthonista">tračanje [see entry: d171_qdb-d1e90647]</pron>
+               <pron xml:lang="bar" notation="teuthonista">tračanje [see entry:
+                  d171_qdb-d1e90647]</pron>
                <gramGrp>
                   <gram> [n]</gram>
                </gramGrp>
             </form>
             <form type="lehnwort" n="2" xml:id="aaa-test-001-tu-7241.2">
-               <pron xml:lang="bar" notation="teuthonista">tračkanje [see entry: d171_qdb-d1e90647]</pron>
+               <pron xml:lang="bar" notation="teuthonista">tračkanje [see entry:
+                  d171_qdb-d1e90647]</pron>
                <gramGrp>
                   <gram> [n]</gram>
                </gramGrp>
             </form>
             <form type="lehnwort" n="7" xml:id="aaa-test-001-tu-6160.12">
-               <pron xml:lang="bar" notation="teuthonista">kroat. pukarance nosit [see entry: d169_qdb-d1e55526]</pron> 
+               <pron xml:lang="bar" notation="teuthonista">kroat. pukarance nosit [see entry:
+                  d169_qdb-d1e55526]</pron>
             </form>
             <cit type="kontext" n="1" xml:id="aaa-test-001-tu-104944.14">
                <quote xml:lang="bar"> und jez Weibaleit steckts abi enkan Löffi in enkan <pRef>
@@ -68,57 +72,123 @@
                </quote>
                <def xml:lang="de">--</def>
                <note type="anmerkung" resp="O" corresp="this:BD"> sagte unser Schaffer in Miesbühl
-                  immer zu den Mägden anach dem Tischgebet, das nach jeder Mahlzeit gesprochen wurde [see entry: h407_qdbn-d16e46765]</note>
-               <def xml:lang="de" corresp="this:WBD/KT1" xml:id="aaa-test-001-tu-104944.16">
-                  Busen [see entry: h407_qdbn-d16e46765]</def>
-               <xr type="verweise" resp="O" xml:id="aaa-test-001-tu-1924.21">gleichbedeutend: <pRef>deaʳ måchts nimma lång</pRef>[see entry: d160_qdb-d1e4306]</xr>
-               <ref type="fragebogenNummer" xml:id="aaa-test-001-tu-1924.18">55/2: Vorzeichen des Todes[see entry: d160_qdb-d1e4306]</ref>
+                  immer zu den Mägden anach dem Tischgebet, das nach jeder Mahlzeit gesprochen wurde
+                  [see entry: h407_qdbn-d16e46765]</note>
+               <def xml:lang="de" corresp="this:WBD/KT1" xml:id="aaa-test-001-tu-104944.16"> Busen
+                  [see entry: h407_qdbn-d16e46765]</def>
+               <xr type="verweise" resp="O" xml:id="aaa-test-001-tu-1924.21">gleichbedeutend:
+                     <pRef>deaʳ måchts nimma lång</pRef>[see entry: d160_qdb-d1e4306]</xr>
+               <ref type="fragebogenNummer" xml:id="aaa-test-001-tu-1924.18">55/2: Vorzeichen des
+                  Todes[see entry: d160_qdb-d1e4306]</ref>
                <interp>Fg:21 [see entry: d167_qdb-d1e1610]</interp>
             </cit>
             <cit type="kontext" n="2" xml:id="aaa-test-001-tu-4702.27">
                <quote xml:lang="bar">tsę̄dɒhausɒ ũmdrā</quote>
                <interp>Fg:11</interp>
                <def xml:lang="de">Zederhauser Umkehr</def>
-               <note type="diverse" xml:id="aaa-test-001-tu-4702.29">Eine markante Straßenkurve auf der Pongauer Seite der Tauernpaßstraße in einer tiefen Schlucht mit senkrecht aufsteigenden Wänden; wenn man sich der Stelle nähert, hat man fast den Eindruck, daß die Straße dort endet; zugrunde liegt eine Art Schildbürgergeschichte, daß Zederhauser die bei ihnen verbreitete Meinung, daß die Welt am Taleingang zu Ende sei, widerlegen wollten und sich auf den Weg machten; bei der "Zederhauser Umdra" gelangten sie dann zur Gewißheit, daß dort das Ende der Welt sei, worauf sie wieder umkehrten. [see entry: d167_qdb-d1e472]</note>
+               <note type="diverse" xml:id="aaa-test-001-tu-4702.29">Eine markante Straßenkurve auf
+                  der Pongauer Seite der Tauernpaßstraße in einer tiefen Schlucht mit senkrecht
+                  aufsteigenden Wänden; wenn man sich der Stelle nähert, hat man fast den Eindruck,
+                  daß die Straße dort endet; zugrunde liegt eine Art Schildbürgergeschichte, daß
+                  Zederhauser die bei ihnen verbreitete Meinung, daß die Welt am Taleingang zu Ende
+                  sei, widerlegen wollten und sich auf den Weg machten; bei der "Zederhauser Umdra"
+                  gelangten sie dann zur Gewißheit, daß dort das Ende der Welt sei, worauf sie
+                  wieder umkehrten. [see entry: d167_qdb-d1e472]</note>
             </cit>
             <cit type="kontext" corresp="this:LT1" xml:id="aaa-test-001-tu-44830.58">
-               <quote xml:lang="bar">an dö Boaner ischt [sg3] fiel Fleisch drun [0][see entry: f265_qdb-d1e57263]</quote>
+               <quote xml:lang="bar">an dö Boaner ischt [sg3] fiel Fleisch drun [0][see entry:
+                  f265_qdb-d1e57263]</quote>
             </cit>
             <cit type="kontext" corresp="this:LT2" xml:id="aaa-test-001-tu-448300.58">
                <quote xml:lang="bar">here some fake "KT/LT2"</quote>
             </cit>
-            
+            <cit type="kontext" n="4" xml:id="aaa-test-001-tu-42064.40">
+               <quote xml:lang="bar">Vizenzi Sonnenschein gibt viel und guten Wein</quote>
+               <interp>Wetterregel:1165821</interp>
+               <re type="zusatzlemma" xml:id="aaa-test-001-tu-42064.41">
+                  <form>
+                     <orth>(Sonnen)schein [see entry: f260_qdb-d1e45776]</orth>
+                  </form>
+                  <gramGrp>
+                     <pos>Subst</pos>
+                  </gramGrp>
+               </re>
+               <re type="zusatzlemma" xml:id="aaa-test-001-tu-42064.42">
+                  <form>
+                     <orth>gůt [see entry: f260_qdb-d1e45776]</orth>
+                  </form>
+                  <gramGrp>
+                     <pos>Adj</pos>
+                     <gram>P</gram>
+                  </gramGrp>
+               </re>
+               <re type="zusatzlemma" xml:id="aaa-test-001-tu-42064.43">
+                  <form>
+                     <orth>gëben [see entry: f260_qdb-d1e45776]</orth>
+                  </form>
+                  <gramGrp>
+                     <pos>Verb</pos>
+                     <gram>sg3</gram>
+                  </gramGrp>
+               </re>
+               <re type="zusatzlemma" xml:id="aaa-test-001-tu-42064.44">
+                  <form>
+                     <orth>fil [see entry: f260_qdb-d1e45776]</orth>
+                  </form>
+                  <gramGrp>
+                     <pos>Adj</pos>
+                     <gram>P</gram>
+                  </gramGrp>
+               </re>
+            </cit>
+
+            <cit type="kontext" n="7" xml:id="aaa-test-001-tu-380817.166_59">
+               <quote xml:lang="bar">fecht'n kumá [see entry: f244_qdb-d1e22892]</quote>
+               <interp>Fg:66 [see entry: f244_qdb-d1e22892]</interp>
+               <def xml:lang="de">betteln [see entry: f244_qdb-d1e22892]</def>
+               <re type="zusatzlemma" xml:id="aaa-test-001-tu-380817.166_61">
+                  <form>
+                     <orth>këmmen [see entry: f244_qdb-d1e22892]</orth>
+                  </form>
+                  <gramGrp>
+                     <pos>Verb</pos>
+                  </gramGrp>
+               </re>
+            </cit>
+
             <note type="anmerkung" resp="O" xml:id="aaa-test-001-tu-4826.33">der Inbegriff aller
-               wienerischen Seligkeit. Läßt sich nicht ins Hochdeutsche übersetzen [see entry: d167_qdb-d1e21348]</note>
+               wienerischen Seligkeit. Läßt sich nicht ins Hochdeutsche übersetzen [see entry:
+               d167_qdb-d1e21348]</note>
             <etym resp="O" xml:id="aaa-test-001-tu-4826.34">Der Ausdruck bezog sich ursprünglich nur
                auf das <pRef> Werkeldrahn</pRef> , war also ganz wörtlich verstanden. Da schrieb
                Ernst Polkammer im Jahre 1879 ein Lied mit dem Abgesang: <pRef>Weil i a alter Drahrer
-                  bin</pRef> [see entry: d167_qdb-d1e21348]
-            </etym>
+                  bin</pRef> [see entry: d167_qdb-d1e21348] </etym>
             <sense corresp="this:LT1" xml:id="aaa-test-001-tu-114679.14">
                <def xml:lang="de">hinüber [h408_qdb-d1e47522]</def>
             </sense>
-            
+
             <sense corresp="this:LW1" xml:id="aaa-test-001-tu-5503.40">
                <def xml:lang="de">faul [see entry: d168_qdb-d1e18557]</def>
             </sense>
             <sense corresp="this:LW2" xml:id="aaa-test-001-tu-5503.42">
                <def xml:lang="de">träg [see entry: d168_qdb-d1e18557]</def>
             </sense>
-            
+
             <sense n="2" corresp="this:LT1" xml:id="aaa-test-001-tu-4715.12">
                <def xml:lang="de">nachtschwärmen</def>
                <note type="anmerkung" resp="O">übtr.</note>
             </sense>
-            
-            <xr type="verweise" resp="B" xml:id="aaa-test-001-tu-4710.3">Entstellt, unter -dr&lt;äel [see entry: d167_qdb-d1e17186]</xr>
-            <ref type="sni" xml:id="aaa-test-001-tu-4802.16">HA-411+scn.txt: wrwb [see entry: d167_qdb-d1e1679]</ref>
+
+            <xr type="verweise" resp="B" xml:id="aaa-test-001-tu-4710.3">Entstellt, unter -dr&lt;äel
+               [see entry: d167_qdb-d1e17186]</xr>
+            <ref type="sni" xml:id="aaa-test-001-tu-4802.16">HA-411+scn.txt: wrwb [see entry:
+               d167_qdb-d1e1679]</ref>
             <note type="diverse" corresp="this:LW7" xml:id="aaa-test-001-tu-6160.16">
-               <pRef>pukarantsl trǫgn</pRef> [see entry: d169_qdb-d1e55526]
-            </note>
-            <note type="anmerkung" resp="O" corresp="this:LW2">Plauscherl [see entry: d171_qdb-d1e90647]</note>
+               <pRef>pukarantsl trǫgn</pRef> [see entry: d169_qdb-d1e55526] </note>
+            <note type="anmerkung" resp="O" corresp="this:LW2">Plauscherl [see entry:
+               d171_qdb-d1e90647]</note>
             <note type="anmerkung" n="1" corresp="this:LT1" resp="O">Demin.u.Iterativform von
-               <pRef>dräen</pRef> [see entry: d167_qdb-d1e1943]</note>
+                  <pRef>dräen</pRef> [see entry: d167_qdb-d1e1943]</note>
             <note type="diverse" n="1" xml:id="aaa-test-001-tu-114679.15">KF.</note>
             <note type="diverse" n="2" xml:id="aaa-test-001-tu-4718.10">Die Eier werden wie ein
                Kreisel am Boden gedreht</note>
