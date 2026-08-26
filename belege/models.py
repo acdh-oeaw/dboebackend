@@ -996,7 +996,7 @@ class Beleg(models.Model):
 
         # Use prefetched bedeutungen - filter in Python
 
-        # BD/LW* $e/tei:sense[@corresp=("this:LW1", "this:LW2", "this:LW3", "this:LW4", "this:LW5", "this:LW6", "this:LW7", "this:LW8")],
+        # BD/LW* $e/tei:sense[@corresp=("this:LW1", "this:LW2", ..., "this:LW8")],
         bedeutungen_list = list(self.bedeutungen.all())
         ret["bd_lw_star"] = [
             f"{b.definition} ›{b.corresp_to}"
