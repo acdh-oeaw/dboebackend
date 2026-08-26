@@ -572,6 +572,7 @@ dev = [
     { name = "black" },
     { name = "coverage" },
     { name = "csae-pyutils" },
+    { name = "django-fixture-magic" },
     { name = "flake8" },
     { name = "ipywidgets" },
     { name = "jupyterlab" },
@@ -608,6 +609,7 @@ dev = [
     { name = "black", specifier = ">=25.1.0" },
     { name = "coverage", specifier = ">=7.14.0" },
     { name = "csae-pyutils", specifier = ">=0.2" },
+    { name = "django-fixture-magic", specifier = ">=0.1.5" },
     { name = "flake8", specifier = ">=7.2.0" },
     { name = "ipywidgets", specifier = ">=8.1.7" },
     { name = "jupyterlab", specifier = ">=4.4.3" },
@@ -741,6 +743,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/b5/40/c702a6fe8cccac9bf
 wheels = [
     { url = "https://files.pythonhosted.org/packages/07/a6/70dcd68537c434ba7cb9277d403c5c829caf04f35baf5eb9458be251e382/django_filter-25.1-py3-none-any.whl", hash = "sha256:4fa48677cf5857b9b1347fed23e355ea792464e0fe07244d1fdfb8a806215b80", size = 94114, upload-time = "2025-02-14T16:30:50.435Z" },
 ]
+
+[[package]]
+name = "django-fixture-magic"
+version = "0.1.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/9f/bb/13ef0015fd389ddc402661454fbb9afb16dd7c782ca7bbefdbe1afd3a92d/django-fixture-magic-0.1.5.tar.gz", hash = "sha256:d82a4d4f6ade078e942927b5157f0536d0cd0232adfeb943dced0858128dd734", size = 8867, upload-time = "2020-07-15T18:15:31.721Z" }
 
 [[package]]
 name = "django-jsonform"

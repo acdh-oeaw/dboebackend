@@ -1,0 +1,162 @@
+[
+{
+    "model": "belege.beleg",
+    "pk": "f243_qdb-d1e29146",
+    "fields": {
+        "orig_xml": "<Element {http://www.tei-c.org/ns/1.0}entry at 0x7b9ad1a8de80>",
+        "xeno_data": "\n*A* HK 243, f243#1022.1 = faul0516.sch#34.1\n*HL* faulig:2\n*QU* Weisskirchen, Pichlh^ofer @@@\n===\n*NR* 22D3: Knochen (w^ortl./^ubertr.) m. Adj. (fest, elend,*)\n*LT1* faulig\n*BD/LT1* faulig\n********************\n",
+        "hauptlemma": "faulig",
+        "hauptlemma_norm": null,
+        "nebenlemma": null,
+        "archivzeile": "HK 243, f243#1022.1 = faul0516.sch#34.1",
+        "quelle": "Weisskirchen, Pichlhöfer",
+        "quelle_page": null,
+        "quelle_bearbeitet": null,
+        "bibl": null,
+        "zitierweise": "[]",
+        "scan": "[]",
+        "year": null,
+        "pos": "Adj",
+        "ref_type_dbo": null,
+        "ref_type_sni": null,
+        "fragebogen_nummer": "22D3: Knochen (wörtl./übertr.) m. Adj. (fest, elend,*)",
+        "etymology": null,
+        "import_issue": false,
+        "quelle_type": null,
+        "internal_comment": null,
+        "has_scan": false,
+        "has_internal_comment": false,
+        "note": null,
+        "xr": null,
+        "tag": [],
+        "collection": []
+    }
+},
+{
+    "model": "belege.beleg",
+    "pk": "d198_qdbn-d16e17226",
+    "fields": {
+        "orig_xml": "<Element {http://www.tei-c.org/ns/1.0}entry at 0x7b9ad1a8de00>",
+        "xeno_data": "\n*A* HK 198, d198#721.1 = tung0817.pir#1.185\n*HL* tungen:6\n*QU* Gmunden Loitlesberger\n*QDB* {5.3b} n^oSkgt.:^oSkgt.:Skgt.:swTraunv.:sTraunv.: wTraunv.:Traunv.:O^O *@ FbB.LOITLESBERGER^. (19xx) [SFb./Mtlg./Slg. \"PflN+TierN.Gmunden\"] *O* Gmunden O^O\n===\n*NR* 18E8: (Feld/Wiese) d^ungen (misten, dummen, geilen); Bed.\n*LT1* duNE^!n[a]\n*LT2* i duN [sg1+5P1]\n*LT3* i duNg [sg1+5P1]\n*LT4* duNgst [sg2]\n*LT5* duNgd [sg3]\n*LT6* duNEn [pl1]\n*LT7* duNgts [pl2]\n*LT8* duNEnd [pl3]\n*LT9* duNad [kj,sg1]\n*LT10* duNgad [kj,sg1]\n*LT11* h;a^!n duNgd [P2+6I]\n*BD/LT1* d^ungen *ANMO* allgemeinste Bed.\n********************\n",
+        "hauptlemma": "tungen",
+        "hauptlemma_norm": null,
+        "nebenlemma": null,
+        "archivzeile": "HK 198, d198#721.1 = tung0817.pir#1.185",
+        "quelle": "Gmunden Loitlesberger",
+        "quelle_page": null,
+        "quelle_bearbeitet": "{5.3b} nöSkgt.:öSkgt.:Skgt.:swTraunv.:sTraunv.: wTraunv.:Traunv.:OÖ",
+        "bibl": "FbB.LOITLESBERGER· (19xx) [SFb./Mtlg./Slg. \"PflN+TierN.Gmunden\"]",
+        "zitierweise": "[]",
+        "scan": "[]",
+        "year": null,
+        "pos": "Verb",
+        "ref_type_dbo": null,
+        "ref_type_sni": null,
+        "fragebogen_nummer": "18E8: (Feld/Wiese) düngen (misten, dummen, geilen); Bed.",
+        "etymology": null,
+        "import_issue": false,
+        "quelle_type": null,
+        "internal_comment": null,
+        "has_scan": false,
+        "has_internal_comment": false,
+        "note": null,
+        "xr": null,
+        "tag": [],
+        "collection": []
+    }
+},
+{
+    "model": "belege.beleg",
+    "pk": "aaa-test-001-d167_qdb-d1e21348",
+    "fields": {
+        "orig_xml": "<Element {http://www.tei-c.org/ns/1.0}entry at 0x7b9ad1a8d880>",
+        "xeno_data": " *A*\n         HK 167, d167#812.1 = T1670706.pla#5, korr. W.B. *HL* dr<^aen:6 *QU* Wien und die Wiener,\n         M^arz (1951) *S* 29 *N* 25 *QDB* {6.5} W. *O* Wien === *LT1* Drahn [I] *ANMO* der Inbegriff\n         aller wienerischen Seligkeit. L^a^st sich nicht ins Hochdeutsche ^ubersetzen *ETO* Der\n         Ausdruck bezog sich urspr^unglich nur auf das #Werkeldrahn#, war also ganz w^ortlich\n         verstanden. Da schrieb Ernst Polkammer im Jahre 1879 ein Lied mit dem Abgesang: #Weil i a\n         alter Drahrer bin# ******************** ",
+        "hauptlemma": "drä̂en",
+        "hauptlemma_norm": null,
+        "nebenlemma": "(Dorn)reiherlein",
+        "archivzeile": "HK 167, d167#812.1 = T1670706.pla#5, korr. W.B.",
+        "quelle": "Wien und die Wiener, März (1951)29 25",
+        "quelle_page": "29",
+        "quelle_bearbeitet": "{6.5} W.",
+        "bibl": "FbB.JUFFINGER· (19xx) [SFb./EFb.] [see entry: h407_qdb-d1e33545]",
+        "zitierweise": "[]",
+        "scan": "[\"F_228%2FF_0725.pla%2FF_0725.pla_00058_00047_a.jp2\"]",
+        "year": null,
+        "pos": "Verb",
+        "ref_type_dbo": null,
+        "ref_type_sni": "HA-411+scn.txt: wrwb [see entry: d167_qdb-d1e1679]",
+        "fragebogen_nummer": null,
+        "etymology": [
+            {
+                "id": "aaa-test-001-tu-4826.34",
+                "pRef": [
+                    "Werkeldrahn",
+                    "Weil i a alter Drahrer bin"
+                ],
+                "resp": "O",
+                "text": "Der Ausdruck bezog sich ursprünglich nur auf das Werkeldrahn , war also ganz wörtlich verstanden. Da schrieb Ernst Polkammer im Jahre 1879 ein Lied mit dem Abgesang: Weil i a alter Drahrer bin [see entry: d167_qdb-d1e21348]"
+            }
+        ],
+        "import_issue": false,
+        "quelle_type": null,
+        "internal_comment": null,
+        "has_scan": true,
+        "has_internal_comment": false,
+        "note": [
+            {
+                "id": "aaa-test-001-tu-4826.33",
+                "resp": "O",
+                "text": "der Inbegriff aller wienerischen Seligkeit. Läßt sich nicht ins Hochdeutsche übersetzen [see entry: d167_qdb-d1e21348]",
+                "type": "anmerkung"
+            },
+            {
+                "id": "aaa-test-001-tu-6160.16",
+                "pRef": [
+                    "pukarantsl trǫgn"
+                ],
+                "text": "pukarantsl trǫgn [see entry: d169_qdb-d1e55526]",
+                "type": "diverse",
+                "corresp": "this:LW7"
+            },
+            {
+                "resp": "O",
+                "text": "Plauscherl [see entry: d171_qdb-d1e90647]",
+                "type": "anmerkung",
+                "corresp": "this:LW2"
+            },
+            {
+                "n": "1",
+                "pRef": [
+                    "dräen"
+                ],
+                "resp": "O",
+                "text": "Demin.u.Iterativform von dräen [see entry: d167_qdb-d1e1943]",
+                "type": "anmerkung",
+                "corresp": "this:LT1"
+            },
+            {
+                "n": "1",
+                "id": "aaa-test-001-tu-114679.15",
+                "text": "KF.",
+                "type": "diverse"
+            },
+            {
+                "n": "2",
+                "id": "aaa-test-001-tu-4718.10",
+                "text": "Die Eier werden wie ein Kreisel am Boden gedreht",
+                "type": "diverse"
+            }
+        ],
+        "xr": [
+            {
+                "id": "aaa-test-001-tu-4710.3",
+                "resp": "B",
+                "text": "Entstellt, unter -dr<äel [see entry: d167_qdb-d1e17186]",
+                "type": "verweise"
+            }
+        ],
+        "tag": [],
+        "collection": []
+    }
+}
+]
