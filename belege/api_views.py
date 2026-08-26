@@ -3,7 +3,12 @@ from django.conf import settings
 from django.db import reset_queries
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import OpenApiExample, extend_schema, inline_serializer
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import (
+    OpenApiExample,
+    extend_schema,
+    inline_serializer,
+)
 from rest_framework import mixins, serializers, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.pagination import PageNumberPagination
@@ -48,6 +53,7 @@ def get_pos_tags(request):
     return JsonResponse(data, safe=False)
 
 
+@extend_schema(responses={200: OpenApiTypes.STR})
 @api_view(["get"])
 def show_original_xml(request, dboe_id):
     """Return the original TEI/XML entry"""
@@ -56,6 +62,7 @@ def show_original_xml(request, dboe_id):
     return HttpResponse(payload, content_type="application/xml")
 
 
+@extend_schema(responses={200: OpenApiTypes.STR})
 @api_view(["get"])
 def show_tustep(request, dboe_id):
     """Return the original Tustep data"""

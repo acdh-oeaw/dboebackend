@@ -150,7 +150,7 @@ class LemmaFilter(django_filters.rest_framework.FilterSet):
             return queryset.filter(Q(norm="") | Q(norm__isnull=True))
         return queryset
 
-    def filter_users(self, queryset, name, value):
+    def filter_users(self, queryset, name, value: int):
         return Lemma.objects.filter(
             Q(id__in=Edit_of_article.objects.filter(user_id=value).values("lemma"))
             | Q(
