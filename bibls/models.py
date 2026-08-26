@@ -50,7 +50,7 @@ class BibliographicType(models.Model):
     )
 
     @property
-    def view_label(self):
+    def view_label(self) -> str:
         if self.sub_type and self.specification:
             return " >> ".join([self.main_type, self.sub_type, self.specification])
         elif self.sub_type:

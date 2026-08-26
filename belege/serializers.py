@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema_field
+from drf_spectacular.utils import extend_schema_field, extend_schema_serializer
 from rest_framework import serializers
 
 from annotations.models import Tag
@@ -206,6 +206,7 @@ class SenseSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
         fields = "__all__"
 
 
+@extend_schema_serializer(component_name="BelegeAnnotation")
 class AnnotationSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="annotation-pos-detail")
     kontext = serializers.PrimaryKeyRelatedField(
