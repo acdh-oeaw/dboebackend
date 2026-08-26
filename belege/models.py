@@ -861,9 +861,12 @@ class Beleg(models.Model):
         verweis_types = ["verweise", "sni", "dbo"]
         if self.xr:
             for x in self.xr:
+                resp = x.get("resp") or ""
+                if resp:
+                    resp = f"{resp}: "
                 node_type = x.get("type") or ""
                 if node_type in verweis_types:
-                    verweise.append(x.get("text"))
+                    verweise.append(f"{resp}{x.get('text')}")
         for x in ["ref_type_dbo", "ref_type_sni"]:
             if getattr(self, x):
                 verweise.append(getattr(self, x))
@@ -973,13 +976,16 @@ class Beleg(models.Model):
                     resp = y.get("resp") or ""
                     if resp:
                         resp = f"{resp}: "
+                    corresp = y.get("corresp") or ""
+                    if corresp:
+                        corresp = f"{corresp}/"
                     if y.get("text") and y.get("type") == "anmerkung":
                         ret["anm_kt_star"].append(
-                            f"{resp}{y['text']} ›KT {x.number}".strip()
+                            f"{resp}{y['text']} ›{corresp}KT{x.number}".strip()
                         )
                     if y.get("text") and y.get("type") == "diverse":
                         ret["dv_kt_star"].append(
-                            f"{resp}{y['text']} ›KT {x.number}".strip()
+                            f"{resp}{y['text']} ›{corresp}KT{x.number}".strip()
                         )
             if x.xr_node:
                 for y in x.xr_node:
