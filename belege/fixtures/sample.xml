@@ -155,10 +155,11 @@
                   </gramGrp>
                </re>
             </cit>
-
             <note type="anmerkung" resp="O" xml:id="aaa-test-001-tu-4826.33">der Inbegriff aller
                wienerischen Seligkeit. Läßt sich nicht ins Hochdeutsche übersetzen [see entry:
                d167_qdb-d1e21348]</note>
+            <note type="notabene" xml:id="tu-114881.59">Lemma korrekt [see entry: h410_qdb-d1e6838]<certainty assertedValue="uncertain" locus="value"/>
+            </note>
             <etym resp="O" xml:id="aaa-test-001-tu-4826.34">Der Ausdruck bezog sich ursprünglich nur
                auf das <pRef> Werkeldrahn</pRef> , war also ganz wörtlich verstanden. Da schrieb
                Ernst Polkammer im Jahre 1879 ein Lied mit dem Abgesang: <pRef>Weil i a alter Drahrer

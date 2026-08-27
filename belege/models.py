@@ -847,14 +847,13 @@ class Beleg(models.Model):
                     ret["dv_lw_star"].append(f"{resp}{x.get('text')} ›{corresp}")
                 if (
                     x.get("type")
-                    == "anmerkung"
                     in [
                         "anmerkung",
                         "notabene",
                     ]
                     and "this:L" not in corresp
                 ):
-                    ret["anm"].append(f"{resp}: {x.get('text')}")
+                    ret["anm"].append(f"{resp}{x.get('text')}")
 
         # verweise "Verweis": $e/(tei:ref,tei:xr)[@type=("verweise", "sni", "dbo")]
         verweise = []
