@@ -67,7 +67,7 @@
             </form>
             <cit type="kontext" n="1" xml:id="aaa-test-001-tu-104944.14">
                <quote xml:lang="bar"> und jez Weibaleit steckts abi enkan Löffi in enkan <pRef>
-                     Voraufi</pRef>
+                  Voraufi</pRef>
                   <seg type="gram"> [sg4]</seg>
                </quote>
                <def xml:lang="de">--</def>
@@ -76,8 +76,8 @@
                   [see entry: h407_qdbn-d16e46765]</note>
                <def xml:lang="de" corresp="this:WBD/KT1" xml:id="aaa-test-001-tu-104944.16"> Busen
                   [see entry: h407_qdbn-d16e46765]</def>
-               <xr type="verweise" resp="O" xml:id="aaa-test-001-tu-1924.21">gleichbedeutend:
-                     <pRef>deaʳ måchts nimma lång</pRef>[see entry: d160_qdb-d1e4306]</xr>
+               <xr type="verweise" resp="O" xml:id="aaa-test-001-tu-1924.21">gleichbedeutend: <pRef>deaʳ
+                  måchts nimma lång</pRef>[see entry: d160_qdb-d1e4306]</xr>
                <ref type="fragebogenNummer" xml:id="aaa-test-001-tu-1924.18">55/2: Vorzeichen des
                   Todes[see entry: d160_qdb-d1e4306]</ref>
                <interp>Fg:21 [see entry: d167_qdb-d1e1610]</interp>
@@ -158,12 +158,13 @@
             <note type="anmerkung" resp="O" xml:id="aaa-test-001-tu-4826.33">der Inbegriff aller
                wienerischen Seligkeit. Läßt sich nicht ins Hochdeutsche übersetzen [see entry:
                d167_qdb-d1e21348]</note>
-            <note type="notabene" xml:id="tu-114881.59">Lemma korrekt [see entry: h410_qdb-d1e6838]<certainty assertedValue="uncertain" locus="value"/>
+            <note type="notabene" xml:id="tu-114881.59">Lemma korrekt [see entry: h410_qdb-d1e6838]<certainty
+                  assertedValue="uncertain" locus="value" />
             </note>
             <etym resp="O" xml:id="aaa-test-001-tu-4826.34">Der Ausdruck bezog sich ursprünglich nur
                auf das <pRef> Werkeldrahn</pRef> , war also ganz wörtlich verstanden. Da schrieb
                Ernst Polkammer im Jahre 1879 ein Lied mit dem Abgesang: <pRef>Weil i a alter Drahrer
-                  bin</pRef> [see entry: d167_qdb-d1e21348] </etym>
+               bin</pRef> [see entry: d167_qdb-d1e21348] </etym>
             <sense corresp="this:LT1" xml:id="aaa-test-001-tu-114679.14">
                <def xml:lang="de">hinüber [h408_qdb-d1e47522]</def>
             </sense>
@@ -188,8 +189,8 @@
                <pRef>pukarantsl trǫgn</pRef> [see entry: d169_qdb-d1e55526] </note>
             <note type="anmerkung" resp="O" corresp="this:LW2">Plauscherl [see entry:
                d171_qdb-d1e90647]</note>
-            <note type="anmerkung" n="1" corresp="this:LT1" resp="O">Demin.u.Iterativform von
-                  <pRef>dräen</pRef> [see entry: d167_qdb-d1e1943]</note>
+            <note type="anmerkung" n="1" corresp="this:LT1" resp="O">Demin.u.Iterativform von <pRef>
+               dräen</pRef> [see entry: d167_qdb-d1e1943]</note>
             <note type="diverse" n="1" xml:id="aaa-test-001-tu-114679.15">KF.</note>
             <note type="diverse" n="2" xml:id="aaa-test-001-tu-4718.10">Die Eier werden wie ein
                Kreisel am Boden gedreht</note>
@@ -215,6 +216,24 @@
                            <idno>6.5</idno>
                         </place>
                      </listPlace>
+                  </place>
+               </listPlace>
+            </usg>
+            <usg type="geo" corresp="this:QU" source="h409_qdb-d1e14334">
+               <placeName>Eisack- u.Etschtal</placeName>
+            </usg>
+            <usg type="geo" corresp="this:QDB" resp="sigle_auto" source="h409_qdb-d1e14334">
+               <placeName type="orig">Tir.</placeName>
+               <listPlace corresp="sigle:1B">
+                  <place type="Bundesland">
+                     <placeName>OTir.</placeName>
+                     <idno>1B</idno>
+                  </place>
+               </listPlace>
+               <listPlace corresp="sigle:1C">
+                  <place type="Bundesland">
+                     <placeName>NTir.</placeName>
+                     <idno>1C</idno>
                   </place>
                </listPlace>
             </usg>
