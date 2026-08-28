@@ -589,7 +589,20 @@ class Beleg(models.Model):
         help_text="whatever",
         schema=ETYMOLOGY_SCHEMA,
     ).set_extra(xml_element="./tei:etym")
-
+    place_qu = ArrayField(
+        models.CharField(blank=True, max_length=250, null=True),
+        blank=True,
+        default=list,
+        verbose_name="Ort (QU)",
+        help_text="No helptext provided",
+    ).set_extra(xpath="./tei:usg[@corresp='this:QU']/tei:placeName", node_type="list")
+    place_qdb = ArrayField(
+        models.CharField(blank=True, max_length=250, null=True),
+        blank=True,
+        default=list,
+        verbose_name="Ort (QDB)",
+        help_text="No helptext provided",
+    ).set_extra(xpath="./tei:usg[@corresp='this:QDB']/tei:placeName", node_type="list")
     import_issue = models.BooleanField(
         default=False,
         verbose_name="Import issue",
