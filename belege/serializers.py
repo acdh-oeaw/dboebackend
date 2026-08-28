@@ -82,7 +82,6 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
     )
     etymology = EtymologyField(required=False, allow_null=True)
     note = NoteField(required=False, allow_null=True)
-    xr = XrNodeField(required=False, allow_null=True)
 
     class Meta:
         model = Beleg
@@ -105,6 +104,8 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
             "etymology",
             "note",
             "xr",
+            "place_qu",
+            "place_qdb",
         ]
 
     def get_fields(self):
