@@ -222,18 +222,35 @@
             <usg type="geo" corresp="this:QU" source="h409_qdb-d1e14334">
                <placeName>Eisack- u.Etschtal</placeName>
             </usg>
-            <usg type="geo" corresp="this:QDB" resp="sigle_auto" source="h409_qdb-d1e14334">
-               <placeName type="orig">Tir.</placeName>
-               <listPlace corresp="sigle:1B">
+            <usg type="geo" corresp="this:QDB" source="h409_qdb-d1e14361">
+               <placeName type="orig">"mittl.Gailt." = Umg.Hermagor Kä. (obGailt.)</placeName>
+               <listPlace corresp="sigle:2.1h02">
                   <place type="Bundesland">
-                     <placeName>OTir.</placeName>
-                     <idno>1B</idno>
-                  </place>
-               </listPlace>
-               <listPlace corresp="sigle:1C">
-                  <place type="Bundesland">
-                     <placeName>NTir.</placeName>
-                     <idno>1C</idno>
+                  <placeName>Ktn.</placeName>
+                  <idno>2</idno>
+                  <listPlace>
+                     <place type="Großregion">
+                        <placeName>ObKtn.</placeName>
+                        <idno>2.1</idno>
+                        <listPlace>
+                        <place type="Kleinregion">
+                           <placeName>obGailt.</placeName>
+                           <idno>2.1h</idno>
+                           <listPlace>
+                              <place type="Gemeinde">
+                              <placeName>Hermagor-Pressegger See</placeName>
+                              <listPlace>
+                                 <place type="Ort">
+                                    <placeName>Hermagor-Pressegger See</placeName>
+                                    <idno>2.1h02</idno>
+                                 </place>
+                              </listPlace>
+                              </place>
+                           </listPlace>
+                        </place>
+                        </listPlace>
+                     </place>
+                  </listPlace>
                   </place>
                </listPlace>
             </usg>
