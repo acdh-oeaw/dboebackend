@@ -908,8 +908,8 @@ class Beleg(models.Model):
         ret["tags"] = [x.name for x in self.tag.all()]
 
         ret["ort"] = []
-        [ret["ort"].append(x) for x in self.place_qdb]
         [ret["ort"].append(x) for x in self.place_qu]
+        [ret["ort"].append(x) for x in self.place_qdb]
 
         siglen = set()
         bundeslaender = set()
