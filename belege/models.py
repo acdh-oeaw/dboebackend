@@ -918,6 +918,7 @@ class Beleg(models.Model):
         ret["ort_kt_star"] = set()
         ret["ort_lt_star"] = set()
         for x in self.belegsigle_set.all():
+            ret["ort"].append(x.name)
             corresp = x.corresp or ""
             if corresp:
                 corresp = f" ›{corresp}"
