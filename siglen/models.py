@@ -71,6 +71,7 @@ class BelegSigle(models.Model):
     corresp = models.CharField(
         max_length=50, blank=True, null=True, verbose_name="@corrsp"
     )
+    name = models.CharField(max_length=250, blank=True, null=True, verbose_name="Name")
     resp = models.CharField(max_length=50, blank=True, null=True, verbose_name="@resp")
 
     class Meta:

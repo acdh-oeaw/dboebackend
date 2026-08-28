@@ -47,7 +47,7 @@ class SigleAdmin(admin.ModelAdmin):
 
 @admin.register(BelegSigle)
 class BelegSigleAdmin(admin.ModelAdmin):
-    list_display = ["beleg", "sigle", "corresp", "resp"]
+    list_display = ["beleg", "sigle", "name", "corresp", "resp"]
     search_fields = ["beleg__dboe_id", "sigle__name", "sigle__sigle"]
     autocomplete_fields = ["beleg", "sigle"]
     ordering = ["sigle"]

@@ -11,11 +11,11 @@ class Command(BaseCommand):
     help = "Links Belege to Siglen"
 
     def handle(self, *args, **options):
+        # BelegSigle.objects.all().delete()
         queryset = Beleg.objects.filter(belegsigle__isnull=True).only(
             "dboe_id", "orig_xml"
         )
         total = queryset.count()
-        # BelegSigle.objects.all().delete()
         sigle_cache = {}
         for item in tqdm(queryset.iterator(chunk_size=2000), total=total):
             try:
@@ -29,6 +29,10 @@ class Command(BaseCommand):
                     corresp = x.attrib["corresp"]
                 except KeyError:
                     corresp = None
+                try:
+                    name = x.xpath("./tei:placeName", namespaces=namespaces)[0].text
+                except IndexError:
+                    name = None
 
                 for full_sigle in x.xpath(
                     ".//tei:listPlace/@corresp", namespaces=namespaces
@@ -45,6 +49,6 @@ class Command(BaseCommand):
                                 print(f"created {sigle}")
                             sigle_cache[sigle_str] = sigle
                         BelegSigle.objects.get_or_create(
-                            beleg=item, sigle=sigle, corresp=corresp
+                            beleg=item, sigle=sigle, corresp=corresp, name=name
                         )
         print("done")

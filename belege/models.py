@@ -911,30 +911,27 @@ class Beleg(models.Model):
         [ret["ort"].append(x) for x in self.place_qu]
         [ret["ort"].append(x) for x in self.place_qdb]
 
-        siglen = set()
-        bundeslaender = set()
-        gregion = set()
-        kregion = set()
-        orig_orte = list()
+        ret["siglen"] = []
+        ret["bundeslaender"] = []
+        ret["gregion"] = []
+        ret["kregion"] = []
         for x in self.belegsigle_set.all():
-            siglen.add(x.sigle.sigle)
-            try:
-                bundeslaender.add(getattr(x.sigle, "bl"))
-            except AttributeError:
-                pass
-            try:
-                gregion.add(getattr(x.sigle, "gr"))
-            except AttributeError:
-                pass
-            try:
-                kregion.add(getattr(x.sigle, "kr"))
-            except AttributeError:
-                pass
-        ret["siglen"] = list(siglen)
-        ret["bundeslaender"] = [f"{x.name} ({x.sigle})" for x in bundeslaender if x]
-        ret["gregion"] = [f"{x.name} ({x.sigle})" for x in gregion if x]
-        ret["kregion"] = [f"{x.name} ({x.sigle})" for x in kregion if x]
-        ret["orig_orte"] = orig_orte
+            corresp = x.corresp or ""
+            if corresp:
+                corresp = f" ›{corresp}"
+            ret["siglen"].append(f"{x.sigle.sigle}{corresp}")
+            if x.sigle.gr:
+                ret["bundeslaender"].append(f"{getattr(x.sigle, 'bl')}{corresp}")
+            elif x.sigle.kind == "bl":
+                ret["bundeslaender"].append(f"{x.sigle}{corresp}")
+            if x.sigle.gr:
+                ret["gregion"].append(f"{getattr(x.sigle, 'gr')}{corresp}")
+            elif x.sigle.kind == "gr":
+                ret["gregion"].append(f"{x.sigle}{corresp}")
+            if x.sigle.kr:
+                ret["kregion"].append(f"{getattr(x.sigle, 'kr')}{corresp}")
+            elif x.sigle.kind == "kr":
+                ret["kregion"].append(f"{x.sigle}{corresp}")
 
         # Lautungen
         for x in self.lautungen.all():
