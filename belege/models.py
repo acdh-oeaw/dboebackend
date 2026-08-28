@@ -915,10 +915,16 @@ class Beleg(models.Model):
         ret["bundeslaender"] = []
         ret["gregion"] = []
         ret["kregion"] = []
+        ret["ort_kt_star"] = set()
+        ret["ort_lt_star"] = set()
         for x in self.belegsigle_set.all():
             corresp = x.corresp or ""
             if corresp:
                 corresp = f" ›{corresp}"
+            if "BD/KT" in corresp:
+                ret["ort_kt_star"].add(x.name)
+            if "BD/LT" in corresp:
+                ret["ort_lt_star"].add(x.name)
             ret["siglen"].append(f"{x.sigle.sigle}{corresp}")
             if x.sigle.gr:
                 ret["bundeslaender"].append(f"{getattr(x.sigle, 'bl')}{corresp}")

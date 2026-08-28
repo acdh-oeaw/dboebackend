@@ -49,6 +49,7 @@ class SigleAdmin(admin.ModelAdmin):
 class BelegSigleAdmin(admin.ModelAdmin):
     list_display = ["beleg", "sigle", "name", "corresp", "resp"]
     search_fields = ["beleg__dboe_id", "sigle__name", "sigle__sigle"]
+    list_filter = ["corresp"]
     autocomplete_fields = ["beleg", "sigle"]
     ordering = ["sigle"]
     list_per_page = 50
