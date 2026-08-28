@@ -907,17 +907,17 @@ class Beleg(models.Model):
         ret["a"] = self.archivzeile
         ret["tags"] = [x.name for x in self.tag.all()]
 
+        ret["ort"] = []
+        [ret["ort"].append(x) for x in self.place_qdb]
+        [ret["ort"].append(x) for x in self.place_qu]
+
         siglen = set()
         bundeslaender = set()
         gregion = set()
         kregion = set()
-        orte = set()
         orig_orte = list()
         for x in self.belegsigle_set.all():
             siglen.add(x.sigle.sigle)
-            orte.add(x.sigle.name)
-            for y in x.sigle.orig_names:
-                orig_orte.append(y)
             try:
                 bundeslaender.add(getattr(x.sigle, "bl"))
             except AttributeError:
@@ -934,7 +934,6 @@ class Beleg(models.Model):
         ret["bundeslaender"] = [f"{x.name} ({x.sigle})" for x in bundeslaender if x]
         ret["gregion"] = [f"{x.name} ({x.sigle})" for x in gregion if x]
         ret["kregion"] = [f"{x.name} ({x.sigle})" for x in kregion if x]
-        ret["orte"] = list(orte)
         ret["orig_orte"] = orig_orte
 
         # Lautungen
