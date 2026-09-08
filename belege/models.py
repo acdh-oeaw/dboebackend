@@ -595,18 +595,6 @@ class Beleg(models.Model):
         help_text="Diese Angabe benennt die Wortart des jeweiligen Belegs.",
         choices=POS_CHOICES,
     ).set_extra(xpath="./tei:gramGrp/tei:pos", node_type="text")
-    ref_type_dbo = models.CharField(
-        blank=True,
-        null=True,
-        max_length=250,
-        verbose_name="Verweis (ref/@type='dbo')",
-    ).set_extra(xpath=".//tei:ref[@type='dbo']", node_type="text")
-    ref_type_sni = models.CharField(
-        blank=True,
-        null=True,
-        max_length=250,
-        verbose_name="Verweis (ref/@type='sni')",
-    ).set_extra(xpath="./tei:ref[@type='sni']", node_type="text")
     fragebogen_nummer = models.TextField(
         blank=True,
         null=True,
@@ -909,6 +897,9 @@ class Beleg(models.Model):
         # verweise "Verweis": $e/(tei:ref,tei:xr)[@type=("verweise", "sni", "dbo")]
         verweise = []
         verweis_types = ["verweise", "sni", "dbo"]
+        ret["quelle_detaillierte"] = []
+        ret["quelle_neu"] = []
+        ret["quelle_zitiert"] = []
         if self.xr:
             for x in self.xr:
                 resp = x.get("resp") or ""
@@ -917,9 +908,17 @@ class Beleg(models.Model):
                 node_type = x.get("type") or ""
                 if node_type in verweis_types:
                     verweise.append(f"{resp}{x.get('text')}")
-        for x in ["ref_type_dbo", "ref_type_sni"]:
-            if getattr(self, x):
-                verweise.append(getattr(self, x))
+        if self.ref:
+            for x in self.ref:
+                node_type = x.get("type") or ""
+                if node_type in verweis_types:
+                    verweise.append(x.get("text"))
+                if node_type == "quelleDetaillierte":
+                    ret["quelle_detaillierte"].append(x.get("text"))
+                if node_type == "quelleNeu":
+                    ret["quelle_neu"].append(x.get("text"))
+                if node_type == "quelleZitierte":
+                    ret["quelle_zitiert"].append(x.get("text"))
 
         ret["etym"] = []  # $e/tei:etym
         if self.etymology:
