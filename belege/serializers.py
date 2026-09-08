@@ -47,7 +47,7 @@ class ReNodeField(serializers.JSONField):
 
 @extend_schema_field(REFS_SCHEMA)
 class RefNodeField(serializers.JSONField):
-    """JSONField whose OpenAPI schema mirrors the model's RE_SCHEMA."""
+    """JSONField whose OpenAPI schema mirrors the model's REF_SCHEMA."""
 
 
 class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer):
