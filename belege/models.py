@@ -12,6 +12,23 @@ from belege.opensearch_client import OS_CONNECTION, OS_INDEX_NAME, client
 from belege.utils import populate_fields_from_xml, transform_record
 from siglen.models import BelegSigle
 
+ref_type_filter = " or ".join(
+    f"@type = '{ref_type}'"
+    for ref_type in (
+        "seite",
+        "paragraph",
+        "karte",
+        "dbo",
+        "sni",
+        "sna",
+        "quelleDetaillierte",
+        "quelleNeu",
+        "quelleZitierte",
+    )
+)
+REF_BELGE_XPATH = f"./tei:ref[{ref_type_filter}]"
+print("###################")
+print(REF_BELGE_XPATH)
 POS_CHOICES = (
     ("Subst", "Substantiv"),
     ("Interj", "Interjektion"),
@@ -27,6 +44,21 @@ POS_CHOICES = (
 LANG_CHOICES = (("bar", "bar"), ("de", "de"))
 
 RESP_OPTIONS = (("O", "O"), ("B", "B"))
+
+REFS_SCHEMA = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {"type": "string"},
+            "corresp": {"type": "string"},
+            "type": {"type": "string"},
+            "text": {"type": "string"},
+            "bibl": {"type": "array", "items": {"type": "string"}},
+        },
+        "additionalProperties": True,
+    },
+}
 
 NOTES_SCHEMA = {
     "type": "array",
@@ -652,6 +684,13 @@ class Beleg(models.Model):
         help_text="stores any kind of ./tei:xr",
         schema=XR_SCHEMA,
     ).set_extra(xml_element="./tei:xr")
+    ref = JSONField(
+        blank=True,
+        null=True,
+        verbose_name="tei:ref",
+        help_text="stores tei:ref with different @type values",
+        schema=REFS_SCHEMA,
+    ).set_extra(xml_element=REF_BELGE_XPATH)
 
     objects = BelegManager()
 
