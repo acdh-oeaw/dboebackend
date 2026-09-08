@@ -7,6 +7,7 @@ from belege.models import (
     ETYMOLOGY_SCHEMA,
     NOTES_SCHEMA,
     RE_SCHEMA,
+    REFS_SCHEMA,
     XR_SCHEMA,
     Annotation,
     Beleg,
@@ -41,6 +42,11 @@ class XrNodeField(serializers.JSONField):
 
 @extend_schema_field(RE_SCHEMA)
 class ReNodeField(serializers.JSONField):
+    """JSONField whose OpenAPI schema mirrors the model's RE_SCHEMA."""
+
+
+@extend_schema_field(REFS_SCHEMA)
+class RefNodeField(serializers.JSONField):
     """JSONField whose OpenAPI schema mirrors the model's RE_SCHEMA."""
 
 
@@ -82,6 +88,8 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
     )
     etymology = EtymologyField(required=False, allow_null=True)
     note = NoteField(required=False, allow_null=True)
+    xr = XrNodeField(required=False, allow_null=True)
+    ref = RefNodeField(required=False, allow_null=True)
 
     class Meta:
         model = Beleg
@@ -104,6 +112,7 @@ class BelegSerializer(PopulateLabelMixin, serializers.HyperlinkedModelSerializer
             "etymology",
             "note",
             "xr",
+            "ref",
             "place_qu",
             "place_qdb",
         ]
