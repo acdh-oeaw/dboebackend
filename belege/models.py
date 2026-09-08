@@ -896,7 +896,7 @@ class Beleg(models.Model):
 
         # verweise "Verweis": $e/(tei:ref,tei:xr)[@type=("verweise", "sni", "dbo")]
         verweise = []
-        verweis_types = ["verweise", "sni", "dbo"]
+        verweis_types = ["verweise", "sni", "dbo", "sna"]
         ret["quelle_detaillierte"] = []
         ret["quelle_neu"] = []
         ret["quelle_zitiert"] = []
