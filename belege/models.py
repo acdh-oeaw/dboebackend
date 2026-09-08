@@ -905,20 +905,26 @@ class Beleg(models.Model):
                 resp = x.get("resp") or ""
                 if resp:
                     resp = f"{resp}: "
+                corresp = x.get("corresp") or ""
+                if corresp:
+                    corresp = f" ›{corresp}"
                 node_type = x.get("type") or ""
                 if node_type in verweis_types:
-                    verweise.append(f"{resp}{x.get('text')}")
+                    verweise.append(f"{resp}{x.get('text')}{corresp}")
         if self.ref:
             for x in self.ref:
+                corresp = x.get("corresp") or ""
+                if corresp:
+                    corresp = f" ›{corresp}"
                 node_type = x.get("type") or ""
                 if node_type in verweis_types:
-                    verweise.append(x.get("text"))
+                    verweise.append(f"{x.get('text')}{corresp}")
                 if node_type == "quelleDetaillierte":
-                    ret["quelle_detaillierte"].append(x.get("text"))
+                    ret["quelle_detaillierte"].append(f"{x.get('text')}{corresp}")
                 if node_type == "quelleNeu":
-                    ret["quelle_neu"].append(x.get("text"))
+                    ret["quelle_neu"].append(f"{x.get('text')}{corresp}")
                 if node_type == "quelleZitierte":
-                    ret["quelle_zitiert"].append(x.get("text"))
+                    ret["quelle_zitiert"].append(f"{x.get('text')}{corresp}")
 
         ret["etym"] = []  # $e/tei:etym
         if self.etymology:
@@ -1066,7 +1072,7 @@ class Beleg(models.Model):
                 if x.note:
                     for y in x.note:
                         ret["bd_lt_star"].append(
-                            f"{x.definition} ANMO {y.get('resp')}: {y.get('text')}  ›{x.corresp_to}"
+                            f"{x.definition} ANMO {y.get('resp')}: {y.get('text')} ›{x.corresp_to}"
                         )
                 else:
                     ret["bd_lt_star"].append(f"{x.definition} ›{x.corresp_to}")
