@@ -204,6 +204,11 @@
                <bibl>FbB.JUFFINGER· (19xx) [SFb./EFb.] [see entry: h407_qdb-d1e33545]</bibl>
             </ref>
             <ref type="quelleBearbeitet" xml:id="aaa-test-001-tu-4826.30">{6.5} W.</ref>
+            <ref type="quelleZitierte">
+               <bibl>Quell. z. Gesch. d. Stadt Wien [see entry: h410_qdb-d1e27069]</bibl>
+            </ref>
+            <ref type="sni" xml:id="tu-29.13">HK-590 [see entry: d154_156_qdb-d1e1614]</ref>
+            <ref type="dbo" xml:id="tu-29.18">x [see entry: d154_156_qdb-d1e1614]</ref>
             <usg type="geo" corresp="this:QDB">
                <placeName type="orig">Wien</placeName>
                <listPlace corresp="sigle:6.5">
