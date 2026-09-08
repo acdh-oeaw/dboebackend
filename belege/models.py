@@ -27,8 +27,6 @@ ref_type_filter = " or ".join(
     )
 )
 REF_BELGE_XPATH = f"./tei:ref[{ref_type_filter}]"
-print("###################")
-print(REF_BELGE_XPATH)
 POS_CHOICES = (
     ("Subst", "Substantiv"),
     ("Interj", "Interjektion"),
