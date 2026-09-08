@@ -1072,7 +1072,7 @@ class Beleg(models.Model):
                 if x.note:
                     for y in x.note:
                         ret["bd_lt_star"].append(
-                            f"{x.definition} ANMO {y.get('resp')}: {y.get('text')} ›{x.corresp_to}"
+                            f"{x.definition} ANM{y.get('resp')}: {y.get('text')} ›{x.corresp_to}"
                         )
                 else:
                     ret["bd_lt_star"].append(f"{x.definition} ›{x.corresp_to}")
